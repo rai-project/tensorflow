@@ -34,5 +34,5 @@ func assetFS() *assetfs.AssetFS {
 }
 
 func init() {
-	common.Register(FrameworkManifest, assetFS())
+	framework.Register(FrameworkManifest, assetFS())
 }
