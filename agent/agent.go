@@ -7,7 +7,7 @@ import (
 	"google.golang.org/grpc"
 
 	dl "github.com/rai-project/dlframework"
-	common "github.com/rai-project/dlframework/frameworks/common/agent"
+	common "github.com/rai-project/dlframework/framework/agent"
 	tf "github.com/rai-project/tensorflow"
 	predict "github.com/rai-project/tensorflow/predict"
 )

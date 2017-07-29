@@ -13,7 +13,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/rai-project/dlframework"
-	common "github.com/rai-project/dlframework/frameworks/common/predict"
+	common "github.com/rai-project/dlframework/framework/predict"
 	"github.com/rai-project/downloadmanager"
 	"github.com/rai-project/utils"
 
