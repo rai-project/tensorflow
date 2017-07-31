@@ -1,8 +1,8 @@
-name: MobileNet_v1_0.50_128
+name: MobileNet
 framework:
   name: Tensorflow
   version: ~1.2.x
-version: 1.0
+version: 1.0.50.128
 container:
   amd64:
     gpu: raiproject/carml-tensorflow:amd64-cpu
