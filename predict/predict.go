@@ -80,7 +80,6 @@ func newImagePredictor(model dlframework.ModelManifest) (*ImagePredictor, error)
 func (p *ImagePredictor) makeSession() error {
 
 	var features []string
-	pp.Println(p.GetFeaturesPath())
 	f, err := os.Open(p.GetFeaturesPath())
 	if err != nil {
 		return errors.Wrapf(err, "cannot read %s", p.GetFeaturesPath())
@@ -253,8 +252,8 @@ func (p *ImagePredictor) Predict(data interface{}) (*dlframework.PredictionFeatu
 	probabilities := output[0].Value().([][]float32)[0]
 	// pp.Println("probabilities == ", probabilities)
 
-	pp.Println("features = ", len(p.features))
-	pp.Println("probabilities = ", len(probabilities))
+	// pp.Println("features = ", len(p.features))
+	// pp.Println("probabilities = ", len(probabilities))
 	rprobs := make([]*dlframework.PredictionFeature, len(probabilities))
 	for ii, prob := range probabilities {
 		name := "dummy"
