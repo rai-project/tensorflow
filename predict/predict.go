@@ -1,6 +1,7 @@
 package predict
 
 import (
+	"bufio"
 	"io"
 	"io/ioutil"
 	"net/url"
@@ -25,6 +26,7 @@ type ImagePredictor struct {
 	common.ImagePredictor
 	meanImage       []float32
 	imageDimensions []int32
+	features        []string
 	tfGraph         *tf.Graph
 	tfSession       *tf.Session
 	workDir         string
@@ -76,6 +78,22 @@ func newImagePredictor(model dlframework.ModelManifest) (*ImagePredictor, error)
 }
 
 func (p *ImagePredictor) makeSession() error {
+
+	var features []string
+	pp.Println(p.GetFeaturesPath())
+	f, err := os.Open(p.GetFeaturesPath())
+	if err != nil {
+		return errors.Wrapf(err, "cannot read %s", p.GetFeaturesPath())
+	}
+	defer f.Close()
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		line := scanner.Text()
+		features = append(features, line)
+	}
+
+	p.features = features
+
 	model, err := ioutil.ReadFile(p.graphFilePath)
 	if err != nil {
 		return errors.Wrapf(err, "unable to read graph file %v", p.graphFilePath)
@@ -122,7 +140,36 @@ func (p *ImagePredictor) Download() error {
 		return errors.Errorf("the graph file %v was not found or is not a file", pth)
 	}
 	p.graphFilePath = pth
+
+	if isHttpPrefixed(p.GetFeaturesUrl()) || utils.IsURL(p.GetFeaturesUrl()) {
+		if _, err := downloadmanager.DownloadFile(p.GetFeaturesUrl(), p.GetFeaturesPath()); err != nil {
+			return err
+		}
+	}
+
 	return nil
+}
+
+func (p *ImagePredictor) GetFeaturesUrl() string {
+	model := p.Model
+	params := model.GetOutput().GetParameters()
+	pfeats, ok := params["features_url"]
+	if !ok {
+		return ""
+	}
+	return pfeats.Value
+}
+
+func isHttpPrefixed(s string) bool {
+	return strings.HasPrefix(s, "http://") || strings.HasPrefix(s, "https://")
+}
+
+func (p *ImagePredictor) GetFeaturesPath() string {
+	if !isHttpPrefixed(p.GetFeaturesUrl()) || !utils.IsURL(p.GetFeaturesUrl()) {
+		return filepath.Join(p.workDir, p.GetFeaturesUrl())
+	}
+	model := p.Model
+	return filepath.Join(p.workDir, model.GetName()+".features")
 }
 
 func (p *ImagePredictor) Preprocess(data interface{}) (interface{}, error) {
@@ -205,10 +252,18 @@ func (p *ImagePredictor) Predict(data interface{}) (*dlframework.PredictionFeatu
 	// Find the most probably label index.
 	probabilities := output[0].Value().([][]float32)[0]
 	// pp.Println("probabilities == ", probabilities)
+
+	pp.Println("features = ", len(p.features))
+	pp.Println("probabilities = ", len(probabilities))
 	rprobs := make([]*dlframework.PredictionFeature, len(probabilities))
 	for ii, prob := range probabilities {
+		name := "dummy"
+		if ii < len(p.features) {
+			name = p.features[ii]
+		}
 		rprobs[ii] = &dlframework.PredictionFeature{
 			Index:       int64(ii),
+			Name:        "<> " + name,
 			Probability: prob,
 		}
 	}

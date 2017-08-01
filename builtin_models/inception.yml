@@ -1,7 +1,7 @@
 name: Inception
 framework:
   name: Tensorflow
-  version: ~1.2.x
+  version: 1.2
 version: 3.0
 container:
   amd64:
@@ -27,7 +27,7 @@ output:
   type: feature
   description: an output image net label
   parameters:
-    features_url: http://data.dmlc.ml/mxnet/models/imagenet/synset.txt
+    features_url: imagenet_comp_graph_label_strings.txt
 model:
   base_url: https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip
   graph_path: tensorflow_inception_graph.pb
