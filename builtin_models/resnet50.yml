@@ -32,3 +32,4 @@ model:
 attributes:
   manifest_author: abduld
   trailing_dataset: ImageNet
+hidden: true
