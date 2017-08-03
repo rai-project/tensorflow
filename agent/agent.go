@@ -33,7 +33,7 @@ func (p *predictorServer) Predict(ctx context.Context, req *dl.PredictRequest) (
 		return nil, err
 	}
 	defer predictor.Close()
-	if err := predictor.Download(); err != nil {
+	if err := predictor.Download(ctx); err != nil {
 		return nil, err
 	}
 
@@ -43,12 +43,12 @@ func (p *predictorServer) Predict(ctx context.Context, req *dl.PredictRequest) (
 	}
 	defer reader.Close()
 
-	data, err := predictor.Preprocess(reader)
+	data, err := predictor.Preprocess(ctx, reader)
 	if err != nil {
 		return nil, err
 	}
 
-	probs, err := predictor.Predict(data)
+	probs, err := predictor.Predict(ctx, data)
 	if err != nil {
 		return nil, err
 	}

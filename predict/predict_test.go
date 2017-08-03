@@ -8,6 +8,7 @@ import (
 	"github.com/rai-project/config"
 	tf "github.com/rai-project/tensorflow"
 	"github.com/stretchr/testify/assert"
+	context "golang.org/x/net/context"
 )
 
 func XXXTestPredictLoad(t *testing.T) {
@@ -41,10 +42,11 @@ func TestPredictInference(t *testing.T) {
 	assert.NotEmpty(t, predictor)
 	defer predictor.Close()
 
-	err = predictor.Download()
+	ctx := context.Background()
+	err = predictor.Download(ctx)
 	assert.NoError(t, err)
 
-	preds, err := predictor.Predict("http://buzzsharer.com/wp-content/uploads/2015/06/beautiful-running-horse.jpg")
+	preds, err := predictor.Predict(ctx, "http://buzzsharer.com/wp-content/uploads/2015/06/beautiful-running-horse.jpg")
 	assert.NoError(t, err)
 	if err != nil {
 		return

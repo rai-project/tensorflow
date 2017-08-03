@@ -11,7 +11,9 @@ import (
 	"strings"
 
 	"github.com/k0kubun/pp"
+	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
+	context "golang.org/x/net/context"
 
 	"github.com/rai-project/dlframework"
 	common "github.com/rai-project/dlframework/framework/predict"
@@ -116,12 +118,18 @@ func (p *ImagePredictor) makeSession() error {
 	return nil
 }
 
-func (p *ImagePredictor) Download() error {
+func (p *ImagePredictor) Download(ctx context.Context) error {
+
+	if span, newCtx := opentracing.StartSpanFromContext(ctx, "DownloadingModel"); span != nil {
+		ctx = newCtx
+		defer span.Finish()
+	}
+
 	model := p.Model
 	var downloadPath string
 	if model.Model.IsArchive {
 		baseURL := model.Model.BaseUrl
-		_, err := downloadmanager.DownloadInto(baseURL, p.workDir)
+		_, err := downloadmanager.DownloadInto(ctx, baseURL, p.workDir)
 		if err != nil {
 			return errors.Wrapf(err, "failed to download model archive from %v", model.Model.BaseUrl)
 		}
@@ -129,7 +137,7 @@ func (p *ImagePredictor) Download() error {
 	} else {
 		var err error
 		url := path.Join(model.Model.BaseUrl, model.Model.GetGraphPath()) // this is a url, so path is correct
-		downloadPath, err = downloadmanager.DownloadFile(url, filepath.Join(p.workDir, model.Model.GetGraphPath()))
+		downloadPath, err = downloadmanager.DownloadFile(ctx, url, filepath.Join(p.workDir, model.Model.GetGraphPath()))
 		if err != nil {
 			return errors.Wrapf(err, "failed to download model graph from %v", url)
 		}
@@ -141,7 +149,7 @@ func (p *ImagePredictor) Download() error {
 	p.graphFilePath = pth
 
 	if isHttpPrefixed(p.GetFeaturesUrl()) || utils.IsURL(p.GetFeaturesUrl()) {
-		if _, err := downloadmanager.DownloadFile(p.GetFeaturesUrl(), p.GetFeaturesPath()); err != nil {
+		if _, err := downloadmanager.DownloadFile(ctx, p.GetFeaturesUrl(), p.GetFeaturesPath()); err != nil {
 			return err
 		}
 	}
@@ -171,7 +179,12 @@ func (p *ImagePredictor) GetFeaturesPath() string {
 	return filepath.Join(p.workDir, model.GetName()+".features")
 }
 
-func (p *ImagePredictor) Preprocess(data interface{}) (interface{}, error) {
+func (p *ImagePredictor) Preprocess(ctx context.Context, data interface{}) (interface{}, error) {
+
+	if span, newCtx := opentracing.StartSpanFromContext(ctx, "Preprocess"); span != nil {
+		ctx = newCtx
+		defer span.Finish()
+	}
 
 	var reader io.ReadCloser
 	defer func() {
@@ -192,7 +205,7 @@ func (p *ImagePredictor) Preprocess(data interface{}) (interface{}, error) {
 			if err != nil {
 				return nil, errors.Wrapf(err, "unable to parse url %v", str)
 			}
-			pth, err := downloadmanager.DownloadInto(str, p.workDir)
+			pth, err := downloadmanager.DownloadInto(ctx, str, p.workDir)
 			if err != nil {
 				return nil, errors.Wrapf(err, "unable to download url %v", str)
 			}
@@ -219,7 +232,12 @@ func (p *ImagePredictor) Preprocess(data interface{}) (interface{}, error) {
 	return tensor, nil
 }
 
-func (p *ImagePredictor) Predict(data interface{}) (*dlframework.PredictionFeatures, error) {
+func (p *ImagePredictor) Predict(ctx context.Context, data interface{}) (*dlframework.PredictionFeatures, error) {
+
+	if span, newCtx := opentracing.StartSpanFromContext(ctx, "Predict"); span != nil {
+		ctx = newCtx
+		defer span.Finish()
+	}
 
 	if p.tfSession == nil {
 		if err := p.makeSession(); err != nil {
