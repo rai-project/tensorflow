@@ -17,7 +17,7 @@ logrus-fix:
 generate: clean generate-models
 
 generate-proto:
-	protoc --plugin=protoc-gen-go=${GOPATH}/bin/protoc-gen-go -proto \
+	protoc --plugin=protoc-gen-go=${GOPATH}/bin/protoc-gen-go -Iproto \
 		--gogofaster_out=Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,plugins=grpc:. \
 		proto/allocation_description.proto proto/attr_value.proto proto/cluster.proto proto/config.proto \
 		proto/control_flow.proto proto/cost_graph.proto proto/debug.proto proto/device_attributes.proto \
