@@ -6,12 +6,16 @@ import (
 	"io"
 	"io/ioutil"
 
+	context "golang.org/x/net/context"
+
 	_ "image/gif"
 	_ "image/jpeg"
 	_ "image/png"
 
 	"github.com/k0kubun/pp"
 	"github.com/pkg/errors"
+
+	common "github.com/rai-project/dlframework/framework/predict"
 
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 	"github.com/tensorflow/tensorflow/tensorflow/go/op"
@@ -27,7 +31,9 @@ func (p *ImagePredictor) setImageDimensions() error {
 }
 
 func (p *ImagePredictor) setMeanImage() error {
-	mean, err := p.GetMeanImage()
+	// TODO
+	ctx := context.Background()
+	mean, err := p.GetMeanImage(ctx, common.NoMeanImageURLProcessor)
 	if err != nil {
 		return err
 	}
