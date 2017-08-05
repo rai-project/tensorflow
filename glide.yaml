@@ -22,6 +22,7 @@ import:
   - framework/predict
 - package: github.com/rai-project/downloadmanager
 - package: github.com/rai-project/grpc
+- package: github.com/rai-project/image
 - package: github.com/rai-project/logger
 - package: github.com/rai-project/registry
 - package: github.com/rai-project/utils
