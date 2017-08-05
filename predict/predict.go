@@ -79,7 +79,15 @@ func newImagePredictor(model dlframework.ModelManifest) (*ImagePredictor, error)
 	return ip, nil
 }
 
-func (p *ImagePredictor) makeSession() error {
+func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
+	if p.tfSession == nil {
+		return nil
+	}
+
+	if span, newCtx := opentracing.StartSpanFromContext(ctx, "LoadPredictor"); span != nil {
+		ctx = newCtx
+		defer span.Finish()
+	}
 
 	var features []string
 	f, err := os.Open(p.GetFeaturesPath())
@@ -224,7 +232,7 @@ func (p *ImagePredictor) Preprocess(ctx context.Context, data interface{}) (inte
 		return nil, errors.New("unexpected input")
 	}
 
-	tensor, err := p.makeTensorFromImage(reader)
+	tensor, err := p.makeTensorFromImage(ctx, reader)
 	if err != nil {
 		return nil, err
 	}
@@ -239,10 +247,8 @@ func (p *ImagePredictor) Predict(ctx context.Context, data interface{}) (*dlfram
 		defer span.Finish()
 	}
 
-	if p.tfSession == nil {
-		if err := p.makeSession(); err != nil {
-			return nil, err
-		}
+	if err := p.loadPredictor(ctx); err != nil {
+		return nil, err
 	}
 
 	session := p.tfSession
@@ -274,7 +280,7 @@ func (p *ImagePredictor) Predict(ctx context.Context, data interface{}) (*dlfram
 	// pp.Println("probabilities = ", len(probabilities))
 	rprobs := make([]*dlframework.PredictionFeature, len(probabilities))
 	for ii, prob := range probabilities {
-		name := "dummy"
+		name := "--UNDEFINED--"
 		if ii < len(p.features) {
 			name = p.features[ii]
 		}

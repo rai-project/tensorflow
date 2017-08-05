@@ -13,7 +13,10 @@ import (
 	_ "image/png"
 
 	"github.com/k0kubun/pp"
+	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
+
+	context "golang.org/x/net/context"
 
 	common "github.com/rai-project/dlframework/framework/predict"
 
@@ -42,7 +45,13 @@ func (p *ImagePredictor) setMeanImage() error {
 }
 
 // Convert the image in reader to a Tensor suitable as input to the Inception model.
-func (p *ImagePredictor) makeTensorFromImage(reader io.Reader) (*tf.Tensor, error) {
+func (p *ImagePredictor) makeTensorFromImage(ctx context.Context, reader io.Reader) (*tf.Tensor, error) {
+
+	if span, newCtx := opentracing.StartSpanFromContext(ctx, "DecodeResizeImage"); span != nil {
+		ctx = newCtx
+		defer span.Finish()
+	}
+
 	bts, err := ioutil.ReadAll(reader)
 	if err != nil {
 		return nil, err
@@ -53,7 +62,7 @@ func (p *ImagePredictor) makeTensorFromImage(reader io.Reader) (*tf.Tensor, erro
 		return nil, err
 	}
 	// Construct a graph to normalize the image
-	graph, input, output, err := p.constructGraphToNormalizeImage(bts)
+	graph, input, output, err := p.constructGraphToNormalizeImage(ctx, bts)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +89,7 @@ func (p *ImagePredictor) makeTensorFromImage(reader io.Reader) (*tf.Tensor, erro
 // This function constructs a graph of TensorFlow operations which takes as
 // input a JPEG-encoded string and returns a tensor suitable as input to the
 // inception model.
-func (p *ImagePredictor) constructGraphToNormalizeImage(img []byte) (graph *tf.Graph, input, output tf.Output, err error) {
+func (p *ImagePredictor) constructGraphToNormalizeImage(ctx context.Context, img []byte) (graph *tf.Graph, input, output tf.Output, err error) {
 	// Some constants specific to the pre-trained model at
 	// - The model was trained after with images scaled to pixels.
 	// - The colors, represented as R, G, B in 1-byte each were converted to
@@ -121,6 +130,10 @@ func (p *ImagePredictor) constructGraphToNormalizeImage(img []byte) (graph *tf.G
 		decoder = op.DecodeJpeg(s, input, op.DecodeJpegChannels(chans))
 	case "png":
 		decoder = op.DecodePng(s, input, op.DecodePngChannels(chans))
+	case "gif":
+		decoder = op.DecodeGif(s, input)
+	case "bmp":
+		decoder = op.DecodeBmp(s, input, op.DecodeBmpChannels(chans))
 	default:
 		err = errors.Errorf("%v is not a supported image format", imageFormat)
 		return
