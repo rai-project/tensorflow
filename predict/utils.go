@@ -16,8 +16,6 @@ import (
 	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
 
-	context "golang.org/x/net/context"
-
 	common "github.com/rai-project/dlframework/framework/predict"
 
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
