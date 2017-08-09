@@ -80,7 +80,7 @@ func newImagePredictor(model dlframework.ModelManifest) (*ImagePredictor, error)
 }
 
 func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
-	if p.tfSession == nil {
+	if p.tfSession != nil {
 		return nil
 	}
 
