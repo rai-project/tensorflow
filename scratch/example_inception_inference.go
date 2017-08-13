@@ -28,6 +28,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/k0kubun/pp"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 	"github.com/tensorflow/tensorflow/tensorflow/go/op"
 )
@@ -94,6 +95,8 @@ func main() {
 	}
 	defer session.Close()
 
+	pp.Println(graph.Operation("output"))
+
 	// Run inference on *imageFile.
 	// For multiple images, session.Run() can be called in a loop (and
 	// concurrently). Alternatively, images can be batched since the model
@@ -109,8 +112,10 @@ func main() {
 		[]tf.Output{
 			graph.Operation("output").Output(0),
 		},
-		nil)
+		nil,
+	)
 	if err != nil {
+		pp.Println(err)
 		log.Fatal(err)
 	}
 	// output[0].Value() is a vector containing probabilities of

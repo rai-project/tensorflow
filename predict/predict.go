@@ -15,7 +15,10 @@ import (
 	"github.com/pkg/errors"
 	context "golang.org/x/net/context"
 
+	"github.com/rai-project/caffe2"
+	"github.com/rai-project/config"
 	"github.com/rai-project/dlframework"
+	"github.com/rai-project/dlframework/framework/agent"
 	common "github.com/rai-project/dlframework/framework/predict"
 	"github.com/rai-project/downloadmanager"
 	"github.com/rai-project/utils"
@@ -44,10 +47,11 @@ func New(model dlframework.ModelManifest) (common.Predictor, error) {
 	if strings.ToLower(firstInputType) != "image" {
 		return nil, errors.New("input type not supported")
 	}
-	return newImagePredictor(model)
+	predictor := new(ImagePredictor)
+	return predictor.Load(context.Background(), model)
 }
 
-func newImagePredictor(model dlframework.ModelManifest) (*ImagePredictor, error) {
+func (p *ImagePredictor) Load(ctx context.Context, model dlframework.ModelManifest) (common.Predictor, error) {
 	framework, err := model.ResolveFramework()
 	if err != nil {
 		return nil, err
@@ -306,4 +310,17 @@ func dummy() {
 	if false {
 		pp.Println("....")
 	}
+}
+
+func init() {
+	config.AfterInit(func() {
+		framework := caffe2.FrameworkManifest
+		agent.AddPredictor(framework, &ImagePredictor{
+			ImagePredictor: common.ImagePredictor{
+				Base: common.Base{
+					Framework: framework,
+				},
+			},
+		})
+	})
 }
