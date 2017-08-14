@@ -2,6 +2,9 @@ package predict
 
 import (
 	"bufio"
+	"bytes"
+	"image"
+	"image/png"
 	"io"
 	"io/ioutil"
 	"net/url"
@@ -232,6 +235,12 @@ func (p *ImagePredictor) Preprocess(ctx context.Context, data interface{}) (inte
 		}
 	} else if rdr, ok := data.(io.Reader); ok {
 		reader = ioutil.NopCloser(rdr)
+	} else if img, ok := data.(image.Image); ok {
+		// this is a temporary hack, since Preprocess is being called
+		// with an image as input.
+		buff := new(bytes.Buffer)
+		png.Encode(buff, img)
+		reader = ioutil.NopCloser(buff)
 	} else {
 		return nil, errors.New("unexpected input")
 	}
