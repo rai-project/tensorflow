@@ -15,12 +15,12 @@ import (
 	"github.com/pkg/errors"
 	context "golang.org/x/net/context"
 
-	"github.com/rai-project/caffe2"
 	"github.com/rai-project/config"
 	"github.com/rai-project/dlframework"
 	"github.com/rai-project/dlframework/framework/agent"
 	common "github.com/rai-project/dlframework/framework/predict"
 	"github.com/rai-project/downloadmanager"
+	"github.com/rai-project/tensorflow"
 	"github.com/rai-project/utils"
 
 	"github.com/Unknwon/com"
@@ -314,7 +314,7 @@ func dummy() {
 
 func init() {
 	config.AfterInit(func() {
-		framework := caffe2.FrameworkManifest
+		framework := tensorflow.FrameworkManifest
 		agent.AddPredictor(framework, &ImagePredictor{
 			ImagePredictor: common.ImagePredictor{
 				Base: common.Base{
