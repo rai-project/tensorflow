@@ -37,7 +37,6 @@ type ImagePredictor struct {
 	features        []string
 	tfGraph         *tf.Graph
 	tfSession       *tf.Session
-	workDir         string
 	graphFilePath   string
 }
 
@@ -71,8 +70,8 @@ func (p *ImagePredictor) Load(ctx context.Context, model dlframework.ModelManife
 				Framework: framework,
 				Model:     model,
 			},
+			WorkDir: workDir,
 		},
-		workDir: workDir,
 	}
 
 	if err := ip.setImageDimensions(); err != nil {
@@ -144,15 +143,15 @@ func (p *ImagePredictor) Download(ctx context.Context) error {
 	var downloadPath string
 	if model.Model.IsArchive {
 		baseURL := model.Model.BaseUrl
-		_, err := downloadmanager.DownloadInto(ctx, baseURL, p.workDir)
+		_, err := downloadmanager.DownloadInto(ctx, baseURL, p.WorkDir)
 		if err != nil {
 			return errors.Wrapf(err, "failed to download model archive from %v", model.Model.BaseUrl)
 		}
-		downloadPath = p.workDir
+		downloadPath = p.WorkDir
 	} else {
 		var err error
 		url := path.Join(model.Model.BaseUrl, model.Model.GetGraphPath()) // this is a url, so path is correct
-		downloadPath, err = downloadmanager.DownloadFile(ctx, url, filepath.Join(p.workDir, model.Model.GetGraphPath()))
+		downloadPath, err = downloadmanager.DownloadFile(ctx, url, filepath.Join(p.WorkDir, model.Model.GetGraphPath()))
 		if err != nil {
 			return errors.Wrapf(err, "failed to download model graph from %v", url)
 		}
@@ -188,10 +187,10 @@ func isHttpPrefixed(s string) bool {
 
 func (p *ImagePredictor) GetFeaturesPath() string {
 	if !isHttpPrefixed(p.GetFeaturesUrl()) || !utils.IsURL(p.GetFeaturesUrl()) {
-		return filepath.Join(p.workDir, p.GetFeaturesUrl())
+		return filepath.Join(p.WorkDir, p.GetFeaturesUrl())
 	}
 	model := p.Model
-	return filepath.Join(p.workDir, model.GetName()+".features")
+	return filepath.Join(p.WorkDir, model.GetName()+".features")
 }
 
 func (p *ImagePredictor) Preprocess(ctx context.Context, data interface{}) (interface{}, error) {
@@ -220,7 +219,7 @@ func (p *ImagePredictor) Preprocess(ctx context.Context, data interface{}) (inte
 			if err != nil {
 				return nil, errors.Wrapf(err, "unable to parse url %v", str)
 			}
-			pth, err := downloadmanager.DownloadInto(ctx, str, p.workDir)
+			pth, err := downloadmanager.DownloadInto(ctx, str, p.WorkDir)
 			if err != nil {
 				return nil, errors.Wrapf(err, "unable to download url %v", str)
 			}
