@@ -143,7 +143,7 @@ func (p *ImagePredictor) Download(ctx context.Context) error {
 	var downloadPath string
 	if model.Model.IsArchive {
 		baseURL := model.Model.BaseUrl
-		_, err := downloadmanager.DownloadInto(ctx, baseURL, p.WorkDir)
+		_, err := downloadmanager.DownloadInto(baseURL, p.WorkDir)
 		if err != nil {
 			return errors.Wrapf(err, "failed to download model archive from %v", model.Model.BaseUrl)
 		}
@@ -151,7 +151,7 @@ func (p *ImagePredictor) Download(ctx context.Context) error {
 	} else {
 		var err error
 		url := path.Join(model.Model.BaseUrl, model.Model.GetGraphPath()) // this is a url, so path is correct
-		downloadPath, err = downloadmanager.DownloadFile(ctx, url, filepath.Join(p.WorkDir, model.Model.GetGraphPath()))
+		downloadPath, err = downloadmanager.DownloadFile(url, filepath.Join(p.WorkDir, model.Model.GetGraphPath()))
 		if err != nil {
 			return errors.Wrapf(err, "failed to download model graph from %v", url)
 		}
@@ -163,7 +163,7 @@ func (p *ImagePredictor) Download(ctx context.Context) error {
 	p.graphFilePath = pth
 
 	if isHttpPrefixed(p.GetFeaturesUrl()) || utils.IsURL(p.GetFeaturesUrl()) {
-		if _, err := downloadmanager.DownloadFile(ctx, p.GetFeaturesUrl(), p.GetFeaturesPath()); err != nil {
+		if _, err := downloadmanager.DownloadFile(p.GetFeaturesUrl(), p.GetFeaturesPath()); err != nil {
 			return err
 		}
 	}
@@ -219,7 +219,7 @@ func (p *ImagePredictor) Preprocess(ctx context.Context, data interface{}) (inte
 			if err != nil {
 				return nil, errors.Wrapf(err, "unable to parse url %v", str)
 			}
-			pth, err := downloadmanager.DownloadInto(ctx, str, p.WorkDir)
+			pth, err := downloadmanager.DownloadInto(str, p.WorkDir)
 			if err != nil {
 				return nil, errors.Wrapf(err, "unable to download url %v", str)
 			}
