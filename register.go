@@ -10,7 +10,7 @@ import (
 
 var FrameworkManifest = dlframework.FrameworkManifest{
 	Name:    "Tensorflow",
-	Version: "1.2",
+	Version: "1.3",
 	Container: map[string]*dlframework.ContainerHardware{
 		"amd64": {
 			Cpu: "raiproject/carml-tensorflow:amd64-cpu",
