@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-	cmd.Init()
 
 	rootCmd, err := cmd.NewRootCommand(tensorflow.FrameworkManifest)
 	if err != nil {
