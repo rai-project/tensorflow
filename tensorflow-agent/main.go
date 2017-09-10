@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/rai-project/dlframework/framework/cmd"
+	cmd "github.com/rai-project/dlframework/framework/cmd/server"
 	"github.com/rai-project/tensorflow"
 	_ "github.com/rai-project/tensorflow/predict"
 )
