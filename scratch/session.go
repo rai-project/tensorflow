@@ -17,6 +17,7 @@ limitations under the License.
 package main
 
 // #include <stdlib.h>
+// #include <string.h>
 // #include "tensorflow/c/c_api.h"
 import "C"
 
@@ -27,6 +28,8 @@ import (
 	"sync"
 	"unsafe"
 
+	protobuf "github.com/golang/protobuf/proto"
+	proto "github.com/rai-project/tensorflow"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 )
 
@@ -105,7 +108,7 @@ func NewSession(graph0 *tf.Graph, options *SessionOptions) (*Session, error) {
 // On success, returns the fetched Tensors in the same order as supplied in
 // the fetches argument. If fetches is set to nil, the returned Tensor fetches
 // is empty.
-func (s *Session) Run(feeds map[tf.Output]*tf.Tensor, fetches []tf.Output, targets []*tf.Operation) ([]*tf.Tensor, error) {
+func (s *Session) Run(feeds map[tf.Output]*tf.Tensor, fetches []tf.Output, targets []*tf.Operation, runOpts *proto.RunOptions) ([]*tf.Tensor, error) {
 	s.mu.Lock()
 	if s.c == nil {
 		s.mu.Unlock()
@@ -117,7 +120,27 @@ func (s *Session) Run(feeds map[tf.Output]*tf.Tensor, fetches []tf.Output, targe
 
 	c := newCRunArgs(feeds, fetches, targets)
 	status := newStatus()
-	C.TF_SessionRun(s.c, nil,
+
+	var runOptsBuf *C.TF_Buffer
+	if runOpts != nil {
+		runOptsBuf = C.TF_NewBuffer()
+		defer C.TF_DeleteBuffer(runOptsBuf)
+
+		buf, err := protobuf.Marshal(runOpts)
+		if err != nil {
+			return nil, err
+		}
+
+		runOptsBuf.length = C.size_t(len(buf))
+		runOptsBuf.data = C.malloc(runOptsBuf.length)
+		if runOptsBuf.data == nil {
+			return nil, fmt.Errorf("unable to allocate memory")
+		}
+		defer C.free(runOptsBuf.data)
+		C.memcpy(runOptsBuf.data, unsafe.Pointer(&buf[0]), runOptsBuf.length)
+	}
+
+	C.TF_SessionRun(s.c, runOptsBuf,
 		ptrOutput(c.feeds), ptrTensor(c.feedTensors), C.int(len(feeds)),
 		ptrOutput(c.fetches), ptrTensor(c.fetchTensors), C.int(len(fetches)),
 		ptrOperation(c.targets), C.int(len(targets)),

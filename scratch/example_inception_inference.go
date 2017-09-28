@@ -29,12 +29,19 @@ import (
 	"path/filepath"
 
 	"github.com/k0kubun/pp"
+	proto "github.com/rai-project/tensorflow"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 	"github.com/tensorflow/tensorflow/tensorflow/go/op"
 )
 
 func NewSessionOptions() *SessionOptions {
 	return &SessionOptions{}
+}
+
+func NewRunOptions() *proto.RunOptions {
+	return &proto.RunOptions{
+		TraceLevel: proto.RunOptions_FULL_TRACE,
+	}
 }
 
 func main() {
@@ -117,6 +124,7 @@ func main() {
 			graph.Operation("output").Output(0),
 		},
 		nil,
+		NewRunOptions(),
 	)
 	if err != nil {
 		pp.Println(err)
@@ -179,7 +187,9 @@ func makeTensorFromImage(filename string) (*tf.Tensor, error) {
 	normalized, err := session.Run(
 		map[tf.Output]*tf.Tensor{input: tensor},
 		[]tf.Output{output},
-		nil)
+		nil,
+		NewRunOptions(),
+	)
 	if err != nil {
 		return nil, err
 	}
