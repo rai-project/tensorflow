@@ -158,7 +158,7 @@ func (s *Session) Run(feeds map[tf.Output]*tf.Tensor, fetches []tf.Output, targe
 	slice := (*[1 << 30]byte)(unsafe.Pointer(runMetaData.data))[:length:length]
 
 	protobuf.Unmarshal(slice, &meta)
-	pp.Println(meta)
+	pp.Println(meta.StepStats)
 
 	// Make sure GC won't harvest input tensors until SessionRun() is finished
 	runtime.KeepAlive(feeds)
