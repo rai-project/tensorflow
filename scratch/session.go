@@ -29,6 +29,7 @@ import (
 	"unsafe"
 
 	protobuf "github.com/golang/protobuf/proto"
+	"github.com/k0kubun/pp"
 	proto "github.com/rai-project/tensorflow"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 )
@@ -140,11 +141,24 @@ func (s *Session) Run(feeds map[tf.Output]*tf.Tensor, fetches []tf.Output, targe
 		C.memcpy(runOptsBuf.data, unsafe.Pointer(&buf[0]), runOptsBuf.length)
 	}
 
+	runMetaData := C.TF_NewBuffer()
+	defer C.TF_DeleteBuffer(runMetaData)
+
 	C.TF_SessionRun(s.c, runOptsBuf,
 		ptrOutput(c.feeds), ptrTensor(c.feedTensors), C.int(len(feeds)),
 		ptrOutput(c.fetches), ptrTensor(c.fetchTensors), C.int(len(fetches)),
 		ptrOperation(c.targets), C.int(len(targets)),
-		nil, status.c)
+		runMetaData, status.c)
+
+	var meta proto.RunMetadata
+
+	// A []byte slice backed by C memory.
+	// See: https://github.com/golang/go/wiki/cgo#turning-c-arrays-into-go-slices
+	length := int(runMetaData.length)
+	slice := (*[1 << 30]byte)(unsafe.Pointer(runMetaData.data))[:length:length]
+
+	protobuf.Unmarshal(slice, &meta)
+	pp.Println(meta)
 
 	// Make sure GC won't harvest input tensors until SessionRun() is finished
 	runtime.KeepAlive(feeds)
