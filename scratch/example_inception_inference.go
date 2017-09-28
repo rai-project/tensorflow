@@ -33,6 +33,10 @@ import (
 	"github.com/tensorflow/tensorflow/tensorflow/go/op"
 )
 
+func NewSessionOptions() *SessionOptions {
+	return &SessionOptions{}
+}
+
 func main() {
 	// An example for using the TensorFlow Go API for image recognition
 	// using a pre-trained inception model (http://arxiv.org/abs/1512.00567).
@@ -89,7 +93,7 @@ func main() {
 	}
 
 	// Create a session for inference over graph.
-	session, err := tf.NewSession(graph, nil)
+	session, err := NewSession(graph, NewSessionOptions())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -167,7 +171,7 @@ func makeTensorFromImage(filename string) (*tf.Tensor, error) {
 		return nil, err
 	}
 	// Execute that graph to normalize this one image
-	session, err := tf.NewSession(graph, nil)
+	session, err := NewSession(graph, NewSessionOptions())
 	if err != nil {
 		return nil, err
 	}
