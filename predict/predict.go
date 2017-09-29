@@ -14,6 +14,7 @@ import (
 	"github.com/rai-project/dlframework/framework/agent"
 	common "github.com/rai-project/dlframework/framework/predict"
 	"github.com/rai-project/downloadmanager"
+	"github.com/rai-project/image"
 	"github.com/rai-project/image/types"
 	"github.com/rai-project/tensorflow"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
@@ -69,11 +70,11 @@ func (p *ImagePredictor) Load(ctx context.Context, model dlframework.ModelManife
 		},
 	}
 
-	if ip.download(ctx) != nil {
+	if err = ip.download(ctx); err != nil {
 		return nil, err
 	}
 
-	if ip.loadPredictor(ctx) != nil {
+	if err = ip.loadPredictor(ctx); err != nil {
 		return nil, err
 	}
 
@@ -101,6 +102,7 @@ func (p *ImagePredictor) GetPreprocessOptions(ctx context.Context) (common.Prepr
 		Scale:     scale,
 		Size:      []int{int(imageDims[1]), int(imageDims[2])},
 		ColorMode: types.RGBMode,
+		Layout:    image.HWCLayout,
 	}, nil
 }
 
@@ -143,18 +145,6 @@ func (p *ImagePredictor) download(ctx context.Context) error {
 		return err
 	}
 
-	checksum = p.GetWeightsChecksum()
-	if checksum == "" {
-		return errors.New("Need weights file checksum in the model manifest")
-	}
-
-	span.LogFields(
-		olog.String("event", "download weights"),
-	)
-	if _, err := downloadmanager.DownloadFile(p.GetWeightsUrl(), p.GetWeightsPath(), downloadmanager.MD5Sum(checksum)); err != nil {
-		return err
-	}
-
 	checksum = p.GetFeaturesChecksum()
 	if checksum == "" {
 		return errors.New("Need features file checksum in the model manifest")
@@ -181,6 +171,7 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 	span.LogFields(
 		olog.String("event", "read features"),
 	)
+
 	var features []string
 	f, err := os.Open(p.GetFeaturesPath())
 	if err != nil {
@@ -220,11 +211,59 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 	return nil
 }
 
-func (p *ImagePredictor) makeTensorFromImageData(ctx context.Context, data [][]float32) (*tf.Tensor, error) {
+func zeros(height, width, channels int) [][][]float32 {
+	rows := make([][][]float32, height)
+	for ii := range rows {
+		columns := make([][]float32, width)
+		for jj := range columns {
+			pixels := make([]float32, channels)
+			columns[jj] = pixels
+		}
+		rows[ii] = columns
+	}
+	return rows
+}
+
+// Needs NHWC
+func (p *ImagePredictor) makeTensorFromImageData(ctx context.Context, data0 [][]float32) (*tf.Tensor, error) {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "makeTensorFromImageData")
 	defer span.Finish()
 
-	// DecodeJpeg uses a scalar String-valued tensor as input.
+	imageDims, err := p.GetImageDimensions()
+	if err != nil {
+		return nil, err
+	}
+	channels, height, width := int(imageDims[0]), int(imageDims[1]), int(imageDims[2])
+	batchSize := int(p.BatchSize())
+
+	makeImage := func(arry []float32) [][][]float32 {
+		rows := make([][][]float32, height)
+		for ii := range rows {
+			columns := make([][]float32, width)
+			for jj := range columns {
+				pixels := make([]float32, channels)
+				for kk := range pixels {
+					pixels[kk] = arry[channels*(width*ii+jj)+kk]
+				}
+				columns[jj] = pixels
+			}
+			rows[ii] = columns
+		}
+		return rows
+	}
+
+	data := make([][][][]float32, batchSize)
+	for ii, e := range data0 {
+		data[ii] = makeImage(e)
+	}
+	// perform padding
+	if len(data0) < batchSize {
+		z := zeros(height, width, channels)
+		for ii := len(data0); ii < batchSize; ii++ {
+			data[ii] = z
+		}
+	}
+
 	tensor, err := tf.NewTensor(data)
 	if err != nil {
 		return nil, err
@@ -242,10 +281,6 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts dlf
 		"batch_size":        p.BatchSize(),
 	})
 	defer span.Finish()
-
-	if err := p.loadPredictor(ctx); err != nil {
-		return nil, err
-	}
 
 	session := p.tfSession
 	graph := p.tfGraph
@@ -269,9 +304,10 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts dlf
 	// output[0].Value() is a vector containing probabilities of
 	// labels for each image in the "batch".
 	probabilities := fetches[0].Value().([][]float32)
-	// pp.Println("probabilities == ", probabilities)
-	// pp.Println("features = ", len(p.features))
-	// pp.Println("probabilities = ", len(probabilities))
+
+	// pp.Println("rank = ", len(probabilities))
+	// pp.Println("len[0] = ", len(probabilities[0]))
+	// pp.Println("len[0:10] = ", probabilities[0][0:10])
 
 	batchSize := int(opts.GetBatchSize())
 	if batchSize == 0 {
@@ -284,7 +320,7 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts dlf
 		for j, v := range prob {
 			rprobs[j] = &dlframework.Feature{
 				Index:       int64(j),
-				Name:        p.features[j],
+				Name:        "<> " + p.features[j],
 				Probability: v,
 			}
 		}
@@ -295,6 +331,11 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts dlf
 }
 
 func (p *ImagePredictor) Reset(ctx context.Context) error {
+
+	return nil
+}
+
+func (p *ImagePredictor) Close() error {
 	if p.tfSession != nil {
 		p.tfSession.Close()
 	}

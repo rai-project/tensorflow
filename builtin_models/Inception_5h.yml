@@ -1,7 +1,7 @@
 name: Inception
 framework:
   name: Tensorflow
-  version: 1.3.0
+  version: 1.2
 version: 1.0
 container:
   amd64:
@@ -21,17 +21,22 @@ inputs:
   - type: image
     description: the input image
     parameters:
-      dimensions: [1, 3, 224, 224]
+      layer_name: "input"
+      dimensions: [3, 224, 224]
       mean: [117, 117, 117]
 output:
   type: feature
   description: an output image net label
   parameters:
-    features_url: imagenet_comp_graph_label_strings.txt
+    # type parameters
+    layer_name: "output"
+    features_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow_1.3.0/inception5h/imagenet_comp_graph_label_strings.txt
+    features_checksum: 69dc10a6ed3fe9045e74f0ceac4daf8b
 model:
-  base_url: https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip
+  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow_1.3.0/inception5h/
   graph_path: tensorflow_inception_graph.pb
-  is_archive: true
+  graph_checksum: be71c0d3ba9c5952b11656133588c75c
+  is_archive: false
 attributes:
   manifest_author: abduld
   trailing_dataset: ImageNet

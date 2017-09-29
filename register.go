@@ -10,7 +10,7 @@ import (
 
 var FrameworkManifest = dlframework.FrameworkManifest{
 	Name:    "Tensorflow",
-	Version: "1.3",
+	Version: "1.2",
 	Container: map[string]*dlframework.ContainerHardware{
 		"amd64": {
 			Cpu: "raiproject/carml-tensorflow:amd64-cpu",
@@ -34,5 +34,8 @@ func assetFS() *assetfs.AssetFS {
 }
 
 func init() {
-	framework.Register(FrameworkManifest, assetFS())
+	err := framework.Register(FrameworkManifest, assetFS())
+	if err != nil {
+		log.WithError(err).Error("Failed to register server")
+	}
 }
