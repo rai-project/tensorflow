@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/k0kubun/pp"
 	opentracing "github.com/opentracing/opentracing-go"
 	olog "github.com/opentracing/opentracing-go/log"
 	"github.com/pkg/errors"
@@ -356,6 +357,9 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts dlf
 	if err != nil {
 		return nil, errors.New("cannot make tensor from image data")
 	}
+
+	pp.Println("input layer = ", p.inputLayer)
+	pp.Println("output layer = ", p.outputLayer)
 
 	fetches, err := session.Run(
 		map[tf.Output]*tf.Tensor{

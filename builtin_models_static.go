@@ -150,7 +150,7 @@ func inception_v1Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Inception_v1.yml", size: 1292, mode: os.FileMode(420), modTime: time.Unix(1506705315, 0)}
+	info := bindataFileInfo{name: "Inception_v1.yml", size: 1292, mode: os.FileMode(420), modTime: time.Unix(1506705759, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }

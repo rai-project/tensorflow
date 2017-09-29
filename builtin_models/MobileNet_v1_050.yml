@@ -1,0 +1,42 @@
+name: MobileNet
+framework:
+  name: Tensorflow
+  version: 1.2
+version: 1.0.50
+container:
+  amd64:
+    gpu: raiproject/carml-tensorflow:amd64-cpu
+    cpu: raiproject/carml-tensorflow:amd64-gpu
+  ppc64le:
+    cpu: raiproject/carml-tensorflow:ppc64le-gpu
+    gpu: raiproject/carml-tensorflow:ppc64le-gpu
+description: >
+  MobileNets are small, low-latency, low-power models parameterized to meet the resource constraints of a variety of use cases.
+  This network consists of 224 layers and achieves 70.7 top-1 and 89.5 top-5 accuracy.
+references:
+  - https://arxiv.org/pdf/1704.04861.pdf
+license: TODO
+inputs:
+  - type: image
+    description: the input image
+    parameters:
+      layer_name: "input"
+      dimensions: [3, 224, 224]
+      mean: [117, 117, 117]
+output:
+  type: feature
+  description: an output image net label
+  parameters:
+    # type parameters
+    layer_name: "MobilenetV1/Predictions/Reshape_1"
+    features_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow_1.3.0/imagenet_comp_graph_label_strings.txt
+    features_checksum: 69dc10a6ed3fe9045e74f0ceac4daf8b
+model:
+  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow_1.3.0/
+  graph_path: mobilenet_v1_050_frozen.pb
+  graph_checksum: 3b74c47303f9e68428e4e325115ae54f
+  is_archive: false
+attributes:
+  manifest_author: abduld
+  trailing_dataset: ImageNet
+

@@ -1,0 +1,41 @@
+name: VGG16
+framework:
+  name: Tensorflow
+  version: 1.2
+version: 1.0
+container:
+  amd64:
+    gpu: raiproject/carml-tensorflow:amd64-cpu
+    cpu: raiproject/carml-tensorflow:amd64-gpu
+  ppc64le:
+    cpu: raiproject/carml-tensorflow:ppc64le-gpu
+    gpu: raiproject/carml-tensorflow:ppc64le-gpu
+description: >
+  An image-classification convolutional network.
+  VGG19 uses a network with 19 layers of 3x3 convolution filters.
+  VGG19 achieves 71.1% top-1 and 89.8% top-5 accuracy on the ImageNet challenge dataset in 2015.
+references:
+  - https://arxiv.org/pdf/1409.1556.pdf
+license: TODO
+inputs:
+  - type: image
+    description: the input image
+    parameters:
+      layer_name: "input"
+      dimensions: [3, 224, 224]
+output:
+  type: feature
+  description: an output image net label
+  parameters:
+    # type parameters
+    layer_name: "vgg_16/fc8/squeezed"
+    features_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow_1.3.0/inception5h/imagenet_comp_graph_label_strings.txt
+    features_checksum: 69dc10a6ed3fe9045e74f0ceac4daf8b
+model:
+  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow_1.3.0/inception5h/
+  graph_path: vgg_16_frozen.pb
+  graph_checksum: 2395153962e05b10dddd48d7459259d4
+  is_archive: false
+attributes:
+  manifest_author: abduld
+  trailing_dataset: ImageNet

@@ -1,0 +1,36 @@
+name: VGG19_OLD
+framework:
+  name: Tensorflow
+  version: 1.2
+version: 1.0
+container:
+  amd64:
+    gpu: raiproject/carml-tensorflow:amd64-cpu
+    cpu: raiproject/carml-tensorflow:amd64-gpu
+  ppc64le:
+    cpu: raiproject/carml-tensorflow:ppc64le-gpu
+    gpu: raiproject/carml-tensorflow:ppc64le-gpu
+description: >
+  An image-classification convolutional network.
+  VGG19 uses a network with 19 layers of 3x3 convolution filters.
+  VGG19 achieves 71.1% top-1 and 89.8% top-5 accuracy on the ImageNet challenge dataset in 2015.
+references:
+  - https://arxiv.org/pdf/1409.1556.pdf
+license: TODO
+inputs:
+  - type: image
+    description: the input image
+    parameters:
+      dimensions: [1, 3, 224, 224]
+output:
+  type: feature
+  description: an output image net label
+  parameters:
+    features_url: http://data.dmlc.ml/mxnet/models/imagenet/synset.txt
+model:
+  checkpoint: http://download.tensorflow.org/models/vgg_19_2016_08_28.tar.gz
+  is_archive: true
+attributes:
+  manifest_author: abduld
+  trailing_dataset: ImageNet
+hidden: true
