@@ -1,4 +1,4 @@
-name: ResNet152
+name: ResNet152_OLD
 framework:
   name: Tensorflow
   version: 1.2

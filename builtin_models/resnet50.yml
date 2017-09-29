@@ -1,4 +1,4 @@
-name: ResNet50
+name: ResNet50_OLD
 framework:
   name: Tensorflow
   version: 1.2

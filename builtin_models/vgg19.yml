@@ -21,16 +21,21 @@ inputs:
   - type: image
     description: the input image
     parameters:
-      dimensions: [1, 3, 224, 224]
+      layer_name: "input"
+      dimensions: [3, 224, 224]
 output:
   type: feature
   description: an output image net label
   parameters:
-    features_url: http://data.dmlc.ml/mxnet/models/imagenet/synset.txt
+    # type parameters
+    layer_name: "vgg_19/fc8/squeezed"
+    features_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow_1.3.0/inception5h/imagenet_comp_graph_label_strings.txt
+    features_checksum: 69dc10a6ed3fe9045e74f0ceac4daf8b
 model:
-  checkpoint: http://download.tensorflow.org/models/vgg_19_2016_08_28.tar.gz
-  is_archive: true
+  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow_1.3.0/inception5h/
+  graph_path: vgg_19_frozen.pb
+  graph_checksum: 8df72834dd82527b73bcc6bc4b277221
+  is_archive: false
 attributes:
   manifest_author: abduld
   trailing_dataset: ImageNet
-hidden: true
