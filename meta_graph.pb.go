@@ -566,8 +566,14 @@ func (m *CollectionDef_AnyList) GetValue() []*google_protobuf.Any {
 
 // Information about a Tensor necessary for feeding or retrieval.
 type TensorInfo struct {
-	Name        string            `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Dtype       DataType          `protobuf:"varint,2,opt,name=dtype,proto3,enum=tensorflow.DataType" json:"dtype,omitempty"`
+	// Types that are valid to be assigned to Encoding:
+	//	*TensorInfo_Name
+	//	*TensorInfo_CooSparse_
+	Encoding isTensorInfo_Encoding `protobuf_oneof:"encoding"`
+	Dtype    DataType              `protobuf:"varint,2,opt,name=dtype,proto3,enum=tensorflow.DataType" json:"dtype,omitempty"`
+	// The static shape should be recorded here, to the extent that it can
+	// be known in advance.  In the case of a SparseTensor, this field describes
+	// the logical shape of the represented tensor (aka dense_shape).
 	TensorShape *TensorShapeProto `protobuf:"bytes,3,opt,name=tensor_shape,json=tensorShape" json:"tensor_shape,omitempty"`
 }
 
@@ -576,11 +582,41 @@ func (m *TensorInfo) String() string            { return proto.CompactTextString
 func (*TensorInfo) ProtoMessage()               {}
 func (*TensorInfo) Descriptor() ([]byte, []int) { return fileDescriptorMetaGraph, []int{2} }
 
-func (m *TensorInfo) GetName() string {
+type isTensorInfo_Encoding interface {
+	isTensorInfo_Encoding()
+	MarshalTo([]byte) (int, error)
+	Size() int
+}
+
+type TensorInfo_Name struct {
+	Name string `protobuf:"bytes,1,opt,name=name,proto3,oneof"`
+}
+type TensorInfo_CooSparse_ struct {
+	CooSparse *TensorInfo_CooSparse `protobuf:"bytes,4,opt,name=coo_sparse,json=cooSparse,oneof"`
+}
+
+func (*TensorInfo_Name) isTensorInfo_Encoding()       {}
+func (*TensorInfo_CooSparse_) isTensorInfo_Encoding() {}
+
+func (m *TensorInfo) GetEncoding() isTensorInfo_Encoding {
 	if m != nil {
-		return m.Name
+		return m.Encoding
+	}
+	return nil
+}
+
+func (m *TensorInfo) GetName() string {
+	if x, ok := m.GetEncoding().(*TensorInfo_Name); ok {
+		return x.Name
 	}
 	return ""
+}
+
+func (m *TensorInfo) GetCooSparse() *TensorInfo_CooSparse {
+	if x, ok := m.GetEncoding().(*TensorInfo_CooSparse_); ok {
+		return x.CooSparse
+	}
+	return nil
 }
 
 func (m *TensorInfo) GetDtype() DataType {
@@ -595,6 +631,115 @@ func (m *TensorInfo) GetTensorShape() *TensorShapeProto {
 		return m.TensorShape
 	}
 	return nil
+}
+
+// XXX_OneofFuncs is for the internal use of the proto package.
+func (*TensorInfo) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
+	return _TensorInfo_OneofMarshaler, _TensorInfo_OneofUnmarshaler, _TensorInfo_OneofSizer, []interface{}{
+		(*TensorInfo_Name)(nil),
+		(*TensorInfo_CooSparse_)(nil),
+	}
+}
+
+func _TensorInfo_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
+	m := msg.(*TensorInfo)
+	// encoding
+	switch x := m.Encoding.(type) {
+	case *TensorInfo_Name:
+		_ = b.EncodeVarint(1<<3 | proto.WireBytes)
+		_ = b.EncodeStringBytes(x.Name)
+	case *TensorInfo_CooSparse_:
+		_ = b.EncodeVarint(4<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.CooSparse); err != nil {
+			return err
+		}
+	case nil:
+	default:
+		return fmt.Errorf("TensorInfo.Encoding has unexpected type %T", x)
+	}
+	return nil
+}
+
+func _TensorInfo_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error) {
+	m := msg.(*TensorInfo)
+	switch tag {
+	case 1: // encoding.name
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		x, err := b.DecodeStringBytes()
+		m.Encoding = &TensorInfo_Name{x}
+		return true, err
+	case 4: // encoding.coo_sparse
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(TensorInfo_CooSparse)
+		err := b.DecodeMessage(msg)
+		m.Encoding = &TensorInfo_CooSparse_{msg}
+		return true, err
+	default:
+		return false, nil
+	}
+}
+
+func _TensorInfo_OneofSizer(msg proto.Message) (n int) {
+	m := msg.(*TensorInfo)
+	// encoding
+	switch x := m.Encoding.(type) {
+	case *TensorInfo_Name:
+		n += proto.SizeVarint(1<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(len(x.Name)))
+		n += len(x.Name)
+	case *TensorInfo_CooSparse_:
+		s := proto.Size(x.CooSparse)
+		n += proto.SizeVarint(4<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case nil:
+	default:
+		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
+	}
+	return n
+}
+
+// For sparse tensors, The COO encoding stores a triple of values, indices,
+// and shape.
+type TensorInfo_CooSparse struct {
+	// The shape of the values Tensor is [?].  Its dtype must be the dtype of
+	// the SparseTensor as a whole, given in the enclosing TensorInfo.
+	ValuesTensorName string `protobuf:"bytes,1,opt,name=values_tensor_name,json=valuesTensorName,proto3" json:"values_tensor_name,omitempty"`
+	// The indices Tensor must have dtype int64 and shape [?, ?].
+	IndicesTensorName string `protobuf:"bytes,2,opt,name=indices_tensor_name,json=indicesTensorName,proto3" json:"indices_tensor_name,omitempty"`
+	// The dynamic logical shape represented by the SparseTensor is recorded in
+	// the Tensor referenced here.  It must have dtype int64 and shape [?].
+	DenseShapeTensorName string `protobuf:"bytes,3,opt,name=dense_shape_tensor_name,json=denseShapeTensorName,proto3" json:"dense_shape_tensor_name,omitempty"`
+}
+
+func (m *TensorInfo_CooSparse) Reset()                    { *m = TensorInfo_CooSparse{} }
+func (m *TensorInfo_CooSparse) String() string            { return proto.CompactTextString(m) }
+func (*TensorInfo_CooSparse) ProtoMessage()               {}
+func (*TensorInfo_CooSparse) Descriptor() ([]byte, []int) { return fileDescriptorMetaGraph, []int{2, 0} }
+
+func (m *TensorInfo_CooSparse) GetValuesTensorName() string {
+	if m != nil {
+		return m.ValuesTensorName
+	}
+	return ""
+}
+
+func (m *TensorInfo_CooSparse) GetIndicesTensorName() string {
+	if m != nil {
+		return m.IndicesTensorName
+	}
+	return ""
+}
+
+func (m *TensorInfo_CooSparse) GetDenseShapeTensorName() string {
+	if m != nil {
+		return m.DenseShapeTensorName
+	}
+	return ""
 }
 
 // SignatureDef defines the signature of a computation supported by a TensorFlow
@@ -736,6 +881,7 @@ func init() {
 	proto.RegisterType((*CollectionDef_FloatList)(nil), "tensorflow.CollectionDef.FloatList")
 	proto.RegisterType((*CollectionDef_AnyList)(nil), "tensorflow.CollectionDef.AnyList")
 	proto.RegisterType((*TensorInfo)(nil), "tensorflow.TensorInfo")
+	proto.RegisterType((*TensorInfo_CooSparse)(nil), "tensorflow.TensorInfo.CooSparse")
 	proto.RegisterType((*SignatureDef)(nil), "tensorflow.SignatureDef")
 	proto.RegisterType((*AssetFileDef)(nil), "tensorflow.AssetFileDef")
 }
@@ -1195,11 +1341,12 @@ func (m *TensorInfo) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Name) > 0 {
-		dAtA[i] = 0xa
-		i++
-		i = encodeVarintMetaGraph(dAtA, i, uint64(len(m.Name)))
-		i += copy(dAtA[i:], m.Name)
+	if m.Encoding != nil {
+		nn17, err := m.Encoding.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += nn17
 	}
 	if m.Dtype != 0 {
 		dAtA[i] = 0x10
@@ -1210,11 +1357,69 @@ func (m *TensorInfo) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x1a
 		i++
 		i = encodeVarintMetaGraph(dAtA, i, uint64(m.TensorShape.Size()))
-		n17, err := m.TensorShape.MarshalTo(dAtA[i:])
+		n18, err := m.TensorShape.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n17
+		i += n18
+	}
+	return i, nil
+}
+
+func (m *TensorInfo_Name) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	dAtA[i] = 0xa
+	i++
+	i = encodeVarintMetaGraph(dAtA, i, uint64(len(m.Name)))
+	i += copy(dAtA[i:], m.Name)
+	return i, nil
+}
+func (m *TensorInfo_CooSparse_) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.CooSparse != nil {
+		dAtA[i] = 0x22
+		i++
+		i = encodeVarintMetaGraph(dAtA, i, uint64(m.CooSparse.Size()))
+		n19, err := m.CooSparse.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n19
+	}
+	return i, nil
+}
+func (m *TensorInfo_CooSparse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *TensorInfo_CooSparse) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.ValuesTensorName) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintMetaGraph(dAtA, i, uint64(len(m.ValuesTensorName)))
+		i += copy(dAtA[i:], m.ValuesTensorName)
+	}
+	if len(m.IndicesTensorName) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintMetaGraph(dAtA, i, uint64(len(m.IndicesTensorName)))
+		i += copy(dAtA[i:], m.IndicesTensorName)
+	}
+	if len(m.DenseShapeTensorName) > 0 {
+		dAtA[i] = 0x1a
+		i++
+		i = encodeVarintMetaGraph(dAtA, i, uint64(len(m.DenseShapeTensorName)))
+		i += copy(dAtA[i:], m.DenseShapeTensorName)
 	}
 	return i, nil
 }
@@ -1254,11 +1459,11 @@ func (m *SignatureDef) MarshalTo(dAtA []byte) (int, error) {
 				dAtA[i] = 0x12
 				i++
 				i = encodeVarintMetaGraph(dAtA, i, uint64(v.Size()))
-				n18, err := v.MarshalTo(dAtA[i:])
+				n20, err := v.MarshalTo(dAtA[i:])
 				if err != nil {
 					return 0, err
 				}
-				i += n18
+				i += n20
 			}
 		}
 	}
@@ -1282,11 +1487,11 @@ func (m *SignatureDef) MarshalTo(dAtA []byte) (int, error) {
 				dAtA[i] = 0x12
 				i++
 				i = encodeVarintMetaGraph(dAtA, i, uint64(v.Size()))
-				n19, err := v.MarshalTo(dAtA[i:])
+				n21, err := v.MarshalTo(dAtA[i:])
 				if err != nil {
 					return 0, err
 				}
-				i += n19
+				i += n21
 			}
 		}
 	}
@@ -1318,11 +1523,11 @@ func (m *AssetFileDef) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0xa
 		i++
 		i = encodeVarintMetaGraph(dAtA, i, uint64(m.TensorInfo.Size()))
-		n20, err := m.TensorInfo.MarshalTo(dAtA[i:])
+		n22, err := m.TensorInfo.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n20
+		i += n22
 	}
 	if len(m.Filename) > 0 {
 		dAtA[i] = 0x12
@@ -1557,15 +1762,48 @@ func (m *CollectionDef_AnyList) Size() (n int) {
 func (m *TensorInfo) Size() (n int) {
 	var l int
 	_ = l
-	l = len(m.Name)
-	if l > 0 {
-		n += 1 + l + sovMetaGraph(uint64(l))
+	if m.Encoding != nil {
+		n += m.Encoding.Size()
 	}
 	if m.Dtype != 0 {
 		n += 1 + sovMetaGraph(uint64(m.Dtype))
 	}
 	if m.TensorShape != nil {
 		l = m.TensorShape.Size()
+		n += 1 + l + sovMetaGraph(uint64(l))
+	}
+	return n
+}
+
+func (m *TensorInfo_Name) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.Name)
+	n += 1 + l + sovMetaGraph(uint64(l))
+	return n
+}
+func (m *TensorInfo_CooSparse_) Size() (n int) {
+	var l int
+	_ = l
+	if m.CooSparse != nil {
+		l = m.CooSparse.Size()
+		n += 1 + l + sovMetaGraph(uint64(l))
+	}
+	return n
+}
+func (m *TensorInfo_CooSparse) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.ValuesTensorName)
+	if l > 0 {
+		n += 1 + l + sovMetaGraph(uint64(l))
+	}
+	l = len(m.IndicesTensorName)
+	if l > 0 {
+		n += 1 + l + sovMetaGraph(uint64(l))
+	}
+	l = len(m.DenseShapeTensorName)
+	if l > 0 {
 		n += 1 + l + sovMetaGraph(uint64(l))
 	}
 	return n
@@ -1788,51 +2026,14 @@ func (m *MetaGraphDef) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			var keykey uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowMetaGraph
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				keykey |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			var stringLenmapkey uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowMetaGraph
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLenmapkey |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLenmapkey := int(stringLenmapkey)
-			if intStringLenmapkey < 0 {
-				return ErrInvalidLengthMetaGraph
-			}
-			postStringIndexmapkey := iNdEx + intStringLenmapkey
-			if postStringIndexmapkey > l {
-				return io.ErrUnexpectedEOF
-			}
-			mapkey := string(dAtA[iNdEx:postStringIndexmapkey])
-			iNdEx = postStringIndexmapkey
 			if m.CollectionDef == nil {
 				m.CollectionDef = make(map[string]*CollectionDef)
 			}
-			if iNdEx < postIndex {
-				var valuekey uint64
+			var mapkey string
+			var mapvalue *CollectionDef
+			for iNdEx < postIndex {
+				entryPreIndex := iNdEx
+				var wire uint64
 				for shift := uint(0); ; shift += 7 {
 					if shift >= 64 {
 						return ErrIntOverflowMetaGraph
@@ -1842,46 +2043,85 @@ func (m *MetaGraphDef) Unmarshal(dAtA []byte) error {
 					}
 					b := dAtA[iNdEx]
 					iNdEx++
-					valuekey |= (uint64(b) & 0x7F) << shift
+					wire |= (uint64(b) & 0x7F) << shift
 					if b < 0x80 {
 						break
 					}
 				}
-				var mapmsglen int
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return ErrIntOverflowMetaGraph
+				fieldNum := int32(wire >> 3)
+				if fieldNum == 1 {
+					var stringLenmapkey uint64
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowMetaGraph
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						stringLenmapkey |= (uint64(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
 					}
-					if iNdEx >= l {
+					intStringLenmapkey := int(stringLenmapkey)
+					if intStringLenmapkey < 0 {
+						return ErrInvalidLengthMetaGraph
+					}
+					postStringIndexmapkey := iNdEx + intStringLenmapkey
+					if postStringIndexmapkey > l {
 						return io.ErrUnexpectedEOF
 					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					mapmsglen |= (int(b) & 0x7F) << shift
-					if b < 0x80 {
-						break
+					mapkey = string(dAtA[iNdEx:postStringIndexmapkey])
+					iNdEx = postStringIndexmapkey
+				} else if fieldNum == 2 {
+					var mapmsglen int
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowMetaGraph
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapmsglen |= (int(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
 					}
+					if mapmsglen < 0 {
+						return ErrInvalidLengthMetaGraph
+					}
+					postmsgIndex := iNdEx + mapmsglen
+					if mapmsglen < 0 {
+						return ErrInvalidLengthMetaGraph
+					}
+					if postmsgIndex > l {
+						return io.ErrUnexpectedEOF
+					}
+					mapvalue = &CollectionDef{}
+					if err := mapvalue.Unmarshal(dAtA[iNdEx:postmsgIndex]); err != nil {
+						return err
+					}
+					iNdEx = postmsgIndex
+				} else {
+					iNdEx = entryPreIndex
+					skippy, err := skipMetaGraph(dAtA[iNdEx:])
+					if err != nil {
+						return err
+					}
+					if skippy < 0 {
+						return ErrInvalidLengthMetaGraph
+					}
+					if (iNdEx + skippy) > postIndex {
+						return io.ErrUnexpectedEOF
+					}
+					iNdEx += skippy
 				}
-				if mapmsglen < 0 {
-					return ErrInvalidLengthMetaGraph
-				}
-				postmsgIndex := iNdEx + mapmsglen
-				if mapmsglen < 0 {
-					return ErrInvalidLengthMetaGraph
-				}
-				if postmsgIndex > l {
-					return io.ErrUnexpectedEOF
-				}
-				mapvalue := &CollectionDef{}
-				if err := mapvalue.Unmarshal(dAtA[iNdEx:postmsgIndex]); err != nil {
-					return err
-				}
-				iNdEx = postmsgIndex
-				m.CollectionDef[mapkey] = mapvalue
-			} else {
-				var mapvalue *CollectionDef
-				m.CollectionDef[mapkey] = mapvalue
 			}
+			m.CollectionDef[mapkey] = mapvalue
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
@@ -1909,51 +2149,14 @@ func (m *MetaGraphDef) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			var keykey uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowMetaGraph
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				keykey |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			var stringLenmapkey uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowMetaGraph
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLenmapkey |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLenmapkey := int(stringLenmapkey)
-			if intStringLenmapkey < 0 {
-				return ErrInvalidLengthMetaGraph
-			}
-			postStringIndexmapkey := iNdEx + intStringLenmapkey
-			if postStringIndexmapkey > l {
-				return io.ErrUnexpectedEOF
-			}
-			mapkey := string(dAtA[iNdEx:postStringIndexmapkey])
-			iNdEx = postStringIndexmapkey
 			if m.SignatureDef == nil {
 				m.SignatureDef = make(map[string]*SignatureDef)
 			}
-			if iNdEx < postIndex {
-				var valuekey uint64
+			var mapkey string
+			var mapvalue *SignatureDef
+			for iNdEx < postIndex {
+				entryPreIndex := iNdEx
+				var wire uint64
 				for shift := uint(0); ; shift += 7 {
 					if shift >= 64 {
 						return ErrIntOverflowMetaGraph
@@ -1963,46 +2166,85 @@ func (m *MetaGraphDef) Unmarshal(dAtA []byte) error {
 					}
 					b := dAtA[iNdEx]
 					iNdEx++
-					valuekey |= (uint64(b) & 0x7F) << shift
+					wire |= (uint64(b) & 0x7F) << shift
 					if b < 0x80 {
 						break
 					}
 				}
-				var mapmsglen int
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return ErrIntOverflowMetaGraph
+				fieldNum := int32(wire >> 3)
+				if fieldNum == 1 {
+					var stringLenmapkey uint64
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowMetaGraph
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						stringLenmapkey |= (uint64(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
 					}
-					if iNdEx >= l {
+					intStringLenmapkey := int(stringLenmapkey)
+					if intStringLenmapkey < 0 {
+						return ErrInvalidLengthMetaGraph
+					}
+					postStringIndexmapkey := iNdEx + intStringLenmapkey
+					if postStringIndexmapkey > l {
 						return io.ErrUnexpectedEOF
 					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					mapmsglen |= (int(b) & 0x7F) << shift
-					if b < 0x80 {
-						break
+					mapkey = string(dAtA[iNdEx:postStringIndexmapkey])
+					iNdEx = postStringIndexmapkey
+				} else if fieldNum == 2 {
+					var mapmsglen int
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowMetaGraph
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapmsglen |= (int(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
 					}
+					if mapmsglen < 0 {
+						return ErrInvalidLengthMetaGraph
+					}
+					postmsgIndex := iNdEx + mapmsglen
+					if mapmsglen < 0 {
+						return ErrInvalidLengthMetaGraph
+					}
+					if postmsgIndex > l {
+						return io.ErrUnexpectedEOF
+					}
+					mapvalue = &SignatureDef{}
+					if err := mapvalue.Unmarshal(dAtA[iNdEx:postmsgIndex]); err != nil {
+						return err
+					}
+					iNdEx = postmsgIndex
+				} else {
+					iNdEx = entryPreIndex
+					skippy, err := skipMetaGraph(dAtA[iNdEx:])
+					if err != nil {
+						return err
+					}
+					if skippy < 0 {
+						return ErrInvalidLengthMetaGraph
+					}
+					if (iNdEx + skippy) > postIndex {
+						return io.ErrUnexpectedEOF
+					}
+					iNdEx += skippy
 				}
-				if mapmsglen < 0 {
-					return ErrInvalidLengthMetaGraph
-				}
-				postmsgIndex := iNdEx + mapmsglen
-				if mapmsglen < 0 {
-					return ErrInvalidLengthMetaGraph
-				}
-				if postmsgIndex > l {
-					return io.ErrUnexpectedEOF
-				}
-				mapvalue := &SignatureDef{}
-				if err := mapvalue.Unmarshal(dAtA[iNdEx:postmsgIndex]); err != nil {
-					return err
-				}
-				iNdEx = postmsgIndex
-				m.SignatureDef[mapkey] = mapvalue
-			} else {
-				var mapvalue *SignatureDef
-				m.SignatureDef[mapkey] = mapvalue
 			}
+			m.SignatureDef[mapkey] = mapvalue
 			iNdEx = postIndex
 		case 6:
 			if wireType != 2 {
@@ -3007,7 +3249,7 @@ func (m *TensorInfo) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Name = string(dAtA[iNdEx:postIndex])
+			m.Encoding = &TensorInfo_Name{string(dAtA[iNdEx:postIndex])}
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {
@@ -3060,6 +3302,175 @@ func (m *TensorInfo) Unmarshal(dAtA []byte) error {
 			if err := m.TensorShape.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CooSparse", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMetaGraph
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMetaGraph
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &TensorInfo_CooSparse{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Encoding = &TensorInfo_CooSparse_{v}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipMetaGraph(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthMetaGraph
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *TensorInfo_CooSparse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowMetaGraph
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: CooSparse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: CooSparse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ValuesTensorName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMetaGraph
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthMetaGraph
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ValuesTensorName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field IndicesTensorName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMetaGraph
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthMetaGraph
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.IndicesTensorName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DenseShapeTensorName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMetaGraph
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthMetaGraph
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.DenseShapeTensorName = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -3137,51 +3548,14 @@ func (m *SignatureDef) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			var keykey uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowMetaGraph
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				keykey |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			var stringLenmapkey uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowMetaGraph
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLenmapkey |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLenmapkey := int(stringLenmapkey)
-			if intStringLenmapkey < 0 {
-				return ErrInvalidLengthMetaGraph
-			}
-			postStringIndexmapkey := iNdEx + intStringLenmapkey
-			if postStringIndexmapkey > l {
-				return io.ErrUnexpectedEOF
-			}
-			mapkey := string(dAtA[iNdEx:postStringIndexmapkey])
-			iNdEx = postStringIndexmapkey
 			if m.Inputs == nil {
 				m.Inputs = make(map[string]*TensorInfo)
 			}
-			if iNdEx < postIndex {
-				var valuekey uint64
+			var mapkey string
+			var mapvalue *TensorInfo
+			for iNdEx < postIndex {
+				entryPreIndex := iNdEx
+				var wire uint64
 				for shift := uint(0); ; shift += 7 {
 					if shift >= 64 {
 						return ErrIntOverflowMetaGraph
@@ -3191,46 +3565,85 @@ func (m *SignatureDef) Unmarshal(dAtA []byte) error {
 					}
 					b := dAtA[iNdEx]
 					iNdEx++
-					valuekey |= (uint64(b) & 0x7F) << shift
+					wire |= (uint64(b) & 0x7F) << shift
 					if b < 0x80 {
 						break
 					}
 				}
-				var mapmsglen int
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return ErrIntOverflowMetaGraph
+				fieldNum := int32(wire >> 3)
+				if fieldNum == 1 {
+					var stringLenmapkey uint64
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowMetaGraph
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						stringLenmapkey |= (uint64(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
 					}
-					if iNdEx >= l {
+					intStringLenmapkey := int(stringLenmapkey)
+					if intStringLenmapkey < 0 {
+						return ErrInvalidLengthMetaGraph
+					}
+					postStringIndexmapkey := iNdEx + intStringLenmapkey
+					if postStringIndexmapkey > l {
 						return io.ErrUnexpectedEOF
 					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					mapmsglen |= (int(b) & 0x7F) << shift
-					if b < 0x80 {
-						break
+					mapkey = string(dAtA[iNdEx:postStringIndexmapkey])
+					iNdEx = postStringIndexmapkey
+				} else if fieldNum == 2 {
+					var mapmsglen int
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowMetaGraph
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapmsglen |= (int(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
 					}
+					if mapmsglen < 0 {
+						return ErrInvalidLengthMetaGraph
+					}
+					postmsgIndex := iNdEx + mapmsglen
+					if mapmsglen < 0 {
+						return ErrInvalidLengthMetaGraph
+					}
+					if postmsgIndex > l {
+						return io.ErrUnexpectedEOF
+					}
+					mapvalue = &TensorInfo{}
+					if err := mapvalue.Unmarshal(dAtA[iNdEx:postmsgIndex]); err != nil {
+						return err
+					}
+					iNdEx = postmsgIndex
+				} else {
+					iNdEx = entryPreIndex
+					skippy, err := skipMetaGraph(dAtA[iNdEx:])
+					if err != nil {
+						return err
+					}
+					if skippy < 0 {
+						return ErrInvalidLengthMetaGraph
+					}
+					if (iNdEx + skippy) > postIndex {
+						return io.ErrUnexpectedEOF
+					}
+					iNdEx += skippy
 				}
-				if mapmsglen < 0 {
-					return ErrInvalidLengthMetaGraph
-				}
-				postmsgIndex := iNdEx + mapmsglen
-				if mapmsglen < 0 {
-					return ErrInvalidLengthMetaGraph
-				}
-				if postmsgIndex > l {
-					return io.ErrUnexpectedEOF
-				}
-				mapvalue := &TensorInfo{}
-				if err := mapvalue.Unmarshal(dAtA[iNdEx:postmsgIndex]); err != nil {
-					return err
-				}
-				iNdEx = postmsgIndex
-				m.Inputs[mapkey] = mapvalue
-			} else {
-				var mapvalue *TensorInfo
-				m.Inputs[mapkey] = mapvalue
 			}
+			m.Inputs[mapkey] = mapvalue
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -3258,51 +3671,14 @@ func (m *SignatureDef) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			var keykey uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowMetaGraph
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				keykey |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			var stringLenmapkey uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowMetaGraph
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLenmapkey |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLenmapkey := int(stringLenmapkey)
-			if intStringLenmapkey < 0 {
-				return ErrInvalidLengthMetaGraph
-			}
-			postStringIndexmapkey := iNdEx + intStringLenmapkey
-			if postStringIndexmapkey > l {
-				return io.ErrUnexpectedEOF
-			}
-			mapkey := string(dAtA[iNdEx:postStringIndexmapkey])
-			iNdEx = postStringIndexmapkey
 			if m.Outputs == nil {
 				m.Outputs = make(map[string]*TensorInfo)
 			}
-			if iNdEx < postIndex {
-				var valuekey uint64
+			var mapkey string
+			var mapvalue *TensorInfo
+			for iNdEx < postIndex {
+				entryPreIndex := iNdEx
+				var wire uint64
 				for shift := uint(0); ; shift += 7 {
 					if shift >= 64 {
 						return ErrIntOverflowMetaGraph
@@ -3312,46 +3688,85 @@ func (m *SignatureDef) Unmarshal(dAtA []byte) error {
 					}
 					b := dAtA[iNdEx]
 					iNdEx++
-					valuekey |= (uint64(b) & 0x7F) << shift
+					wire |= (uint64(b) & 0x7F) << shift
 					if b < 0x80 {
 						break
 					}
 				}
-				var mapmsglen int
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return ErrIntOverflowMetaGraph
+				fieldNum := int32(wire >> 3)
+				if fieldNum == 1 {
+					var stringLenmapkey uint64
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowMetaGraph
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						stringLenmapkey |= (uint64(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
 					}
-					if iNdEx >= l {
+					intStringLenmapkey := int(stringLenmapkey)
+					if intStringLenmapkey < 0 {
+						return ErrInvalidLengthMetaGraph
+					}
+					postStringIndexmapkey := iNdEx + intStringLenmapkey
+					if postStringIndexmapkey > l {
 						return io.ErrUnexpectedEOF
 					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					mapmsglen |= (int(b) & 0x7F) << shift
-					if b < 0x80 {
-						break
+					mapkey = string(dAtA[iNdEx:postStringIndexmapkey])
+					iNdEx = postStringIndexmapkey
+				} else if fieldNum == 2 {
+					var mapmsglen int
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowMetaGraph
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapmsglen |= (int(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
 					}
+					if mapmsglen < 0 {
+						return ErrInvalidLengthMetaGraph
+					}
+					postmsgIndex := iNdEx + mapmsglen
+					if mapmsglen < 0 {
+						return ErrInvalidLengthMetaGraph
+					}
+					if postmsgIndex > l {
+						return io.ErrUnexpectedEOF
+					}
+					mapvalue = &TensorInfo{}
+					if err := mapvalue.Unmarshal(dAtA[iNdEx:postmsgIndex]); err != nil {
+						return err
+					}
+					iNdEx = postmsgIndex
+				} else {
+					iNdEx = entryPreIndex
+					skippy, err := skipMetaGraph(dAtA[iNdEx:])
+					if err != nil {
+						return err
+					}
+					if skippy < 0 {
+						return ErrInvalidLengthMetaGraph
+					}
+					if (iNdEx + skippy) > postIndex {
+						return io.ErrUnexpectedEOF
+					}
+					iNdEx += skippy
 				}
-				if mapmsglen < 0 {
-					return ErrInvalidLengthMetaGraph
-				}
-				postmsgIndex := iNdEx + mapmsglen
-				if mapmsglen < 0 {
-					return ErrInvalidLengthMetaGraph
-				}
-				if postmsgIndex > l {
-					return io.ErrUnexpectedEOF
-				}
-				mapvalue := &TensorInfo{}
-				if err := mapvalue.Unmarshal(dAtA[iNdEx:postmsgIndex]); err != nil {
-					return err
-				}
-				iNdEx = postmsgIndex
-				m.Outputs[mapkey] = mapvalue
-			} else {
-				var mapvalue *TensorInfo
-				m.Outputs[mapkey] = mapvalue
 			}
+			m.Outputs[mapkey] = mapvalue
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
@@ -3623,62 +4038,68 @@ var (
 func init() { proto.RegisterFile("meta_graph.proto", fileDescriptorMetaGraph) }
 
 var fileDescriptorMetaGraph = []byte{
-	// 903 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x96, 0xcd, 0x6e, 0x1b, 0x37,
-	0x10, 0xc7, 0xb3, 0x92, 0x2c, 0x4b, 0xa3, 0xb5, 0xeb, 0x10, 0x46, 0xe0, 0x2c, 0x0a, 0xd7, 0x51,
-	0x13, 0x20, 0x48, 0x53, 0x19, 0x49, 0xd3, 0x0f, 0x14, 0x41, 0x52, 0xab, 0x6a, 0x12, 0x03, 0x6d,
-	0x9c, 0xae, 0x83, 0x02, 0x45, 0x0f, 0x02, 0x6d, 0x71, 0xe5, 0x85, 0x57, 0xe4, 0x62, 0x49, 0x39,
-	0xd8, 0x63, 0x1f, 0xa0, 0x40, 0xdf, 0xa1, 0xef, 0xd0, 0x67, 0xe8, 0xb1, 0x97, 0xde, 0x0b, 0xf7,
-	0x25, 0x7a, 0x2c, 0x38, 0x24, 0x57, 0x14, 0x94, 0xad, 0x2f, 0xb9, 0x71, 0xc8, 0xff, 0xfc, 0x38,
-	0x3b, 0x33, 0x24, 0x17, 0xb6, 0x66, 0x4c, 0xd1, 0xf1, 0xb4, 0xa0, 0xf9, 0xd9, 0x20, 0x2f, 0x84,
-	0x12, 0x04, 0x14, 0xe3, 0x52, 0x14, 0x49, 0x26, 0xde, 0x44, 0x37, 0xa7, 0x42, 0x4c, 0x33, 0xb6,
-	0x8f, 0x2b, 0x27, 0xf3, 0x64, 0x9f, 0xf2, 0xd2, 0xc8, 0xa2, 0x9e, 0xe7, 0x13, 0x85, 0x22, 0x1f,
-	0x4f, 0x58, 0x62, 0x2d, 0x62, 0x08, 0x63, 0x79, 0x46, 0x73, 0xe6, 0xe4, 0xaa, 0xcc, 0x99, 0x74,
-	0x86, 0xa4, 0x17, 0xac, 0x30, 0x46, 0xff, 0xe7, 0x75, 0x08, 0xbf, 0x63, 0x8a, 0x3e, 0xd7, 0xbc,
-	0x11, 0x4b, 0xc8, 0x0b, 0xd8, 0xc0, 0xa0, 0x52, 0x9e, 0x08, 0x4d, 0xdd, 0x09, 0xf6, 0x82, 0xbb,
-	0xbd, 0x87, 0xb7, 0x07, 0x8b, 0xc0, 0x06, 0xbe, 0x03, 0x1a, 0x87, 0x3c, 0x11, 0x23, 0x96, 0xc4,
-	0xbd, 0xd9, 0xc2, 0x20, 0x0f, 0xa0, 0x8b, 0x51, 0x22, 0xa5, 0x81, 0x94, 0x6d, 0x9f, 0xe2, 0x08,
-	0x71, 0x67, 0xea, 0x36, 0x7f, 0x00, 0x5d, 0x0c, 0x0e, 0x5d, 0x9a, 0xab, 0x2e, 0xc7, 0x7a, 0x11,
-	0x5d, 0xa4, 0x1d, 0x91, 0x18, 0x36, 0x4f, 0x45, 0x96, 0xb1, 0x53, 0x95, 0x0a, 0x8e, 0x7e, 0xad,
-	0xbd, 0xe6, 0xdd, 0xde, 0xc3, 0x8f, 0x6a, 0x03, 0xfe, 0xba, 0x92, 0x8f, 0x58, 0xf2, 0x0d, 0x57,
-	0x45, 0x19, 0x6f, 0x9c, 0xfa, 0x73, 0xe4, 0x08, 0x36, 0x64, 0x3a, 0xe5, 0x54, 0xcd, 0x0b, 0x86,
-	0xc8, 0x35, 0x44, 0xde, 0xab, 0x45, 0x1e, 0x3b, 0x75, 0x45, 0x0c, 0xa5, 0x37, 0x45, 0x9e, 0xc0,
-	0x26, 0x95, 0x92, 0xa9, 0x71, 0x92, 0x66, 0x86, 0xd8, 0x46, 0xe2, 0x8e, 0x4f, 0x3c, 0xd0, 0x8a,
-	0x67, 0x69, 0xa6, 0x3d, 0xe2, 0x90, 0x7a, 0x56, 0xf4, 0x5b, 0x03, 0x7a, 0x5e, 0x9e, 0xc9, 0x7d,
-	0x20, 0x8b, 0xce, 0x19, 0x5f, 0xb0, 0x42, 0xa6, 0x82, 0x63, 0xa5, 0xba, 0x31, 0xf6, 0x14, 0x46,
-	0xf6, 0x83, 0x99, 0x27, 0x8f, 0x61, 0x4b, 0xaa, 0x22, 0xcd, 0x73, 0x36, 0x19, 0x8b, 0x7c, 0x9c,
-	0xa5, 0x52, 0xd9, 0x7a, 0x10, 0x7f, 0xff, 0xa3, 0xfc, 0xdb, 0x54, 0xaa, 0x78, 0xd3, 0x69, 0x8d,
-	0x4d, 0xf6, 0xa1, 0x43, 0x79, 0x89, 0xfd, 0x50, 0x95, 0xc4, 0x34, 0xe6, 0xc0, 0x35, 0xe6, 0xe0,
-	0x80, 0x97, 0xf1, 0x3a, 0xe5, 0xa5, 0x8e, 0x8f, 0x10, 0x68, 0x29, 0x3a, 0x95, 0x58, 0x87, 0x6e,
-	0x8c, 0x63, 0xf2, 0x31, 0x90, 0xc5, 0x4e, 0x55, 0xc0, 0x6b, 0x18, 0xf0, 0xf5, 0xc5, 0x8a, 0x8b,
-	0xf8, 0x11, 0xdc, 0xf0, 0xe4, 0xd3, 0x54, 0x55, 0x2e, 0x6d, 0x74, 0xd9, 0x5e, 0xac, 0x3e, 0x4f,
-	0x95, 0xf5, 0x8a, 0x7e, 0x02, 0xb2, 0x5a, 0x5b, 0xb2, 0x05, 0xcd, 0x73, 0x56, 0xda, 0xe4, 0xe8,
-	0x21, 0xd9, 0x87, 0xb5, 0x0b, 0x9a, 0xcd, 0x99, 0x4d, 0xc2, 0x4d, 0x3f, 0x09, 0x4b, 0x80, 0xd8,
-	0xe8, 0xbe, 0x6c, 0x7c, 0x11, 0x44, 0x3f, 0xc2, 0xf5, 0x95, 0x2a, 0xbf, 0x85, 0x3d, 0x58, 0x66,
-	0x2f, 0x15, 0xd8, 0xf7, 0xf7, 0xd0, 0xfd, 0xdf, 0x5b, 0xb0, 0xb1, 0xb4, 0x2f, 0x39, 0x80, 0x2e,
-	0x17, 0x13, 0x66, 0x4a, 0x65, 0x0e, 0x60, 0xbf, 0x36, 0xca, 0xc1, 0x4b, 0x31, 0x61, 0xba, 0x54,
-	0x2f, 0xae, 0xc5, 0x1d, 0x6e, 0xc7, 0x64, 0x04, 0x70, 0x52, 0x2a, 0x26, 0xfd, 0x72, 0x7f, 0x58,
-	0xcf, 0x18, 0x6a, 0xad, 0x85, 0x74, 0x4f, 0x9c, 0xa1, 0x29, 0x29, 0x57, 0x9f, 0x3d, 0x32, 0x94,
-	0xe6, 0x55, 0x94, 0x43, 0xad, 0x75, 0x94, 0xd4, 0x19, 0x9a, 0x92, 0x64, 0x82, 0x2a, 0x43, 0x69,
-	0x5d, 0x45, 0x79, 0xa6, 0xb5, 0x8e, 0x92, 0x38, 0x83, 0x3c, 0x31, 0x8d, 0x88, 0x8c, 0x35, 0x64,
-	0xdc, 0xaa, 0x67, 0x1c, 0xf0, 0xd2, 0x12, 0x74, 0x5f, 0xea, 0x61, 0xb4, 0x07, 0x1d, 0x97, 0x29,
-	0xb2, 0xed, 0xca, 0x14, 0x60, 0x93, 0x1a, 0x23, 0xba, 0x05, 0xdd, 0x2a, 0x0f, 0xcb, 0x92, 0xd0,
-	0x49, 0xee, 0x40, 0xb7, 0xfa, 0x48, 0xb2, 0xe3, 0x4b, 0x9a, 0xc3, 0xc6, 0x56, 0xe0, 0xc9, 0xaa,
-	0xaf, 0x58, 0x96, 0x35, 0x7c, 0xd9, 0xa7, 0xb0, 0x6e, 0x03, 0x25, 0xf7, 0x7c, 0x51, 0xdd, 0x19,
-	0x33, 0x92, 0x61, 0x1b, 0x5a, 0xe7, 0x29, 0x9f, 0xf4, 0x7f, 0x09, 0x00, 0x5e, 0x63, 0x06, 0xdc,
-	0xc1, 0xe3, 0x74, 0xc6, 0x6c, 0x3b, 0xe2, 0x58, 0x63, 0x27, 0xfa, 0xf2, 0xc7, 0x0e, 0xd8, 0x5c,
-	0xbe, 0x4d, 0x47, 0x54, 0xd1, 0xd7, 0x65, 0xce, 0x62, 0x23, 0x21, 0x4f, 0x21, 0xf4, 0xdf, 0x0e,
-	0x5b, 0xee, 0xf7, 0x7d, 0x17, 0xb3, 0xdb, 0xb1, 0x5e, 0x7e, 0xa5, 0x03, 0x8b, 0x7b, 0x6a, 0x31,
-	0xd3, 0xff, 0xab, 0x01, 0xa1, 0xdf, 0xe4, 0xe4, 0x31, 0xb4, 0x53, 0x9e, 0xcf, 0x95, 0xb4, 0x5f,
-	0x75, 0xbb, 0xee, 0x38, 0x0c, 0x0e, 0x51, 0x66, 0xee, 0x4e, 0xeb, 0x43, 0x9e, 0xc2, 0xba, 0x98,
-	0x2b, 0x74, 0x6f, 0xa0, 0xfb, 0x9d, 0x5a, 0xf7, 0x23, 0xa3, 0x33, 0xfe, 0xce, 0x8b, 0x7c, 0x00,
-	0xfa, 0x41, 0x3a, 0x13, 0x93, 0x31, 0xe6, 0xa5, 0x89, 0x79, 0x01, 0x33, 0xf5, 0x92, 0xce, 0x58,
-	0xf4, 0x3d, 0xf4, 0xbc, 0x8d, 0xdf, 0x72, 0x9c, 0xef, 0x2f, 0x1f, 0xe7, 0x1b, 0xab, 0xb9, 0xd0,
-	0x99, 0xf7, 0xef, 0x89, 0x18, 0x42, 0x3f, 0x98, 0x77, 0xc1, 0xec, 0x9f, 0x42, 0xe8, 0x3f, 0x0e,
-	0xe4, 0x73, 0xb0, 0x69, 0x37, 0xb7, 0x72, 0xf0, 0xbf, 0x1c, 0xfb, 0x47, 0x81, 0x1d, 0x12, 0x41,
-	0x47, 0xbf, 0x40, 0x98, 0x8d, 0x06, 0x46, 0x54, 0xd9, 0xc3, 0xaf, 0xfe, 0xb8, 0xdc, 0x0d, 0xfe,
-	0xbc, 0xdc, 0x0d, 0xfe, 0xbe, 0xdc, 0x0d, 0x7e, 0xfd, 0x67, 0xf7, 0x1a, 0xec, 0x88, 0x62, 0xea,
-	0x43, 0x93, 0x82, 0xce, 0xd8, 0x1b, 0x51, 0x9c, 0x0f, 0xdf, 0xab, 0x5e, 0x3f, 0xec, 0x02, 0xf9,
-	0x2a, 0xf8, 0x37, 0x08, 0x4e, 0xda, 0xd8, 0xab, 0x9f, 0xfc, 0x17, 0x00, 0x00, 0xff, 0xff, 0xe1,
-	0x07, 0xce, 0x4c, 0xd6, 0x08, 0x00, 0x00,
+	// 993 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x96, 0x41, 0x6f, 0x1b, 0x45,
+	0x14, 0xc7, 0xb3, 0xb6, 0xe3, 0xd8, 0xcf, 0x4e, 0x70, 0x87, 0xa8, 0xa4, 0x2b, 0x14, 0x52, 0xd3,
+	0x4a, 0x55, 0x29, 0x1b, 0xb5, 0xb4, 0x80, 0x50, 0xd5, 0x62, 0xd7, 0xb4, 0x89, 0x04, 0x4d, 0xd9,
+	0x54, 0x48, 0x88, 0x83, 0x35, 0xf1, 0xce, 0x3a, 0xab, 0x38, 0x33, 0xab, 0x9d, 0x71, 0xaa, 0x3d,
+	0xf6, 0x1b, 0xf0, 0x11, 0x90, 0xf8, 0x0e, 0x7c, 0x06, 0x8e, 0x5c, 0xb8, 0xa3, 0xf0, 0x25, 0x38,
+	0xa2, 0x79, 0xb3, 0xb3, 0x9e, 0x25, 0x31, 0xb9, 0xf4, 0xe6, 0xb7, 0xf3, 0xff, 0xff, 0xe6, 0xcd,
+	0xbc, 0x37, 0x33, 0x86, 0xde, 0x29, 0x53, 0x74, 0x3c, 0xcd, 0x68, 0x7a, 0x1c, 0xa4, 0x99, 0x50,
+	0x82, 0x80, 0x62, 0x5c, 0x8a, 0x2c, 0x9e, 0x89, 0x37, 0xfe, 0x8d, 0xa9, 0x10, 0xd3, 0x19, 0xdb,
+	0xc5, 0x91, 0xa3, 0x79, 0xbc, 0x4b, 0x79, 0x6e, 0x64, 0x7e, 0xc7, 0xf1, 0xf8, 0x5d, 0x91, 0x8e,
+	0x23, 0x16, 0x17, 0x11, 0x31, 0x84, 0xb1, 0x3c, 0xa6, 0x29, 0xb3, 0x72, 0x95, 0xa7, 0x4c, 0xda,
+	0x40, 0xd2, 0x33, 0x96, 0x99, 0xa0, 0xff, 0x76, 0x0d, 0xba, 0xdf, 0x31, 0x45, 0x5f, 0x68, 0xde,
+	0x88, 0xc5, 0x64, 0x0f, 0xd6, 0x31, 0xa9, 0x84, 0xc7, 0x42, 0x53, 0xb7, 0xbc, 0x1d, 0xef, 0x4e,
+	0xe7, 0xc1, 0xad, 0x60, 0x91, 0x58, 0xe0, 0x1a, 0x30, 0xd8, 0xe7, 0xb1, 0x18, 0xb1, 0x38, 0xec,
+	0x9c, 0x2e, 0x02, 0x72, 0x1f, 0xda, 0x98, 0x25, 0x52, 0x6a, 0x48, 0xd9, 0x74, 0x29, 0x96, 0x10,
+	0xb6, 0xa6, 0x76, 0xf2, 0xfb, 0xd0, 0xc6, 0xe4, 0xd0, 0x52, 0xbf, 0x68, 0x39, 0xd4, 0x83, 0x68,
+	0x91, 0xc5, 0x2f, 0x12, 0xc2, 0xc6, 0x44, 0xcc, 0x66, 0x6c, 0xa2, 0x12, 0xc1, 0xd1, 0xd7, 0xd8,
+	0xa9, 0xdf, 0xe9, 0x3c, 0xf8, 0x64, 0x69, 0xc2, 0xcf, 0x4a, 0xf9, 0x88, 0xc5, 0xdf, 0x70, 0x95,
+	0xe5, 0xe1, 0xfa, 0xc4, 0xfd, 0x46, 0x0e, 0x60, 0x5d, 0x26, 0x53, 0x4e, 0xd5, 0x3c, 0x63, 0x88,
+	0x5c, 0x45, 0xe4, 0xdd, 0xa5, 0xc8, 0x43, 0xab, 0x2e, 0x89, 0x5d, 0xe9, 0x7c, 0x22, 0x4f, 0x60,
+	0x83, 0x4a, 0xc9, 0xd4, 0x38, 0x4e, 0x66, 0x86, 0xd8, 0x44, 0xe2, 0x96, 0x4b, 0x1c, 0x68, 0xc5,
+	0xf3, 0x64, 0xa6, 0x1d, 0x61, 0x97, 0x3a, 0x91, 0xff, 0x6b, 0x0d, 0x3a, 0xce, 0x3e, 0x93, 0x7b,
+	0x40, 0x16, 0x9d, 0x33, 0x3e, 0x63, 0x99, 0x4c, 0x04, 0xc7, 0x4a, 0xb5, 0x43, 0xec, 0x29, 0xcc,
+	0xec, 0x07, 0xf3, 0x9d, 0x3c, 0x86, 0x9e, 0x54, 0x59, 0x92, 0xa6, 0x2c, 0x1a, 0x8b, 0x74, 0x3c,
+	0x4b, 0xa4, 0x2a, 0xea, 0x41, 0xdc, 0xf9, 0x0f, 0xd2, 0x6f, 0x13, 0xa9, 0xc2, 0x0d, 0xab, 0x35,
+	0x31, 0xd9, 0x85, 0x16, 0xe5, 0x39, 0xf6, 0x43, 0x59, 0x12, 0xd3, 0x98, 0x81, 0x6d, 0xcc, 0x60,
+	0xc0, 0xf3, 0x70, 0x8d, 0xf2, 0x5c, 0xe7, 0x47, 0x08, 0x34, 0x14, 0x9d, 0x4a, 0xac, 0x43, 0x3b,
+	0xc4, 0xdf, 0xe4, 0x53, 0x20, 0x8b, 0x99, 0xca, 0x84, 0x57, 0x31, 0xe1, 0x6b, 0x8b, 0x11, 0x9b,
+	0xf1, 0x43, 0xb8, 0xee, 0xc8, 0xa7, 0x89, 0x2a, 0x2d, 0x4d, 0xb4, 0x6c, 0x2e, 0x46, 0x5f, 0x24,
+	0xaa, 0x70, 0xf9, 0x3f, 0x01, 0xb9, 0x58, 0x5b, 0xd2, 0x83, 0xfa, 0x09, 0xcb, 0x8b, 0xcd, 0xd1,
+	0x3f, 0xc9, 0x2e, 0xac, 0x9e, 0xd1, 0xd9, 0x9c, 0x15, 0x9b, 0x70, 0xc3, 0xdd, 0x84, 0x0a, 0x20,
+	0x34, 0xba, 0xaf, 0x6a, 0x5f, 0x7a, 0xfe, 0x8f, 0x70, 0xed, 0x42, 0x95, 0x2f, 0x61, 0x07, 0x55,
+	0x76, 0xa5, 0xc0, 0xae, 0xdf, 0x41, 0xf7, 0x7f, 0x6b, 0xc0, 0x7a, 0x65, 0x5e, 0x32, 0x80, 0x36,
+	0x17, 0x11, 0x33, 0xa5, 0x32, 0x07, 0xb0, 0xbf, 0x34, 0xcb, 0xe0, 0xa5, 0x88, 0x98, 0x2e, 0xd5,
+	0xde, 0x4a, 0xd8, 0xe2, 0xc5, 0x6f, 0x32, 0x02, 0x38, 0xca, 0x15, 0x93, 0x6e, 0xb9, 0x3f, 0x5e,
+	0xce, 0x18, 0x6a, 0x6d, 0x01, 0x69, 0x1f, 0xd9, 0x40, 0x53, 0x12, 0xae, 0x3e, 0x7f, 0x68, 0x28,
+	0xf5, 0xab, 0x28, 0xfb, 0x5a, 0x6b, 0x29, 0x89, 0x0d, 0x34, 0x25, 0x9e, 0x09, 0xaa, 0x0c, 0xa5,
+	0x71, 0x15, 0xe5, 0xb9, 0xd6, 0x5a, 0x4a, 0x6c, 0x03, 0xf2, 0xc4, 0x34, 0x22, 0x32, 0x56, 0x91,
+	0x71, 0x73, 0x39, 0x63, 0xc0, 0xf3, 0x82, 0xa0, 0xfb, 0x52, 0xff, 0xf4, 0x77, 0xa0, 0x65, 0x77,
+	0x8a, 0x6c, 0xda, 0x32, 0x79, 0xd8, 0xa4, 0x26, 0xf0, 0x6f, 0x42, 0xbb, 0xdc, 0x87, 0xaa, 0xa4,
+	0x6b, 0x25, 0xb7, 0xa1, 0x5d, 0x2e, 0x92, 0x6c, 0xb9, 0x92, 0xfa, 0xb0, 0xd6, 0xf3, 0x1c, 0x59,
+	0xb9, 0x8a, 0xaa, 0xac, 0xe6, 0xca, 0x1e, 0xc1, 0x5a, 0x91, 0x28, 0xb9, 0xeb, 0x8a, 0x96, 0x9d,
+	0x31, 0x23, 0x19, 0x36, 0xa1, 0x71, 0x92, 0xf0, 0xa8, 0xff, 0xb6, 0x0e, 0xf0, 0x1a, 0x77, 0x00,
+	0x0f, 0xde, 0x26, 0x34, 0x38, 0x3d, 0x65, 0xa6, 0x1d, 0xf7, 0x56, 0x42, 0x8c, 0x34, 0x38, 0xd2,
+	0xd7, 0x3f, 0xf6, 0xc0, 0x46, 0xf5, 0x3e, 0x1d, 0x51, 0x45, 0x5f, 0xe7, 0x29, 0x0b, 0x8d, 0x84,
+	0x3c, 0x85, 0xae, 0xfb, 0x7a, 0x14, 0x05, 0xff, 0xd0, 0xb5, 0x98, 0xf9, 0x0e, 0xf5, 0xf0, 0x2b,
+	0x9d, 0x5a, 0xd8, 0x51, 0x8b, 0x2f, 0x64, 0x00, 0x30, 0x11, 0x62, 0x2c, 0x53, 0x9a, 0x49, 0x56,
+	0x54, 0x7a, 0xe7, 0xa2, 0x5d, 0xa7, 0x1b, 0x3c, 0x13, 0xe2, 0x10, 0x75, 0xba, 0xcc, 0x13, 0x1b,
+	0xf8, 0xbf, 0x78, 0xd0, 0x2e, 0x87, 0xf4, 0x4d, 0x87, 0x6b, 0x96, 0xe3, 0x22, 0xb1, 0xc5, 0x0a,
+	0xc3, 0x9e, 0x19, 0x31, 0xc8, 0x97, 0x7a, 0xad, 0x01, 0xbc, 0x9f, 0xf0, 0x28, 0x99, 0xfc, 0x47,
+	0x5e, 0x33, 0xf7, 0x4c, 0x31, 0xe4, 0xe8, 0x1f, 0xc1, 0x07, 0x11, 0xe3, 0x92, 0x99, 0xe5, 0x56,
+	0x3c, 0x75, 0x73, 0xd1, 0xe0, 0x30, 0xae, 0x6d, 0x61, 0x1b, 0x02, 0xb4, 0x18, 0x9f, 0x88, 0x28,
+	0xe1, 0xd3, 0xfe, 0x9f, 0x35, 0xe8, 0xba, 0x07, 0x9b, 0x3c, 0x86, 0x66, 0xc2, 0xd3, 0xb9, 0x92,
+	0x45, 0x25, 0x6f, 0x2d, 0xbb, 0x02, 0x82, 0x7d, 0x94, 0x99, 0xf7, 0xa2, 0xf0, 0x90, 0xa7, 0xb0,
+	0x26, 0xe6, 0x0a, 0xed, 0x35, 0xb4, 0xdf, 0x5e, 0x6a, 0x3f, 0x30, 0x3a, 0xe3, 0xb7, 0x2e, 0xf2,
+	0x11, 0xe8, 0x47, 0xf8, 0x58, 0x44, 0xee, 0x32, 0xc0, 0x7c, 0xd2, 0xc9, 0xfb, 0xdf, 0x43, 0xc7,
+	0x99, 0xf8, 0x92, 0x2b, 0xec, 0x5e, 0xf5, 0x0a, 0xbb, 0x7e, 0x79, 0xf9, 0xdc, 0xbb, 0x31, 0x84,
+	0xae, 0x9b, 0xcc, 0xbb, 0x60, 0xf6, 0x27, 0xd0, 0x75, 0x1f, 0x44, 0xf2, 0x05, 0x14, 0x8d, 0x66,
+	0x5e, 0x22, 0xef, 0x7f, 0x39, 0xc5, 0xbf, 0x28, 0x3c, 0x15, 0x3e, 0xb4, 0xf4, 0xab, 0xeb, 0x34,
+	0x42, 0x19, 0x0f, 0xbf, 0xfe, 0xfd, 0x7c, 0xdb, 0xfb, 0xe3, 0x7c, 0xdb, 0xfb, 0xeb, 0x7c, 0xdb,
+	0xfb, 0xf9, 0xef, 0xed, 0x15, 0xd8, 0x12, 0xd9, 0xd4, 0x85, 0xc6, 0x19, 0x3d, 0x65, 0x6f, 0x44,
+	0x76, 0x32, 0x7c, 0xaf, 0x7c, 0xf1, 0xb1, 0xef, 0xe5, 0x2b, 0xef, 0x1f, 0xcf, 0x3b, 0x6a, 0xe2,
+	0xf9, 0xfc, 0xec, 0xdf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x35, 0xa7, 0xe3, 0xd4, 0xca, 0x09, 0x00,
+	0x00,
 }

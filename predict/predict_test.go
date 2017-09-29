@@ -6,6 +6,7 @@ import (
 
 	"github.com/k0kubun/pp"
 	"github.com/rai-project/config"
+	"github.com/rai-project/dlframework"
 	tf "github.com/rai-project/tensorflow"
 	"github.com/stretchr/testify/assert"
 	context "golang.org/x/net/context"
@@ -37,13 +38,14 @@ func TestPredictInference(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
 
-	predictor, err := New(*model)
+	opts := dlframework.PredictionOptions{}
+	predictor, err := New(*model, opts)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, predictor)
 	defer predictor.Close()
 
 	ctx := context.Background()
-	err = predictor.Download(ctx)
+	err = predictor.Load(ctx, model, opts)
 	assert.NoError(t, err)
 
 	preds, err := predictor.Predict(ctx, "http://buzzsharer.com/wp-content/uploads/2015/06/beautiful-running-horse.jpg")

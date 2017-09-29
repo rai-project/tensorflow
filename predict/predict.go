@@ -2,6 +2,8 @@ package predict
 
 import (
 	"bufio"
+	"bytes"
+	"io"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -23,9 +25,11 @@ import (
 
 type ImagePredictor struct {
 	common.ImagePredictor
-	features  []string
-	tfGraph   *tf.Graph
-	tfSession *tf.Session
+	features    []string
+	tfGraph     *tf.Graph
+	tfSession   *tf.Session
+	inputLayer  string
+	outputLayer string
 }
 
 func New(model dlframework.ModelManifest, opts dlframework.PredictionOptions) (common.Predictor, error) {
@@ -160,6 +164,54 @@ func (p *ImagePredictor) download(ctx context.Context) error {
 	return nil
 }
 
+func (p ImagePredictor) GetInputLayerName(reader io.Reader) (string, error) {
+	model := p.Model
+	modelInputs := model.GetInputs()
+	typeParameters := modelInputs[0].GetParameters()
+	name, err := p.GetLayerName(typeParameters)
+	if err != nil {
+		graphDef, err := tensorflow.FromCheckpoint(reader)
+		if err != nil {
+			return "", errors.Wrap(err, "failed to read metagraph from checkpoint")
+		}
+		nodes := graphDef.GetNode()
+		if nodes == nil {
+			return "", errors.New("failed to read graph nodes")
+		}
+		// get the first node which has no input
+		for _, n := range nodes {
+			if len(n.GetInput()) == 0 {
+				return n.GetName(), nil
+			}
+		}
+		return "", errors.New("cannot determin the name of the input layer")
+	}
+	return name, nil
+}
+
+func (p ImagePredictor) GetOutputLayerName(reader io.Reader) (string, error) {
+	model := p.Model
+	modelOutput := model.GetOutput()
+	typeParameters := modelOutput.GetParameters()
+	name, err := p.GetLayerName(typeParameters)
+	if err != nil {
+		graphDef, err := tensorflow.FromCheckpoint(reader)
+		if err != nil {
+			return "", errors.Wrap(err, "failed to read metagraph from checkpoint")
+		}
+		nodes := graphDef.GetNode()
+		if nodes == nil {
+			return "", errors.New("failed to read graph nodes")
+		}
+		if len(nodes) == 0 {
+			return "", errors.New("cannot determin the name of the output layer")
+		}
+		// get the last node
+		return nodes[len(nodes)-1].GetName(), nil
+	}
+	return name, nil
+}
+
 func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 	span, ctx := p.GetTracer().StartSpanFromContext(ctx, "LoadPredictor")
 	defer span.Finish()
@@ -199,6 +251,16 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 		return errors.Wrap(err, "unable to create tensorflow model graph")
 	}
 
+	modelReader := bytes.NewReader(model)
+	p.inputLayer, err = p.GetInputLayerName(modelReader)
+	if err != nil {
+		return errors.Wrap(err, "failed to get input layer name")
+	}
+	p.outputLayer, err = p.GetOutputLayerName(modelReader)
+	if err != nil {
+		return errors.Wrap(err, "failed to get input layer name")
+	}
+
 	// Create a session for inference over graph.
 	session, err := tf.NewSession(graph, nil)
 	if err != nil {
@@ -216,8 +278,7 @@ func zeros(height, width, channels int) [][][]float32 {
 	for ii := range rows {
 		columns := make([][]float32, width)
 		for jj := range columns {
-			pixels := make([]float32, channels)
-			columns[jj] = pixels
+			columns[jj] = make([]float32, channels)
 		}
 		rows[ii] = columns
 	}
@@ -235,23 +296,24 @@ func (p *ImagePredictor) makeTensorFromImageData(ctx context.Context, data0 [][]
 	}
 	channels, height, width := int(imageDims[0]), int(imageDims[1]), int(imageDims[2])
 	batchSize := int(p.BatchSize())
+	if batchSize == 0 {
+		batchSize = 1
+	}
 
 	makeImage := func(arry []float32) [][][]float32 {
 		rows := make([][][]float32, height)
 		for ii := range rows {
 			columns := make([][]float32, width)
 			for jj := range columns {
-				pixels := make([]float32, channels)
-				for kk := range pixels {
-					pixels[kk] = arry[channels*(width*ii+jj)+kk]
-				}
-				columns[jj] = pixels
+				offset := channels * (width*ii + jj)
+				columns[jj] = arry[offset : offset+3]
 			}
 			rows[ii] = columns
 		}
 		return rows
 	}
 
+	// convert to a 4D tensor (batch, height, width, channels)
 	data := make([][][][]float32, batchSize)
 	for ii, e := range data0 {
 		data[ii] = makeImage(e)
@@ -285,6 +347,11 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts dlf
 	session := p.tfSession
 	graph := p.tfGraph
 
+	batchSize := int(opts.GetBatchSize())
+	if batchSize == 0 {
+		batchSize = 1
+	}
+
 	tensor, err := p.makeTensorFromImageData(ctx, data)
 	if err != nil {
 		return nil, errors.New("cannot make tensor from image data")
@@ -292,27 +359,17 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts dlf
 
 	fetches, err := session.Run(
 		map[tf.Output]*tf.Tensor{
-			graph.Operation("input").Output(0): tensor,
+			graph.Operation(p.inputLayer).Output(0): tensor,
 		},
 		[]tf.Output{
-			graph.Operation("output").Output(0),
+			graph.Operation(p.outputLayer).Output(0),
 		},
 		nil)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to perform inference")
 	}
-	// output[0].Value() is a vector containing probabilities of
-	// labels for each image in the "batch".
+
 	probabilities := fetches[0].Value().([][]float32)
-
-	// pp.Println("rank = ", len(probabilities))
-	// pp.Println("len[0] = ", len(probabilities[0]))
-	// pp.Println("len[0:10] = ", probabilities[0][0:10])
-
-	batchSize := int(opts.GetBatchSize())
-	if batchSize == 0 {
-		batchSize = 1
-	}
 
 	var output []dlframework.Features
 	for _, prob := range probabilities {
