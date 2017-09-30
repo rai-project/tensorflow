@@ -23,6 +23,7 @@ inputs:
     parameters:
       layer_name: "input"
       dimensions: [3, 224, 224]
+      mean: [117, 117, 117]
 output:
   type: feature
   description: an output image net label

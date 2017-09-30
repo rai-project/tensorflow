@@ -32,7 +32,7 @@ output:
     features_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow_1.3.0/inception5h/imagenet_comp_graph_label_strings.txt
     features_checksum: 69dc10a6ed3fe9045e74f0ceac4daf8b
 model:
-  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow_1.3.0/inception5h/
+  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow_1.3.0/
   graph_path: vgg_16_frozen.pb
   graph_checksum: 2395153962e05b10dddd48d7459259d4
   is_archive: false
