@@ -20,16 +20,21 @@ inputs:
   - type: image
     description: the input image
     parameters:
-      dimensions: [1, 3, 224, 224]
+      layer_name: "input"
+      dimensions: [3, 224, 224]
+      mean: [128, 128, 128]
 output:
   type: feature
   description: an output image net label
   parameters:
-    features_url: http://data.dmlc.ml/mxnet/models/imagenet/synset.txt
+    # type parameters
+    layer_name: "output"
+    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset.txt
+    features_checksum: 2bb228d6cf55ae4e6409f55fc81fcfe7
 model:
-  checkpoint: http://download.tensorflow.org/models/mobilenet_v1_0.25_128_2017_06_14.tar.gz
+  graph_path: https://s3.amazonaws.com/store.carml.org/models/tensorflow/graphs/inception_resnet_v2_frozen.pb
   is_archive: true
 attributes:
   manifest_author: abduld
-  trailing_dataset: ImageNet
+  training_dataset: ImageNet
 hidden: true

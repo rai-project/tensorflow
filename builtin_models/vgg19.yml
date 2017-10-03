@@ -32,10 +32,10 @@ output:
     features_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow_1.3.0/inception5h/imagenet_comp_graph_label_strings.txt
     features_checksum: 69dc10a6ed3fe9045e74f0ceac4daf8b
 model:
-  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow_1.3.0/
+  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/graphs
   graph_path: vgg_19_frozen.pb
-  graph_checksum: 8df72834dd82527b73bcc6bc4b277221
+  graph_checksum: 9b09d4bdc8fcee61678ec44107d92190
   is_archive: false
 attributes:
   manifest_author: abduld
-  trailing_dataset: ImageNet
+  training_dataset: ImageNet

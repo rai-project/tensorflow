@@ -12,7 +12,6 @@ container:
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
   An image-classification network built of layers that learn residual functions w.r.t layer inputs.
-  This network consists of 50 layers and achieves 75.2 top-1 and 92.2 top-5 accuracy on ILSVRC-2015.
 references:
   - https://arxiv.org/pdf/1512.03385.pdf
 license: TODO
@@ -32,11 +31,11 @@ output:
     features_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow_1.3.0/imagenet_comp_graph_label_strings.txt
     features_checksum: 69dc10a6ed3fe9045e74f0ceac4daf8b
 model:
-  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow_1.3.0/
+  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/graphs
   graph_path: resnet_v2_152_frozen.pb
-  graph_checksum: 0ea72ef9ea04ca68f1a0156fb0ec3ebe
+  graph_checksum: bb160c9e548566ebb1225396893963be
   is_archive: false
 attributes:
   manifest_author: abduld
-  trailing_dataset: ImageNet
+  training_dataset: ImageNet
 

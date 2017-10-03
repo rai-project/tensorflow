@@ -146,6 +146,8 @@ func (p *ImagePredictor) download(ctx context.Context) error {
 	span.LogFields(
 		olog.String("event", "download graph"),
 	)
+	pp.Println(p.GetGraphUrl())
+	pp.Println(p.GetGraphPath())
 	if _, err := downloadmanager.DownloadFile(p.GetGraphUrl(), p.GetGraphPath(), downloadmanager.MD5Sum(checksum)); err != nil {
 		return err
 	}

@@ -31,5 +31,5 @@ model:
   is_archive: true
 attributes:
   manifest_author: abduld
-  trailing_dataset: ImageNet
+  training_dataset: ImageNet
 hidden: true

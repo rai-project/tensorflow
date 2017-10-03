@@ -29,14 +29,14 @@ output:
   parameters:
     # type parameters
     layer_name: "resnet_v1_50/predictions/Reshape_1"
-    features_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow_1.3.0/imagenet_comp_graph_label_strings.txt
-    features_checksum: 69dc10a6ed3fe9045e74f0ceac4daf8b
+    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset1008.txt
+    features_checksum: 2bb228d6cf55ae4e6409f55fc81fcfe7
 model:
-  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow_1.3.0/
+  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/graphs
   graph_path: resnet_v1_50_frozen.pb
-  graph_checksum: 357faae480b1aea930c9ac843caf2386
+  graph_checksum: b153619627b5811a3b96c255126dd507
   is_archive: false
 attributes:
   manifest_author: abduld
-  trailing_dataset: ImageNet
+  training_dataset: ImageNet
 
