@@ -20,16 +20,17 @@ inputs:
     description: the input image
     parameters:
       layer_name: "input"
-      dimensions: [3, 299, 299]
+      dimensions: [3, 224, 224]
       mean: [128, 128, 128]
+      scale: 128
 output:
   type: feature
   description: an output image net label
   parameters:
     # type parameters
     layer_name: "InceptionV2/Predictions/Reshape_1"
-    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset1008.txt
-    features_checksum: 2bb228d6cf55ae4e6409f55fc81fcfe7
+    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset1.txt
+    features_checksum: 6c05083991207dea5c37f2d271014fad
 model:
   graph_path: http://s3.amazonaws.com/store.carml.org/models/tensorflow/graphs/inception_v2_frozen.pb
   graph_checksum: f357c54648189679b5c1af1df348d8cf

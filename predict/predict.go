@@ -8,7 +8,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/k0kubun/pp"
 	opentracing "github.com/opentracing/opentracing-go"
 	olog "github.com/opentracing/opentracing-go/log"
 	"github.com/pkg/errors"
@@ -20,6 +19,7 @@ import (
 	"github.com/rai-project/image"
 	"github.com/rai-project/image/types"
 	"github.com/rai-project/tensorflow"
+	"github.com/rai-project/tracer"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 	context "golang.org/x/net/context"
 )
@@ -69,7 +69,7 @@ func (p *ImagePredictor) Load(ctx context.Context, model dlframework.ModelManife
 				Framework:         framework,
 				Model:             model,
 				PredictionOptions: opts,
-				Tracer:            tracer,
+				Tracer:            tracer.Std(),
 			},
 			WorkDir: workDir,
 		},
@@ -146,8 +146,7 @@ func (p *ImagePredictor) download(ctx context.Context) error {
 	span.LogFields(
 		olog.String("event", "download graph"),
 	)
-	pp.Println(p.GetGraphUrl())
-	pp.Println(p.GetGraphPath())
+
 	if _, err := downloadmanager.DownloadFile(p.GetGraphUrl(), p.GetGraphPath(), downloadmanager.MD5Sum(checksum)); err != nil {
 		return err
 	}
@@ -360,8 +359,8 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts dlf
 		return nil, errors.New("cannot make tensor from image data")
 	}
 
-	pp.Println("input layer = ", p.inputLayer)
-	pp.Println("output layer = ", p.outputLayer)
+	// pp.Println("input layer = ", p.inputLayer)
+	// pp.Println("output layer = ", p.outputLayer)
 
 	fetches, err := session.Run(
 		map[tf.Output]*tf.Tensor{

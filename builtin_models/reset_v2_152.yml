@@ -21,15 +21,16 @@ inputs:
     parameters:
       layer_name: "input"
       dimensions: [3, 224, 224]
-      mean: [117, 117, 117]
+      mean: [128, 128, 128]
+      scale: 128
 output:
   type: feature
   description: an output image net label
   parameters:
     # type parameters
     layer_name: "resnet_v2_152/predictions/Reshape_1"
-    features_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow_1.3.0/imagenet_comp_graph_label_strings.txt
-    features_checksum: 69dc10a6ed3fe9045e74f0ceac4daf8b
+    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset1.txt
+    features_checksum: 6c05083991207dea5c37f2d271014fad
 model:
   base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/graphs
   graph_path: resnet_v2_152_frozen.pb
