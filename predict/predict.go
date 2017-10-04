@@ -14,6 +14,7 @@ import (
 	"github.com/rai-project/config"
 	"github.com/rai-project/dlframework"
 	"github.com/rai-project/dlframework/framework/agent"
+	"github.com/rai-project/dlframework/framework/options"
 	common "github.com/rai-project/dlframework/framework/predict"
 	"github.com/rai-project/downloadmanager"
 	"github.com/rai-project/image"
@@ -33,7 +34,7 @@ type ImagePredictor struct {
 	outputLayer string
 }
 
-func New(model dlframework.ModelManifest, opts dlframework.PredictionOptions) (common.Predictor, error) {
+func New(model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
 	modelInputs := model.GetInputs()
 	if len(modelInputs) != 1 {
 		return nil, errors.New("number of inputs not supported")
@@ -45,10 +46,10 @@ func New(model dlframework.ModelManifest, opts dlframework.PredictionOptions) (c
 
 	predictor := new(ImagePredictor)
 
-	return predictor.Load(context.Background(), model, opts)
+	return predictor.Load(context.Background(), model, opts...)
 }
 
-func (p *ImagePredictor) Load(ctx context.Context, model dlframework.ModelManifest, opts dlframework.PredictionOptions) (common.Predictor, error) {
+func (p *ImagePredictor) Load(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
 	span, newCtx := tracer.StartSpanFromContext(ctx, "Load")
 	ctx = newCtx
 	defer span.Finish()
@@ -66,10 +67,9 @@ func (p *ImagePredictor) Load(ctx context.Context, model dlframework.ModelManife
 	ip := &ImagePredictor{
 		ImagePredictor: common.ImagePredictor{
 			Base: common.Base{
-				Framework:         framework,
-				Model:             model,
-				PredictionOptions: opts,
-				Tracer:            tracer.Std(),
+				Framework: framework,
+				Model:     model,
+				Options:   options.New(opts...),
 			},
 			WorkDir: workDir,
 		},
@@ -112,7 +112,7 @@ func (p *ImagePredictor) GetPreprocessOptions(ctx context.Context) (common.Prepr
 }
 
 func (p *ImagePredictor) download(ctx context.Context) error {
-	span, ctx := p.GetTracer().StartSpanFromContext(
+	span, ctx := opentracing.StartSpanFromContext(
 		ctx,
 		"Download",
 		opentracing.Tags{
@@ -215,7 +215,7 @@ func (p ImagePredictor) GetOutputLayerName(reader io.Reader) (string, error) {
 }
 
 func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
-	span, ctx := p.GetTracer().StartSpanFromContext(ctx, "LoadPredictor")
+	span, ctx := opentracing.StartSpanFromContext(ctx, "LoadPredictor")
 	defer span.Finish()
 
 	if p.tfSession != nil {
@@ -336,20 +336,16 @@ func (p *ImagePredictor) makeTensorFromImageData(ctx context.Context, data0 [][]
 	return tensor, nil
 }
 
-func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts dlframework.PredictionOptions) ([]dlframework.Features, error) {
-	span, ctx := p.GetTracer().StartSpanFromContext(ctx, "Predict", opentracing.Tags{
-		"model_name":        p.Model.GetName(),
-		"model_version":     p.Model.GetVersion(),
-		"framework_name":    p.Model.GetFramework().GetName(),
-		"framework_version": p.Model.GetFramework().GetVersion(),
-		"batch_size":        p.BatchSize(),
-	})
-	defer span.Finish()
+func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...options.Option) ([]dlframework.Features, error) {
+	span := opentracing.SpanFromContext(ctx)
+	_ = span
 
 	session := p.tfSession
 	graph := p.tfGraph
 
-	batchSize := int(opts.GetBatchSize())
+	options := options.New(opts...)
+
+	batchSize := int(options.BatchSize())
 	if batchSize == 0 {
 		batchSize = 1
 	}
@@ -358,9 +354,6 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts dlf
 	if err != nil {
 		return nil, errors.New("cannot make tensor from image data")
 	}
-
-	// pp.Println("input layer = ", p.inputLayer)
-	// pp.Println("output layer = ", p.outputLayer)
 
 	fetches, err := session.Run(
 		map[tf.Output]*tf.Tensor{
