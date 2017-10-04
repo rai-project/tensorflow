@@ -20,7 +20,6 @@ import (
 	"github.com/rai-project/image"
 	"github.com/rai-project/image/types"
 	"github.com/rai-project/tensorflow"
-	"github.com/rai-project/tracer"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 	context "golang.org/x/net/context"
 )
@@ -50,8 +49,7 @@ func New(model dlframework.ModelManifest, opts ...options.Option) (common.Predic
 }
 
 func (p *ImagePredictor) Load(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
-	span, newCtx := tracer.StartSpanFromContext(ctx, "Load")
-	ctx = newCtx
+	span, ctx := opentracing.StartSpanFromContext(ctx, "Load")
 	defer span.Finish()
 
 	framework, err := model.ResolveFramework()
