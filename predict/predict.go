@@ -262,7 +262,11 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 	}
 
 	// Create a session for inference over graph.
-	session, err := tf.NewSession(graph, nil)
+	sessionOpts := &tf.SessionOptions{}
+	if p.Options.UsesGPU() {
+		sessionOpts = &tf.SessionOptions{Target: "/gpu:0"}
+	}
+	session, err := tf.NewSession(graph, sessionOpts)
 	if err != nil {
 		return errors.Wrap(err, "unable to create tensorflow session")
 	}
