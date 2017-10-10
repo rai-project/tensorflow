@@ -1,5 +1,18 @@
 package predict
 
+// #cgo LDFLAGS: -ltensorflow
+// #cgo CFLAGS: -I${SRCDIR}/../../../tensorflow/tensorflow
+// #include "tensorflow/c/c_api.h"
+// #include "tensorflow/core/framework/graph.pb.h"
+import "C"
+
+// #include <stdlib.h>
+// #include <string.h>
+// void setDefaultDevice(const char * device, TF_Graph * graph_def) {
+//  tensorflow::GraphDef def;
+// GetGraphDef(graph_def, &def);
+// graph::SetDefaultDevice(device, def);
+// 	}
 import (
 	"bufio"
 	"bytes"
@@ -7,7 +20,9 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+	"unsafe"
 
+	"github.com/k0kubun/pp"
 	opentracing "github.com/opentracing/opentracing-go"
 	olog "github.com/opentracing/opentracing-go/log"
 	"github.com/pkg/errors"
@@ -213,6 +228,10 @@ func (p ImagePredictor) GetOutputLayerName(reader io.Reader) (string, error) {
 	return name, nil
 }
 
+type Graph struct {
+	c *C.TF_Graph
+}
+
 func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "LoadPredictor")
 	defer span.Finish()
@@ -265,14 +284,25 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 	// Create a session for inference over graph.
 	sessionOpts := &tf.SessionOptions{}
 	if p.Options.UsesGPU() {
-		sessionOpts = &tf.SessionOptions{Target: "/gpu:0"}
+		if false {
+		g := (*Graph)(unsafe.Pointer(graph))
+		_ = g 
+		}
+		//C.setDefaultDevice("/device:GPU:0", g.c)
+		sessionOpts = &tf.SessionOptions{Target: "GPU"}
+		_ = nvidiasmi.GPUCount
 		sessionConfig := tensorflow.ConfigProto{
 			DeviceCount: map[string]int32{
-				"GPU": int32(nvidiasmi.GPUCount),
+				"GPU": int32(1), //int32(nvidiasmi.GPUCount),
+			},
+			LogDevicePlacement: true,
+			GpuOptions: &tensorflow.GPUOptions{
+				ForceGpuCompatible: true,
 			},
 		}
 		if buf, err := sessionConfig.Marshal(); err == nil {
 			sessionOpts.Config = buf
+			pp.Println("buf = ", string(buf))
 		}
 	}
 	session, err := tf.NewSession(graph, sessionOpts)
@@ -347,6 +377,13 @@ func (p *ImagePredictor) makeTensorFromImageData(ctx context.Context, data0 [][]
 	return tensor, nil
 }
 
+type operation struct {
+	c *C.TF_Operation
+	// A reference to the Graph to prevent it from
+	// being GCed while the Operation is still alive.
+	g *Graph
+}
+
 func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...options.Option) ([]dlframework.Features, error) {
 	span := opentracing.SpanFromContext(ctx)
 	_ = span
@@ -365,7 +402,13 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 	if err != nil {
 		return nil, errors.New("cannot make tensor from image data")
 	}
-
+ //
+ //if options.UsesGPU() {
+ //	op := (*operation)(unsafe.Pointer(graph.Operation(p.inputLayer)))
+ //	cstr := C.CString("gpu:0")
+ //	C.TF_SetDevice(op.c, cstr)
+ //	C.free(unsafe.Pointer(cstr))
+ //}
 	fetches, err := session.Run(
 		map[tf.Output]*tf.Tensor{
 			graph.Operation(p.inputLayer).Output(0): tensor,
