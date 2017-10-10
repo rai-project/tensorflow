@@ -19,6 +19,7 @@ import (
 	"github.com/rai-project/downloadmanager"
 	"github.com/rai-project/image"
 	"github.com/rai-project/image/types"
+	nvidiasmi "github.com/rai-project/nvidia-smi"
 	"github.com/rai-project/tensorflow"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 	context "golang.org/x/net/context"
@@ -265,6 +266,14 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 	sessionOpts := &tf.SessionOptions{}
 	if p.Options.UsesGPU() {
 		sessionOpts = &tf.SessionOptions{Target: "/gpu:0"}
+		sessionConfig := tensorflow.ConfigProto{
+			DeviceCount: map[string]int32{
+				"GPU": int32(nvidiasmi.GPUCount),
+			},
+		}
+		if buf, err := sessionConfig.Marshal(); err == nil {
+			sessionOpts.Config = buf
+		}
 	}
 	session, err := tf.NewSession(graph, sessionOpts)
 	if err != nil {
