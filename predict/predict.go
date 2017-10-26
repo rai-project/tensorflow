@@ -3,9 +3,9 @@ package predict
 // #cgo LDFLAGS: -ltensorflow
 // #cgo CFLAGS: -I${SRCDIR}/../../../tensorflow/tensorflow
 // #include "tensorflow/c/c_api.h"
-// #include "tensorflow/core/framework/graph.pb.h"
 import "C"
 
+// #include "tensorflow/core/framework/graph.pb.h"
 // #include <stdlib.h>
 // #include <string.h>
 // void setDefaultDevice(const char * device, TF_Graph * graph_def) {
@@ -283,7 +283,7 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 
 	// Create a session for inference over graph.
 	sessionOpts := &tf.SessionOptions{}
-	if p.Options.UsesGPU() {
+	if p.Options.UsesGPU() && false {
 		if false {
 		g := (*Graph)(unsafe.Pointer(graph))
 		_ = g 
