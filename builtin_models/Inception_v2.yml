@@ -11,7 +11,7 @@ container:
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  TODO
+  Inception-v2 introduced Factorization(factorize convolutions into smaller convolutions) and some minor change into Inception-v1.
 references:
   - http://arxiv.org/abs/1512.00567
 license: TODO
