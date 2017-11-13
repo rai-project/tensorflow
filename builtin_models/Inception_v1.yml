@@ -11,7 +11,8 @@ container:
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  TODO
+  Inception v1 architecture, implemented in the winning ILSVRC 2014 submission GoogLeNet. 
+  Intorduced in Going deeper with convolutions, Szegedy et al. (2014)
 references:
   - http://arxiv.org/abs/1512.00567
 license: TODO

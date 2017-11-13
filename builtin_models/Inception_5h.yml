@@ -11,7 +11,9 @@ container:
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  TODO
+  This variant of the Inception model is easier to use for DeepDream
+  and other imaging techniques. This is because it allows the input
+  image to be any size, and the optimized images are also prettier.
 references:
   - http://arxiv.org/abs/1512.00567
 license: TODO
