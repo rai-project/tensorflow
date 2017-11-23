@@ -26,6 +26,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"unsafe"
 
 	"github.com/fatih/color"
 	colorable "github.com/mattn/go-colorable"
@@ -48,15 +49,20 @@ func NewSessionOptions() *SessionOptions {
 		},
 		LogDevicePlacement: true,
 		GpuOptions: &proto.GPUOptions{
-			ForceGpuCompatible: true,
+			ForceGpuCompatible:          true,
+			PerProcessGpuMemoryFraction: 0.5,
 		},
 	}
 
 	buf, err := sessionConfig.Marshal()
-	if err == nil {
-		pp.Println("buf = ", string(buf))
+	if err != nil {
+		panic(err)
 	}
-	return &SessionOptions{Config: buf}
+	opts := &SessionOptions{Config: buf}
+
+	pp.Println(opts)
+
+	return opts
 
 }
 
@@ -206,8 +212,12 @@ func makeTensorFromImage(filename string) (*tf.Tensor, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	opts := NewSessionOptions()
+	sessOpts := (*tf.SessionOptions)(unsafe.Pointer(opts))
+
 	// Execute that graph to normalize this one image
-	session, err := tf.NewSession(graph, nil)
+	session, err := tf.NewSession(graph, sessOpts)
 	if err != nil {
 		return nil, err
 	}
@@ -342,7 +352,9 @@ func init() {
 		config.DebugMode(true),
 	)
 
-	color.NoColor = true
-	pp.ColoringEnabled = false
-	pp.SetDefaultOutput(colorable.NewColorableStdout())
+	if false {
+		color.NoColor = true
+		pp.ColoringEnabled = false
+		pp.SetDefaultOutput(colorable.NewColorableStdout())
+	}
 }

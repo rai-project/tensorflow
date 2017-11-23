@@ -29,7 +29,12 @@ import (
 	"sync"
 	"unsafe"
 
+	"github.com/k0kubun/pp"
+
 	protobuf "github.com/golang/protobuf/proto"
+	opentracing "github.com/opentracing/opentracing-go"
+	cupti "github.com/rai-project/go-cupti"
+	nvidiasmi "github.com/rai-project/nvidia-smi"
 	proto "github.com/rai-project/tensorflow"
 	"github.com/rai-project/tracer"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
@@ -95,6 +100,7 @@ func NewSession(graph0 *tf.Graph, options *SessionOptions) (*Session, error) {
 	if err != nil {
 		return nil, err
 	}
+	pp.Println(options)
 	graph := toGraph(graph0)
 	cSess := C.TF_NewSession(graph.c, cOpt, status.c)
 	if err := status.Err(); err != nil {
@@ -128,28 +134,46 @@ func (s *Session) Run(feeds map[tf.Output]*tf.Tensor, fetches []tf.Output, targe
 	status := newStatus()
 
 	var runOptsBuf *C.TF_Buffer
-	if runOpts != nil {
-		runOptsBuf = C.TF_NewBuffer()
-		defer C.TF_DeleteBuffer(runOptsBuf)
+	var span opentracing.Span
+	ctx := context.Background()
 
-		buf, err := protobuf.Marshal(runOpts)
-		if err != nil {
-			return nil, err
+	var runMetaData *C.TF_Buffer
+
+	if true {
+		if runOpts != nil {
+			runOptsBuf = C.TF_NewBuffer()
+			defer C.TF_DeleteBuffer(runOptsBuf)
+
+			buf, err := protobuf.Marshal(runOpts)
+			if err != nil {
+				return nil, err
+			}
+
+			runOptsBuf.length = C.size_t(len(buf))
+			runOptsBuf.data = C.malloc(runOptsBuf.length)
+			if runOptsBuf.data == nil {
+				return nil, fmt.Errorf("unable to allocate memory")
+			}
+			defer C.free(runOptsBuf.data)
+			C.memcpy(runOptsBuf.data, unsafe.Pointer(&buf[0]), runOptsBuf.length)
 		}
 
-		runOptsBuf.length = C.size_t(len(buf))
-		runOptsBuf.data = C.malloc(runOptsBuf.length)
-		if runOptsBuf.data == nil {
-			return nil, fmt.Errorf("unable to allocate memory")
+		runMetaData = C.TF_NewBuffer()
+		defer C.TF_DeleteBuffer(runMetaData)
+
+		span, ctx = tracer.StartSpanFromContext(ctx, tracer.FULL_TRACE, "tensorflow_session_run")
+
+		if nvidiasmi.HasGPU {
+			cu, err := cupti.New(cupti.Context(ctx))
+			if err == nil {
+				defer func() {
+					cu.Wait()
+					cu.Close()
+				}()
+			}
 		}
-		defer C.free(runOptsBuf.data)
-		C.memcpy(runOptsBuf.data, unsafe.Pointer(&buf[0]), runOptsBuf.length)
+
 	}
-
-	runMetaData := C.TF_NewBuffer()
-	defer C.TF_DeleteBuffer(runMetaData)
-
-	span, ctx := tracer.StartSpanFromContext(context.Background(), tracer.FULL_TRACE, "tensorflow_session_run")
 
 	C.TF_SessionRun(s.c, runOptsBuf,
 		ptrOutput(c.feeds), ptrTensor(c.feedTensors), C.int(len(feeds)),
@@ -157,27 +181,31 @@ func (s *Session) Run(feeds map[tf.Output]*tf.Tensor, fetches []tf.Output, targe
 		ptrOperation(c.targets), C.int(len(targets)),
 		runMetaData, status.c)
 
-	span.Finish()
+	if true {
+		span.Finish()
 
-	var meta proto.RunMetadata
+		var meta proto.RunMetadata
 
-	// A []byte slice backed by C memory.
-	// See: https://github.com/golang/go/wiki/cgo#turning-c-arrays-into-go-slices
-	length := int(runMetaData.length)
-	slice := (*[1 << 30]byte)(unsafe.Pointer(runMetaData.data))[:length:length]
+		// A []byte slice backed by C memory.
+		// See: https://github.com/golang/go/wiki/cgo#turning-c-arrays-into-go-slices
+		length := int(runMetaData.length)
+		slice := (*[1 << 30]byte)(unsafe.Pointer(runMetaData.data))[:length:length]
 
-	protobuf.Unmarshal(slice, &meta)
+		protobuf.Unmarshal(slice, &meta)
 
-	js, err := json.MarshalIndent(meta.StepStats, "", "  ")
-	if err != nil {
-		panic("failed to marshal step stats " + err.Error())
+		js, err := json.MarshalIndent(meta.StepStats, "", "  ")
+		if err != nil {
+			panic("failed to marshal step stats " + err.Error())
+		}
+		if false {
+			fmt.Println(string(js))
+		}
+
+		tracer, err := NewTrace(meta.StepStats)
+		tracer.Publish(ctx)
+
 	}
-	if false {
-		fmt.Println(string(js))
-	}
 
-	tracer, err := NewTrace(meta.StepStats)
-	tracer.Publish(ctx)
 	// Make sure GC won't harvest input tensors until SessionRun() is finished
 	runtime.KeepAlive(feeds)
 
@@ -373,6 +401,7 @@ func (o *SessionOptions) c() (ret *C.TF_SessionOptions, done func(), err error) 
 	var cConfig unsafe.Pointer
 	if sz := len(o.Config); sz > 0 {
 		status := newStatus()
+		pp.Println(status)
 		// Copying into C-memory is the simplest thing to do in terms
 		// of memory safety and cgo rules ("C code may not keep a copy
 		// of a Go pointer after the call returns" from

@@ -22,6 +22,8 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/k0kubun/pp"
+
 	opentracing "github.com/opentracing/opentracing-go"
 	olog "github.com/opentracing/opentracing-go/log"
 	"github.com/pkg/errors"
@@ -35,6 +37,7 @@ import (
 	"github.com/rai-project/image/types"
 	nvidiasmi "github.com/rai-project/nvidia-smi"
 	"github.com/rai-project/tensorflow"
+	proto "github.com/rai-project/tensorflow"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 	context "golang.org/x/net/context"
 )
@@ -43,7 +46,7 @@ type ImagePredictor struct {
 	common.ImagePredictor
 	features    []string
 	tfGraph     *tf.Graph
-	tfSession   *tf.Session
+	tfSession   *Session
 	inputLayer  string
 	outputLayer string
 }
@@ -227,10 +230,6 @@ func (p ImagePredictor) GetOutputLayerName(reader io.Reader) (string, error) {
 	return name, nil
 }
 
-type Graph struct {
-	c *C.TF_Graph
-}
-
 func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "LoadPredictor")
 	defer span.Finish()
@@ -288,8 +287,9 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 				"GPU": int32(nvidiasmi.GPUCount),
 			},
 			// LogDevicePlacement: true,
-			GpuOptions: &tensorflow.GPUOptions{
+			GpuOptions: &proto.GPUOptions{
 				ForceGpuCompatible: true,
+				// PerProcessGpuMemoryFraction: 0.5,
 			},
 		}
 	} else {
@@ -304,15 +304,16 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 			},
 		}
 	}
-	sessionOpts := &tf.SessionOptions{}
+	sessionOpts := &SessionOptions{}
 	if buf, err := sessionConfig.Marshal(); err == nil {
 		sessionOpts.Config = buf
 	}
-	session, err := tf.NewSession(graph, sessionOpts)
+	session, err := NewSession(graph, sessionOpts)
 	if err != nil {
 		return errors.Wrap(err, "unable to create tensorflow session")
 	}
 
+	pp.Println(sessionOpts)
 	p.tfGraph = graph
 	p.tfSession = session
 
@@ -412,14 +413,14 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 	// 	C.TF_SetDevice(op.c, cstr)
 	// 	C.free(unsafe.Pointer(cstr))
 	// }
-	fetches, err := session.Run(
+	fetches, err := session.Run(ctx,
 		map[tf.Output]*tf.Tensor{
 			graph.Operation(p.inputLayer).Output(0): tensor,
 		},
 		[]tf.Output{
 			graph.Operation(p.outputLayer).Output(0),
 		},
-		nil)
+		nil, NewRunOptions())
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to perform inference")
 	}
@@ -440,6 +441,15 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 	}
 
 	return output, nil
+}
+
+func NewRunOptions() *proto.RunOptions {
+	if true {
+		return &proto.RunOptions{
+			TraceLevel: proto.RunOptions_SOFTWARE_TRACE,
+		}
+	}
+	return nil
 }
 
 func (p *ImagePredictor) Reset(ctx context.Context) error {

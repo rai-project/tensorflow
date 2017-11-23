@@ -1,7 +1,7 @@
 name: MobileNet
 framework:
   name: Tensorflow
-  version: 1.2
+  version: 1.4
 version: 1.0.75.128
 container:
   amd64:

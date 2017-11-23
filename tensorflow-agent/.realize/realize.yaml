@@ -33,7 +33,7 @@ schema:
   watcher:
     preview: true
     paths:
-    - ..
+    - ../
     - ../../dlframework
     - ../../grpc
     extensions:
@@ -41,6 +41,5 @@ schema:
     ignored_paths:
     - ../.git
     - .realize
-    - ..
     - ../vendor
     - ../../dlframework/vendor
