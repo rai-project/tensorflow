@@ -23,42 +23,47 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 
+	"github.com/fatih/color"
+	colorable "github.com/mattn/go-colorable"
+
 	"github.com/k0kubun/pp"
+	"github.com/rai-project/config"
 	proto "github.com/rai-project/tensorflow"
+	"github.com/rai-project/tracer"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 	"github.com/tensorflow/tensorflow/tensorflow/go/op"
+
+	_ "github.com/rai-project/tracer/all"
 )
 
 func NewSessionOptions() *SessionOptions {
-	if false {
-		sessionConfig := proto.ConfigProto{
-			DeviceCount: map[string]int32{
-				"CPU": int32(1), //int32(nvidiasmi.GPUCount),
-			},
-			LogDevicePlacement: true,
-		}
 
-		buf, err := sessionConfig.Marshal()
-		if err == nil {
-			pp.Println("buf = ", string(buf))
-		}
-		return &SessionOptions{Config: buf}
+	sessionConfig := proto.ConfigProto{
+		DeviceCount: map[string]int32{
+			"GPU": int32(1),
+		},
+		LogDevicePlacement: true,
+		GpuOptions: &proto.GPUOptions{
+			ForceGpuCompatible: true,
+		},
 	}
-	return &SessionOptions{}
+
+	buf, err := sessionConfig.Marshal()
+	if err == nil {
+		pp.Println("buf = ", string(buf))
+	}
+	return &SessionOptions{Config: buf}
+
 }
 
 func NewRunOptions() *proto.RunOptions {
-	if false {
-		return &proto.RunOptions{
-			TraceLevel: proto.RunOptions_FULL_TRACE,
-		}
+	return &proto.RunOptions{
+		TraceLevel: proto.RunOptions_FULL_TRACE,
 	}
-	return nil
 }
 
 func main() {
@@ -100,6 +105,11 @@ func main() {
 		flag.Usage()
 		return
 	}
+
+	defer func() {
+		tracer.Close()
+	}()
+
 	// Load the serialized GraphDef from a file.
 	modelfile, labelsfile, err := modelFiles(*modeldir)
 	if err != nil {
@@ -130,7 +140,7 @@ func main() {
 	// concurrently). Alternatively, images can be batched since the model
 	// accepts batches of image data as input.
 	tensor, err := makeTensorFromImage(*imagefile)
-	pp.Println(tensor)
+	// pp.Println(tensor)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -323,4 +333,16 @@ func unzip(dir, zipfile string) error {
 		dst.Close()
 	}
 	return nil
+}
+
+func init() {
+	config.Init(
+		config.AppName("carml"),
+		config.VerboseMode(true),
+		config.DebugMode(true),
+	)
+
+	color.NoColor = true
+	pp.ColoringEnabled = false
+	pp.SetDefaultOutput(colorable.NewColorableStdout())
 }

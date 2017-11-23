@@ -18,17 +18,22 @@ package main
 
 // #include <stdlib.h>
 // #include "tensorflow/c/c_api.h"
+// #include <string.h>
 import "C"
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"runtime"
 	"sync"
 	"unsafe"
 
+	protobuf "github.com/golang/protobuf/proto"
 	proto "github.com/rai-project/tensorflow"
+	"github.com/rai-project/tracer"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
+	"golang.org/x/net/context"
 )
 
 // Session drives a TensorFlow graph computation.
@@ -109,6 +114,7 @@ func NewSession(graph0 *tf.Graph, options *SessionOptions) (*Session, error) {
 // the fetches argument. If fetches is set to nil, the returned Tensor fetches
 // is empty.
 func (s *Session) Run(feeds map[tf.Output]*tf.Tensor, fetches []tf.Output, targets []*tf.Operation, runOpts *proto.RunOptions) ([]*tf.Tensor, error) {
+
 	s.mu.Lock()
 	if s.c == nil {
 		s.mu.Unlock()
@@ -120,12 +126,58 @@ func (s *Session) Run(feeds map[tf.Output]*tf.Tensor, fetches []tf.Output, targe
 
 	c := newCRunArgs(feeds, fetches, targets)
 	status := newStatus()
-	C.TF_SessionRun(s.c, nil,
+
+	var runOptsBuf *C.TF_Buffer
+	if runOpts != nil {
+		runOptsBuf = C.TF_NewBuffer()
+		defer C.TF_DeleteBuffer(runOptsBuf)
+
+		buf, err := protobuf.Marshal(runOpts)
+		if err != nil {
+			return nil, err
+		}
+
+		runOptsBuf.length = C.size_t(len(buf))
+		runOptsBuf.data = C.malloc(runOptsBuf.length)
+		if runOptsBuf.data == nil {
+			return nil, fmt.Errorf("unable to allocate memory")
+		}
+		defer C.free(runOptsBuf.data)
+		C.memcpy(runOptsBuf.data, unsafe.Pointer(&buf[0]), runOptsBuf.length)
+	}
+
+	runMetaData := C.TF_NewBuffer()
+	defer C.TF_DeleteBuffer(runMetaData)
+
+	span, ctx := tracer.StartSpanFromContext(context.Background(), tracer.FULL_TRACE, "tensorflow_session_run")
+
+	C.TF_SessionRun(s.c, runOptsBuf,
 		ptrOutput(c.feeds), ptrTensor(c.feedTensors), C.int(len(feeds)),
 		ptrOutput(c.fetches), ptrTensor(c.fetchTensors), C.int(len(fetches)),
 		ptrOperation(c.targets), C.int(len(targets)),
-		nil, status.c)
+		runMetaData, status.c)
 
+	span.Finish()
+
+	var meta proto.RunMetadata
+
+	// A []byte slice backed by C memory.
+	// See: https://github.com/golang/go/wiki/cgo#turning-c-arrays-into-go-slices
+	length := int(runMetaData.length)
+	slice := (*[1 << 30]byte)(unsafe.Pointer(runMetaData.data))[:length:length]
+
+	protobuf.Unmarshal(slice, &meta)
+
+	js, err := json.MarshalIndent(meta.StepStats, "", "  ")
+	if err != nil {
+		panic("failed to marshal step stats " + err.Error())
+	}
+	if false {
+		fmt.Println(string(js))
+	}
+
+	tracer, err := NewTrace(meta.StepStats)
+	tracer.Publish(ctx)
 	// Make sure GC won't harvest input tensors until SessionRun() is finished
 	runtime.KeepAlive(feeds)
 
