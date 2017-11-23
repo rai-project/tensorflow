@@ -17,7 +17,6 @@ limitations under the License.
 package main
 
 // #include <stdlib.h>
-// #include <string.h>
 // #include "tensorflow/c/c_api.h"
 import "C"
 
@@ -28,8 +27,6 @@ import (
 	"sync"
 	"unsafe"
 
-	protobuf "github.com/golang/protobuf/proto"
-	"github.com/k0kubun/pp"
 	proto "github.com/rai-project/tensorflow"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 )
@@ -55,6 +52,8 @@ type Session struct {
 type Graph struct {
 	c *C.TF_Graph
 }
+
+func (t *Tensor) finalize() { C.TF_DeleteTensor(t.c) }
 
 // Tensor holds a multi-dimensional array of elements of a single data type.
 type Tensor struct {
@@ -121,44 +120,11 @@ func (s *Session) Run(feeds map[tf.Output]*tf.Tensor, fetches []tf.Output, targe
 
 	c := newCRunArgs(feeds, fetches, targets)
 	status := newStatus()
-
-	var runOptsBuf *C.TF_Buffer
-	if runOpts != nil {
-		runOptsBuf = C.TF_NewBuffer()
-		defer C.TF_DeleteBuffer(runOptsBuf)
-
-		buf, err := protobuf.Marshal(runOpts)
-		if err != nil {
-			return nil, err
-		}
-
-		runOptsBuf.length = C.size_t(len(buf))
-		runOptsBuf.data = C.malloc(runOptsBuf.length)
-		if runOptsBuf.data == nil {
-			return nil, fmt.Errorf("unable to allocate memory")
-		}
-		defer C.free(runOptsBuf.data)
-		C.memcpy(runOptsBuf.data, unsafe.Pointer(&buf[0]), runOptsBuf.length)
-	}
-
-	runMetaData := C.TF_NewBuffer()
-	defer C.TF_DeleteBuffer(runMetaData)
-
-	C.TF_SessionRun(s.c, runOptsBuf,
+	C.TF_SessionRun(s.c, nil,
 		ptrOutput(c.feeds), ptrTensor(c.feedTensors), C.int(len(feeds)),
 		ptrOutput(c.fetches), ptrTensor(c.fetchTensors), C.int(len(fetches)),
 		ptrOperation(c.targets), C.int(len(targets)),
-		runMetaData, status.c)
-
-	var meta proto.RunMetadata
-
-	// A []byte slice backed by C memory.
-	// See: https://github.com/golang/go/wiki/cgo#turning-c-arrays-into-go-slices
-	length := int(runMetaData.length)
-	slice := (*[1 << 30]byte)(unsafe.Pointer(runMetaData.data))[:length:length]
-
-	protobuf.Unmarshal(slice, &meta)
-	pp.Println(meta.StepStats)
+		nil, status.c)
 
 	// Make sure GC won't harvest input tensors until SessionRun() is finished
 	runtime.KeepAlive(feeds)
@@ -167,6 +133,126 @@ func (s *Session) Run(feeds map[tf.Output]*tf.Tensor, fetches []tf.Output, targe
 		return nil, err
 	}
 	return c.toGo(), nil
+}
+
+// PartialRun enables incremental evaluation of graphs.
+//
+// PartialRun allows the caller to pause the evaluation of a graph, run
+// arbitrary code that depends on the intermediate computation of the graph,
+// and then resume graph execution. The results of the arbitrary code can be
+// fed into the graph when resuming execution.  In contrast, Session.Run
+// executes the graph to compute the requested fetches using the provided feeds
+// and discards all intermediate state (e.g., value of intermediate tensors)
+// when it returns.
+//
+// For example, consider a graph for unsupervised training of a neural network
+// model. PartialRun can be used to pause execution after the forward pass of
+// the network, let the caller actuate the output (e.g., play a game, actuate a
+// robot etc.), determine the error/loss and then feed this calculated loss
+// when resuming the backward pass of the graph.
+type PartialRun struct {
+	session *Session
+	handle  *C.char
+}
+
+// Run resumes execution of the graph to compute the requested fetches and
+// targets with the provided feeds.
+func (pr *PartialRun) Run(feeds map[tf.Output]*tf.Tensor, fetches []tf.Output, targets []*tf.Operation) ([]*tf.Tensor, error) {
+	var (
+		c      = newCRunArgs(feeds, fetches, targets)
+		status = newStatus()
+		s      = pr.session
+	)
+	s.mu.Lock()
+	if s.c == nil {
+		s.mu.Unlock()
+		return nil, errors.New("session is closed")
+	}
+	s.wg.Add(1)
+	s.mu.Unlock()
+	defer s.wg.Done()
+
+	C.TF_SessionPRun(s.c, pr.handle,
+		ptrOutput(c.feeds), ptrTensor(c.feedTensors), C.int(len(feeds)),
+		ptrOutput(c.fetches), ptrTensor(c.fetchTensors), C.int(len(fetches)),
+		ptrOperation(c.targets), C.int(len(targets)),
+		status.c)
+	if err := status.Err(); err != nil {
+		return nil, err
+	}
+	return c.toGo(), nil
+}
+
+func outputC(p tf.Output) C.TF_Output {
+	if p.Op == nil {
+		// Attempt to provide a more useful panic message than "nil
+		// pointer dereference".
+		panic("nil-Operation. If the Output was created with a Scope object, see Scope.Err() for details.")
+	}
+	op := toOperation(p.Op)
+	return C.TF_Output{oper: op.c, index: C.int(p.Index)}
+}
+
+// NewPartialRun sets up the graph for incremental evaluation.
+//
+// All values of feeds, fetches and targets that may be provided to Run calls
+// on the returned PartialRun need to be provided to NewPartialRun.
+//
+// See documentation for the PartialRun type.
+func (s *Session) NewPartialRun(feeds, fetches []tf.Output, targets []*tf.Operation) (*PartialRun, error) {
+	var (
+		cfeeds   = make([]C.TF_Output, len(feeds))
+		cfetches = make([]C.TF_Output, len(fetches))
+		ctargets = make([]*C.TF_Operation, len(targets))
+
+		pcfeeds   *C.TF_Output
+		pcfetches *C.TF_Output
+		pctargets **C.TF_Operation
+
+		status = newStatus()
+	)
+	if len(feeds) > 0 {
+		pcfeeds = &cfeeds[0]
+		for i, o := range feeds {
+			cfeeds[i] = outputC(o)
+		}
+	}
+	if len(fetches) > 0 {
+		pcfetches = &cfetches[0]
+		for i, o := range fetches {
+			cfetches[i] = outputC(o)
+		}
+	}
+	if len(targets) > 0 {
+		pctargets = &ctargets[0]
+		for i, o := range targets {
+			op := toOperation(o)
+			ctargets[i] = op.c
+		}
+	}
+
+	s.mu.Lock()
+	if s.c == nil {
+		s.mu.Unlock()
+		return nil, errors.New("session is closed")
+	}
+	s.wg.Add(1)
+	s.mu.Unlock()
+	defer s.wg.Done()
+
+	pr := &PartialRun{session: s}
+	C.TF_SessionPRunSetup(s.c,
+		pcfeeds, C.int(len(feeds)),
+		pcfetches, C.int(len(fetches)),
+		pctargets, C.int(len(targets)),
+		&pr.handle, status.c)
+	if err := status.Err(); err != nil {
+		return nil, err
+	}
+	runtime.SetFinalizer(pr, func(pr *PartialRun) {
+		C.TF_DeletePRunHandle(pr.handle)
+	})
+	return pr, nil
 }
 
 // Close a session. This contacts any other processes associated with this
@@ -268,15 +354,12 @@ func newCRunArgs(feeds map[tf.Output]*tf.Tensor, fetches []tf.Output, targets []
 		fetchTensors: make([]*C.TF_Tensor, len(fetches)),
 		targets:      make([]*C.TF_Operation, len(targets)),
 	}
-	for o, t0 := range feeds {
-		oc := C.TF_Output{oper: toOperation(o.Op).c, index: C.int(o.Index)}
-		t := toTensor(t0)
-		c.feeds = append(c.feeds, oc)
-		c.feedTensors = append(c.feedTensors, t.c)
+	for o, t := range feeds {
+		c.feeds = append(c.feeds, outputC(o))
+		c.feedTensors = append(c.feedTensors, toTensor(t).c)
 	}
 	for i, o := range fetches {
-		oc := C.TF_Output{oper: toOperation(o.Op).c, index: C.int(o.Index)}
-		c.fetches[i] = oc
+		c.fetches[i] = outputC(o)
 	}
 	for i, t := range targets {
 		c.targets[i] = toOperation(t).c
@@ -290,22 +373,6 @@ func (c *cRunArgs) toGo() []*tf.Tensor {
 		ret[i] = newTensorFromC(ct)
 	}
 	return ret
-}
-
-// newTensorFromC takes ownership of c and returns the owning Tensor.
-func newTensorFromC(c *C.TF_Tensor) *tf.Tensor {
-	var shape []int64
-	if ndims := int(C.TF_NumDims(c)); ndims > 0 {
-		shape = make([]int64, ndims)
-	}
-	for i := range shape {
-		shape[i] = int64(C.TF_Dim(c, C.int(i)))
-	}
-	t := &Tensor{c: c, shape: shape}
-	runtime.SetFinalizer(t, func(t *Tensor) {
-		C.TF_DeleteTensor(t.c)
-	})
-	return (*tf.Tensor)(unsafe.Pointer(t))
 }
 
 func ptrOutput(l []C.TF_Output) *C.TF_Output {
@@ -327,4 +394,18 @@ func ptrOperation(l []*C.TF_Operation) **C.TF_Operation {
 		return nil
 	}
 	return &l[0]
+}
+
+// newTensorFromC takes ownership of c and returns the owning Tensor.
+func newTensorFromC(c *C.TF_Tensor) *tf.Tensor {
+	var shape []int64
+	if ndims := int(C.TF_NumDims(c)); ndims > 0 {
+		shape = make([]int64, ndims)
+	}
+	for i := range shape {
+		shape[i] = int64(C.TF_Dim(c, C.int(i)))
+	}
+	t := &Tensor{c: c, shape: shape}
+	runtime.SetFinalizer(t, (*Tensor).finalize)
+	return (*tf.Tensor)(unsafe.Pointer(t))
 }

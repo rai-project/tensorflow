@@ -35,13 +35,30 @@ import (
 )
 
 func NewSessionOptions() *SessionOptions {
+	if false {
+		sessionConfig := proto.ConfigProto{
+			DeviceCount: map[string]int32{
+				"CPU": int32(1), //int32(nvidiasmi.GPUCount),
+			},
+			LogDevicePlacement: true,
+		}
+
+		buf, err := sessionConfig.Marshal()
+		if err == nil {
+			pp.Println("buf = ", string(buf))
+		}
+		return &SessionOptions{Config: buf}
+	}
 	return &SessionOptions{}
 }
 
 func NewRunOptions() *proto.RunOptions {
-	return &proto.RunOptions{
-		TraceLevel: proto.RunOptions_FULL_TRACE,
+	if false {
+		return &proto.RunOptions{
+			TraceLevel: proto.RunOptions_FULL_TRACE,
+		}
 	}
+	return nil
 }
 
 func main() {
@@ -106,13 +123,14 @@ func main() {
 	}
 	defer session.Close()
 
-	pp.Println(graph.Operation("output"))
+	// pp.Println(graph.Operation("output"))
 
 	// Run inference on *imageFile.
 	// For multiple images, session.Run() can be called in a loop (and
 	// concurrently). Alternatively, images can be batched since the model
 	// accepts batches of image data as input.
 	tensor, err := makeTensorFromImage(*imagefile)
+	pp.Println(tensor)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -179,7 +197,7 @@ func makeTensorFromImage(filename string) (*tf.Tensor, error) {
 		return nil, err
 	}
 	// Execute that graph to normalize this one image
-	session, err := NewSession(graph, NewSessionOptions())
+	session, err := tf.NewSession(graph, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -187,9 +205,7 @@ func makeTensorFromImage(filename string) (*tf.Tensor, error) {
 	normalized, err := session.Run(
 		map[tf.Output]*tf.Tensor{input: tensor},
 		[]tf.Output{output},
-		nil,
-		NewRunOptions(),
-	)
+		nil)
 	if err != nil {
 		return nil, err
 	}

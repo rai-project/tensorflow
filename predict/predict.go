@@ -19,10 +19,9 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"runtime"
 	"strings"
-	"unsafe"
 
-	"github.com/k0kubun/pp"
 	opentracing "github.com/opentracing/opentracing-go"
 	olog "github.com/opentracing/opentracing-go/log"
 	"github.com/pkg/errors"
@@ -282,28 +281,32 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 	}
 
 	// Create a session for inference over graph.
-	sessionOpts := &tf.SessionOptions{}
-	if p.Options.UsesGPU() && false {
-		if false {
-		g := (*Graph)(unsafe.Pointer(graph))
-		_ = g 
-		}
-		//C.setDefaultDevice("/device:GPU:0", g.c)
-		sessionOpts = &tf.SessionOptions{Target: "GPU"}
-		_ = nvidiasmi.GPUCount
-		sessionConfig := tensorflow.ConfigProto{
+	var sessionConfig tensorflow.ConfigProto
+	if p.Options.UsesGPU() {
+		sessionConfig = tensorflow.ConfigProto{
 			DeviceCount: map[string]int32{
-				"GPU": int32(1), //int32(nvidiasmi.GPUCount),
+				"GPU": int32(nvidiasmi.GPUCount),
 			},
-			LogDevicePlacement: true,
+			// LogDevicePlacement: true,
 			GpuOptions: &tensorflow.GPUOptions{
 				ForceGpuCompatible: true,
 			},
 		}
-		if buf, err := sessionConfig.Marshal(); err == nil {
-			sessionOpts.Config = buf
-			pp.Println("buf = ", string(buf))
+	} else {
+		sessionConfig = tensorflow.ConfigProto{
+			DeviceCount: map[string]int32{
+				"CPU": int32(runtime.NumCPU()),
+				"GPU": int32(0),
+			},
+			// LogDevicePlacement: true,
+			GpuOptions: &tensorflow.GPUOptions{
+				ForceGpuCompatible: false,
+			},
 		}
+	}
+	sessionOpts := &tf.SessionOptions{}
+	if buf, err := sessionConfig.Marshal(); err == nil {
+		sessionOpts.Config = buf
 	}
 	session, err := tf.NewSession(graph, sessionOpts)
 	if err != nil {
@@ -402,13 +405,13 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 	if err != nil {
 		return nil, errors.New("cannot make tensor from image data")
 	}
- //
- //if options.UsesGPU() {
- //	op := (*operation)(unsafe.Pointer(graph.Operation(p.inputLayer)))
- //	cstr := C.CString("gpu:0")
- //	C.TF_SetDevice(op.c, cstr)
- //	C.free(unsafe.Pointer(cstr))
- //}
+	//
+	// if options.UsesGPU() {
+	// 	op := (*operation)(unsafe.Pointer(graph.Operation(p.inputLayer)))
+	// 	cstr := C.CString("gpu:0")
+	// 	C.TF_SetDevice(op.c, cstr)
+	// 	C.free(unsafe.Pointer(cstr))
+	// }
 	fetches, err := session.Run(
 		map[tf.Output]*tf.Tensor{
 			graph.Operation(p.inputLayer).Output(0): tensor,
