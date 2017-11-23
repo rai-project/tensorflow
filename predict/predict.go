@@ -16,13 +16,12 @@ import "C"
 import (
 	"bufio"
 	"bytes"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
 	"runtime"
 	"strings"
-
-	"github.com/k0kubun/pp"
 
 	opentracing "github.com/opentracing/opentracing-go"
 	olog "github.com/opentracing/opentracing-go/log"
@@ -313,7 +312,6 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 		return errors.Wrap(err, "unable to create tensorflow session")
 	}
 
-	pp.Println(sessionOpts)
 	p.tfGraph = graph
 	p.tfSession = session
 
@@ -330,6 +328,39 @@ func zeros(height, width, channels int) [][][]float32 {
 		rows[ii] = columns
 	}
 	return rows
+}
+
+func (p *ImagePredictor) newTensor(ctx context.Context, data [][]float32) (*tf.Tensor, error) {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "newTensor")
+	defer span.Finish()
+
+	imageDims, err := p.GetImageDimensions()
+	if err != nil {
+		return nil, err
+	}
+
+	channels, height, width := int64(imageDims[0]), int64(imageDims[1]), int64(imageDims[2])
+	batchSize := int64(p.BatchSize())
+	if batchSize == 0 {
+		batchSize = 1
+	}
+
+	// flattenedLength := func(data [][]float32) int64 {
+	// 	accum := int64(1)
+	// 	for _, row := range data {
+	// 		accum *= int64(len(row))
+	// 	}
+	// 	return accum
+	// }
+
+	shapeLen := width * height * channels
+	dataLen := int64(len(data))
+	if batchSize > dataLen {
+		padding := make([]float32, (batchSize-dataLen)*shapeLen)
+		data = append(data, padding)
+	}
+
+	return NewTensor(ctx, data, []int64{batchSize, height, width, channels})
 }
 
 // Needs NHWC
@@ -392,6 +423,11 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 	span := opentracing.SpanFromContext(ctx)
 	_ = span
 
+	// check input
+	if data == nil || len(data) < 1 {
+		return nil, fmt.Errorf("intput data nil or empty")
+	}
+
 	session := p.tfSession
 	graph := p.tfGraph
 
@@ -402,17 +438,16 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 		batchSize = 1
 	}
 
-	tensor, err := p.makeTensorFromImageData(ctx, data)
+	tensor, err := p.newTensor(ctx, data)
 	if err != nil {
-		return nil, errors.New("cannot make tensor from image data")
+		return nil, errors.Wrap(err, "cannot make tensor from image data")
 	}
-	//
-	// if options.UsesGPU() {
-	// 	op := (*operation)(unsafe.Pointer(graph.Operation(p.inputLayer)))
-	// 	cstr := C.CString("gpu:0")
-	// 	C.TF_SetDevice(op.c, cstr)
-	// 	C.free(unsafe.Pointer(cstr))
+
+	// tensor, err = p.makeTensorFromImageData(ctx, data)
+	// if err != nil {
+	// 	return nil, errors.Wrap(err, "cannot make tensor from image data")
 	// }
+
 	fetches, err := session.Run(ctx,
 		map[tf.Output]*tf.Tensor{
 			graph.Operation(p.inputLayer).Output(0): tensor,
