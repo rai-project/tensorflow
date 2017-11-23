@@ -37,6 +37,7 @@ import (
 	nvidiasmi "github.com/rai-project/nvidia-smi"
 	"github.com/rai-project/tensorflow"
 	proto "github.com/rai-project/tensorflow"
+	"github.com/rai-project/tracer"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 	context "golang.org/x/net/context"
 )
@@ -330,8 +331,8 @@ func zeros(height, width, channels int) [][][]float32 {
 	return rows
 }
 
-func (p *ImagePredictor) newTensor(ctx context.Context, data [][]float32) (*tf.Tensor, error) {
-	span, ctx := opentracing.StartSpanFromContext(ctx, "newTensor")
+func (p *ImagePredictor) createTensor(ctx context.Context, data [][]float32) (*tf.Tensor, error) {
+	span, ctx := tracer.StartSpanFromContext(ctx, tracer.STEP_TRACE, "createTensor")
 	defer span.Finish()
 
 	imageDims, err := p.GetImageDimensions()
@@ -345,14 +346,6 @@ func (p *ImagePredictor) newTensor(ctx context.Context, data [][]float32) (*tf.T
 		batchSize = 1
 	}
 
-	// flattenedLength := func(data [][]float32) int64 {
-	// 	accum := int64(1)
-	// 	for _, row := range data {
-	// 		accum *= int64(len(row))
-	// 	}
-	// 	return accum
-	// }
-
 	shapeLen := width * height * channels
 	dataLen := int64(len(data))
 	if batchSize > dataLen {
@@ -363,55 +356,6 @@ func (p *ImagePredictor) newTensor(ctx context.Context, data [][]float32) (*tf.T
 	return NewTensor(ctx, data, []int64{batchSize, height, width, channels})
 }
 
-// Needs NHWC
-func (p *ImagePredictor) makeTensorFromImageData(ctx context.Context, data0 [][]float32) (*tf.Tensor, error) {
-	span, ctx := opentracing.StartSpanFromContext(ctx, "makeTensorFromImageData")
-	defer span.Finish()
-
-	imageDims, err := p.GetImageDimensions()
-	if err != nil {
-		return nil, err
-	}
-	channels, height, width := int(imageDims[0]), int(imageDims[1]), int(imageDims[2])
-	batchSize := int(p.BatchSize())
-	if batchSize == 0 {
-		batchSize = 1
-	}
-
-	makeImage := func(arry []float32) [][][]float32 {
-		rows := make([][][]float32, height)
-		for ii := range rows {
-			columns := make([][]float32, width)
-			for jj := range columns {
-				offset := channels * (width*ii + jj)
-				columns[jj] = arry[offset : offset+3]
-			}
-			rows[ii] = columns
-		}
-		return rows
-	}
-
-	// convert to a 4D tensor (batch, height, width, channels)
-	data := make([][][][]float32, batchSize)
-	for ii, e := range data0 {
-		data[ii] = makeImage(e)
-	}
-	// perform padding
-	if len(data0) < batchSize {
-		z := zeros(height, width, channels)
-		for ii := len(data0); ii < batchSize; ii++ {
-			data[ii] = z
-		}
-	}
-
-	tensor, err := tf.NewTensor(data)
-	if err != nil {
-		return nil, err
-	}
-
-	return tensor, nil
-}
-
 type operation struct {
 	c *C.TF_Operation
 	// A reference to the Graph to prevent it from
@@ -420,8 +364,6 @@ type operation struct {
 }
 
 func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...options.Option) ([]dlframework.Features, error) {
-	span := opentracing.SpanFromContext(ctx)
-	_ = span
 
 	// check input
 	if data == nil || len(data) < 1 {
@@ -438,15 +380,10 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 		batchSize = 1
 	}
 
-	tensor, err := p.newTensor(ctx, data)
+	tensor, err := p.createTensor(ctx, data)
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot make tensor from image data")
 	}
-
-	// tensor, err = p.makeTensorFromImageData(ctx, data)
-	// if err != nil {
-	// 	return nil, errors.Wrap(err, "cannot make tensor from image data")
-	// }
 
 	fetches, err := session.Run(ctx,
 		map[tf.Output]*tf.Tensor{
@@ -455,7 +392,9 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 		[]tf.Output{
 			graph.Operation(p.outputLayer).Output(0),
 		},
-		nil, NewRunOptions())
+		nil,
+		p.runOptions(),
+	)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to perform inference")
 	}
@@ -478,8 +417,8 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 	return output, nil
 }
 
-func NewRunOptions() *proto.RunOptions {
-	if true {
+func (p *ImagePredictor) runOptions() *proto.RunOptions {
+	if p.TraceLevel() >= tracer.FRAMEWORK_TRACE {
 		return &proto.RunOptions{
 			TraceLevel: proto.RunOptions_SOFTWARE_TRACE,
 		}

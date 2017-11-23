@@ -29,7 +29,6 @@ import (
 	"sync"
 	"unsafe"
 
-	"github.com/k0kubun/pp"
 	"golang.org/x/net/context"
 
 	protobuf "github.com/golang/protobuf/proto"
@@ -96,7 +95,6 @@ func NewSession(graph0 *tf.Graph, options *SessionOptions) (*Session, error) {
 	if err != nil {
 		return nil, err
 	}
-	pp.Println(options)
 	graph := toGraph(graph0)
 	cSess := C.TF_NewSession(graph.c, cOpt, status.c)
 	if err := status.Err(); err != nil {
@@ -377,7 +375,6 @@ func (o *SessionOptions) c() (ret *C.TF_SessionOptions, done func(), err error) 
 	var cConfig unsafe.Pointer
 	if sz := len(o.Config); sz > 0 {
 		status := newStatus()
-		pp.Println(status)
 		// Copying into C-memory is the simplest thing to do in terms
 		// of memory safety and cgo rules ("C code may not keep a copy
 		// of a Go pointer after the call returns" from
