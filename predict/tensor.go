@@ -86,7 +86,6 @@ func encodeTensor(w *bytes.Buffer, v reflect.Value) error {
 		if !ok {
 			return errors.New("expecting a [][]float32 type")
 		}
-		log.Info("encoding tensor using [][]float32")
 		for _, row := range data {
 			for _, elem := range row {
 				var b [4]byte
