@@ -33,7 +33,7 @@ func assetFS() *assetfs.AssetFS {
 	panic("unreachable")
 }
 
-func init() {
+func Register() {
 	err := framework.Register(FrameworkManifest, assetFS())
 	if err != nil {
 		log.WithError(err).Error("Failed to register server")

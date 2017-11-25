@@ -11,6 +11,8 @@ import (
 )
 
 func main() {
+	tensorflow.Register()
+
 	rootCmd, err := cmd.NewRootCommand(tensorflow.FrameworkManifest)
 	if err != nil {
 		fmt.Println(err)
