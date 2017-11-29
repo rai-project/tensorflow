@@ -347,7 +347,7 @@ func (p *ImagePredictor) createTensor(ctx context.Context, data [][]float32) (*t
 	}
 
 	shapeLen := width * height * channels
-	dataLen := int64(len(data)) / shapeLen
+	dataLen := int64(len(data))
 	if batchSize > dataLen {
 		padding := make([]float32, (batchSize-dataLen)*shapeLen)
 		data = append(data, padding)
