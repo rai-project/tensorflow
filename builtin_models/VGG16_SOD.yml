@@ -30,6 +30,9 @@ inputs:
     # description of the first input
     description: the input image
     parameters: # type parameters
+      layer_name: "data"
+      layout: "CHW"
+      rgb_mode: "BGR"
       dimensions: [3, 224, 224]
       mean: [123.68, 116.779, 103.939]
 output:
@@ -39,6 +42,7 @@ output:
   description: the output label
   parameters:
     # type parameters
+    layer_name: "prob"
     features_url: http://s3.amazonaws.com/store.carml.org/models/Tensorflow/vgg16_sod/center100.txt
     features_checksum: 6ea7d1bd9a24ba3bcde6c067dbd6185f
 model: # specifies model graph and weights resources

@@ -32,6 +32,9 @@ inputs:
     # description of the first input
     description: the input image
     parameters: # type parameters
+      layer_name: "data"
+      layout: "CHW"
+      rgb_mode: "BGR"
       dimensions: [3, 224, 224]
       mean: [123.68, 116.779, 103.939]
       scale: 256
@@ -42,6 +45,7 @@ output:
   description: the output label
   parameters:
     # type parameters
+    layer_name: "prob"
     features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset.txt
     features_checksum: 4d234b5833aca44928065a180db3016a
 model: # specifies model graph and weights resources
