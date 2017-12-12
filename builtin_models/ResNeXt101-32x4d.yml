@@ -1,4 +1,4 @@
-name: VGG16 # name of your model
+name: ResNeXt101-32x4d # name of your model
 framework:
   name: Tensorflow # framework for the model
   version: 1.4 # framework version contraint
@@ -12,13 +12,16 @@ container: # containers used to perform model prediction
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  The model is an improved version of the 16-layer model used by the VGG team in the ILSVRC-2014 competition.
+  ResNeXt is a simple, highly modularized network architecture for image classification. Our network is constructed by repeating
+  a building block that aggregates a set of transformations with the same topology. Our simple design results in a homogeneous,
+  multi-branch architecture that has only a few hyper-parameters to set. This strategy exposes a new dimension, which we call
+  “cardinality” (the size of the set of transformations), as an essential factor in addition to the dimensions of depth and width.
 references: # references to papers / websites / etc.. describing the model
-  - https://gist.github.com/ksimonyan/211839e770f7b538e2d8
-  - https://github.com/BVLC/Tensorflow/wiki/Model-Zoo#models-used-by-the-vgg-team-in-ilsvrc-2014
-  - https://arxiv.org/abs/1409.1556
+  - https://github.com/soeaver/Tensorflow-model/tree/master/cls
+  - https://github.com/facebookresearch/ResNeXt
+  - https://github.com/facebookresearch/ResNeXt/blob/master/datasets/README.md
 # license of the model
-license: CC BY 4.0 (commercial use is allowed)
+license: unrestricted
 # inputs to the model
 inputs:
   # first input type for the model
@@ -27,7 +30,8 @@ inputs:
     description: the input image
     parameters: # type parameters
       dimensions: [3, 224, 224]
-      mean: [123.68, 116.779, 103.939]
+      mean: [123.675, 116.28, 103.52]
+      scale: 256
 output:
   # the type of the output
   type: feature
@@ -35,17 +39,19 @@ output:
   description: the output label
   parameters:
     # type parameters
-    features_url: http://data.dmlc.ml/mxnet/models/imagenet/synset.txt
+    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset.txt
     features_checksum: 4d234b5833aca44928065a180db3016a
 model: # specifies model graph and weights resources
-  graph_path: https://gist.githubusercontent.com/ksimonyan/211839e770f7b538e2d8/raw/ded9363bd93ec0c770134f4e387d8aaaaa2407ce/VGG_ILSVRC_16_layers_deploy.prototxt
-  weights_path: http://www.robots.ox.ac.uk/~vgg/software/very_deep/Tensorflow/VGG_ILSVRC_16_layers.Tensorflowmodel
+  graph_path: http://s3.amazonaws.com/store.carml.org/models/Tensorflow/resnext101-32x4d/deploy_resnext101-32x4d_no_ceil_mode.prototxt
+  weights_path: http://s3.amazonaws.com/store.carml.org/models/Tensorflow/resnext101-32x4d/resnext101-32x4d.Tensorflowmodel
   is_archive: false # if set, then the base_url is a url to an archive
                     # the graph_path and weights_path then denote the
                     # file names of the graph and weights within the archive
-  graph_checksum: c70550f8203a4eaae53d7c39ef34c92d
-  weights_checksum: 441315b0ff6932dbfde97731be7ca852
+  graph_checksum: ec0c8e578040cbf76056deb41ba0af7d
+  weights_checksum: 5e5ec49b00d9f16d14ac6555dc992fcf
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: ImageNet # dataset used to for training
   manifest_author: abduld
+# hidden: true # Message type "Tensorflow.PoolingParameter" has no field named "ceil_mode"
+# https://github.com/BVLC/Tensorflow/pull/3057/files

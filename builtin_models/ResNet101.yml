@@ -1,4 +1,4 @@
-name: VGG16 # name of your model
+name: ResNet101 # name of your model
 framework:
   name: Tensorflow # framework for the model
   version: 1.4 # framework version contraint
@@ -12,13 +12,16 @@ container: # containers used to perform model prediction
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  The model is an improved version of the 16-layer model used by the VGG team in the ILSVRC-2014 competition.
+  A Residual learning framework to ease the training of networks that are substantially deeper than those used previously.
+  We explicitly reformulate the layers as learning residual functions with reference to the layer inputs, instead of learning unreferenced functions.
+  We provide comprehensive empirical evidence showing that these residual networks are easier to optimize, and can gain accuracy from considerably increased depth.
+  On the ImageNet dataset we evaluate residual nets with a depth of up to 152 layers---8x deeper than VGG nets but still having lower complexity.
+  An ensemble of these residual nets achieves 3.57% error on the ImageNet test set. This result won the 1st place on the ILSVRC 2015 classification task.
 references: # references to papers / websites / etc.. describing the model
-  - https://gist.github.com/ksimonyan/211839e770f7b538e2d8
-  - https://github.com/BVLC/Tensorflow/wiki/Model-Zoo#models-used-by-the-vgg-team-in-ilsvrc-2014
-  - https://arxiv.org/abs/1409.1556
+  - https://github.com/KaimingHe/deep-residual-networks
+  - https://arxiv.org/abs/1512.03385
 # license of the model
-license: CC BY 4.0 (commercial use is allowed)
+license: unrestricted
 # inputs to the model
 inputs:
   # first input type for the model
@@ -35,16 +38,16 @@ output:
   description: the output label
   parameters:
     # type parameters
-    features_url: http://data.dmlc.ml/mxnet/models/imagenet/synset.txt
+    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset.txt
     features_checksum: 4d234b5833aca44928065a180db3016a
 model: # specifies model graph and weights resources
-  graph_path: https://gist.githubusercontent.com/ksimonyan/211839e770f7b538e2d8/raw/ded9363bd93ec0c770134f4e387d8aaaaa2407ce/VGG_ILSVRC_16_layers_deploy.prototxt
-  weights_path: http://www.robots.ox.ac.uk/~vgg/software/very_deep/Tensorflow/VGG_ILSVRC_16_layers.Tensorflowmodel
+  graph_path: http://s3.amazonaws.com/store.carml.org/models/Tensorflow/resnet101/ResNet-101-deploy.prototxt
+  weights_path: http://s3.amazonaws.com/store.carml.org/models/Tensorflow/resnet101/ResNet-101-model.Tensorflowmodel
   is_archive: false # if set, then the base_url is a url to an archive
                     # the graph_path and weights_path then denote the
                     # file names of the graph and weights within the archive
-  graph_checksum: c70550f8203a4eaae53d7c39ef34c92d
-  weights_checksum: 441315b0ff6932dbfde97731be7ca852
+  graph_checksum: 3ec3d1a5d432ef54cb2d1afc9f83403a
+  weights_checksum: 3f8ccc93329ddc280b91efae09f71973
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: ImageNet # dataset used to for training

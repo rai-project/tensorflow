@@ -1,4 +1,4 @@
-name: VGG16 # name of your model
+name: BVLC-AlexNet # name of your model
 framework:
   name: Tensorflow # framework for the model
   version: 1.4 # framework version contraint
@@ -12,13 +12,22 @@ container: # containers used to perform model prediction
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  The model is an improved version of the 16-layer model used by the VGG team in the ILSVRC-2014 competition.
+  This model is a replication of the model described in the AlexNet publication.
+  Differences: not training with the relighting data-augmentation;
+  initializing non-zero biases to 0.1 instead of 1 (found necessary for training, as initialization to 1 gave flat loss).
+  The bundled model is the iteration 360,000 snapshot. The best validation
+  performance during training was iteration 358,000 with validation accuracy
+  57.258% and loss 1.83948. This model obtains a top-1 accuracy 57.1% and a
+  top-5 accuracy 80.2% on the validation set, using just the center crop.
+  (Using the average of 10 crops, (4 + 1 center) * 2 mirror, should obtain
+  a bit higher accuracy.)
+  This model was trained by Evan Shelhamer @shelhamer
 references: # references to papers / websites / etc.. describing the model
-  - https://gist.github.com/ksimonyan/211839e770f7b538e2d8
-  - https://github.com/BVLC/Tensorflow/wiki/Model-Zoo#models-used-by-the-vgg-team-in-ilsvrc-2014
-  - https://arxiv.org/abs/1409.1556
+  - https://github.com/BVLC/Tensorflow/tree/master/models/bvlc_alexnet
+  - https://github.com/BVLC/Tensorflow/wiki/Models-accuracy-on-ImageNet-2012-val
+  - http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf
 # license of the model
-license: CC BY 4.0 (commercial use is allowed)
+license: unrestricted
 # inputs to the model
 inputs:
   # first input type for the model
@@ -26,8 +35,9 @@ inputs:
     # description of the first input
     description: the input image
     parameters: # type parameters
-      dimensions: [3, 224, 224]
-      mean: [123.68, 116.779, 103.939]
+      layer_name: "input"
+      dimensions: [3, 227, 227]
+      mean: [123, 117, 104]
 output:
   # the type of the output
   type: feature
@@ -35,16 +45,16 @@ output:
   description: the output label
   parameters:
     # type parameters
+    layer_name:
     features_url: http://data.dmlc.ml/mxnet/models/imagenet/synset.txt
     features_checksum: 4d234b5833aca44928065a180db3016a
 model: # specifies model graph and weights resources
-  graph_path: https://gist.githubusercontent.com/ksimonyan/211839e770f7b538e2d8/raw/ded9363bd93ec0c770134f4e387d8aaaaa2407ce/VGG_ILSVRC_16_layers_deploy.prototxt
-  weights_path: http://www.robots.ox.ac.uk/~vgg/software/very_deep/Tensorflow/VGG_ILSVRC_16_layers.Tensorflowmodel
+  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
+  graph_path: bvlc_alexnet_1.0/frozen_model.pb
+  graph_checksum: 6d23f40191c1dcac71285f41a85abd8e
   is_archive: false # if set, then the base_url is a url to an archive
                     # the graph_path and weights_path then denote the
                     # file names of the graph and weights within the archive
-  graph_checksum: c70550f8203a4eaae53d7c39ef34c92d
-  weights_checksum: 441315b0ff6932dbfde97731be7ca852
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: ImageNet # dataset used to for training

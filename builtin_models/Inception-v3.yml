@@ -1,8 +1,8 @@
-name: VGG16 # name of your model
+name: Inception # name of your model
 framework:
   name: Tensorflow # framework for the model
   version: 1.4 # framework version contraint
-version: 1.0 # version information in semantic version format
+version: 3.0 # version information in semantic version format
 container: # containers used to perform model prediction
            # multiple platforms can be specified
   amd64:
@@ -12,13 +12,14 @@ container: # containers used to perform model prediction
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  The model is an improved version of the 16-layer model used by the VGG team in the ILSVRC-2014 competition.
+  Inception-v3 is trained for the ImageNet Large Visual Recognition Challenge using the data from 2012.
+  This is a standard task in computer vision, where models try to classify entire images into 1000 classes, like "Zebra", "Dalmatian", and "Dishwasher".
 references: # references to papers / websites / etc.. describing the model
-  - https://gist.github.com/ksimonyan/211839e770f7b538e2d8
-  - https://github.com/BVLC/Tensorflow/wiki/Model-Zoo#models-used-by-the-vgg-team-in-ilsvrc-2014
-  - https://arxiv.org/abs/1409.1556
+  - https://github.com/soeaver/Tensorflow-model/tree/master/cls
+  - https://github.com/dmlc/mxnet-model-gallery/blob/master/imagenet-1k-inception-v3.md
+  - https://github.com/tensorflow/models/blob/master/research/slim/preprocessing/inception_preprocessing.py
 # license of the model
-license: CC BY 4.0 (commercial use is allowed)
+license: unrestricted
 # inputs to the model
 inputs:
   # first input type for the model
@@ -26,8 +27,9 @@ inputs:
     # description of the first input
     description: the input image
     parameters: # type parameters
-      dimensions: [3, 224, 224]
-      mean: [123.68, 116.779, 103.939]
+      dimensions: [3, 299, 299]
+      mean: [128, 128, 128]
+      scale: 128
 output:
   # the type of the output
   type: feature
@@ -35,16 +37,16 @@ output:
   description: the output label
   parameters:
     # type parameters
-    features_url: http://data.dmlc.ml/mxnet/models/imagenet/synset.txt
-    features_checksum: 4d234b5833aca44928065a180db3016a
+    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset1000.txt
+    features_checksum: 7315c2c8bffdb680cf8c5d2a7c45c363
 model: # specifies model graph and weights resources
-  graph_path: https://gist.githubusercontent.com/ksimonyan/211839e770f7b538e2d8/raw/ded9363bd93ec0c770134f4e387d8aaaaa2407ce/VGG_ILSVRC_16_layers_deploy.prototxt
-  weights_path: http://www.robots.ox.ac.uk/~vgg/software/very_deep/Tensorflow/VGG_ILSVRC_16_layers.Tensorflowmodel
+  graph_path: http://s3.amazonaws.com/store.carml.org/models/Tensorflow/inception-v3/deploy_inception-v3.prototxt
+  weights_path: http://s3.amazonaws.com/store.carml.org/models/Tensorflow/inception-v3/inception-v3.Tensorflowmodel
   is_archive: false # if set, then the base_url is a url to an archive
                     # the graph_path and weights_path then denote the
                     # file names of the graph and weights within the archive
-  graph_checksum: c70550f8203a4eaae53d7c39ef34c92d
-  weights_checksum: 441315b0ff6932dbfde97731be7ca852
+  graph_checksum: f6232b561b2ffb1ff2d7c4ff6957f66b
+  weights_checksum: 0516c5ad05b50f6c71a8891a0cb6c4e8
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: ImageNet # dataset used to for training

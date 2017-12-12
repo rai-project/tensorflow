@@ -1,9 +1,10 @@
-name: VGG19
+name: VGG19 # name of your model
 framework:
-  name: Tensorflow
-  version: 1.4
-version: 1.0
-container:
+  name: Tensorflow # framework for the model
+  version: 1.4 # framework version contraint
+version: 1.0 # version information in semantic version format
+container: # containers used to perform model prediction
+           # multiple platforms can be specified
   amd64:
     gpu: raiproject/carml-tensorflow:amd64-cpu
     cpu: raiproject/carml-tensorflow:amd64-gpu
@@ -11,32 +12,40 @@ container:
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  An image-classification convolutional network.
-  VGG19 uses a network with 19 layers of 3x3 convolution filters.
-  VGG19 achieves 71.1% top-1 and 89.8% top-5 accuracy on the ImageNet challenge dataset in 2015.
-references:
-  - https://arxiv.org/pdf/1409.1556.pdf
-license: TODO
+  The model is an improved version of the 19-layer model used by the VGG team in the ILSVRC-2014 competition.
+references: # references to papers / websites / etc.. describing the model
+  - https://gist.github.com/ksimonyan/3785162f95cd2d5fee77
+  - https://github.com/BVLC/Tensorflow/wiki/Model-Zoo#models-used-by-the-vgg-team-in-ilsvrc-2014
+  - https://arxiv.org/abs/1409.1556
+# license of the model
+license: CC BY 4.0 (commercial use is allowed)
+# inputs to the model
 inputs:
+  # first input type for the model
   - type: image
+    # description of the first input
     description: the input image
-    parameters:
-      layer_name: "input"
+    parameters: # type parameters
       dimensions: [3, 224, 224]
       mean: [123.68, 116.779, 103.939]
 output:
+  # the type of the output
   type: feature
-  description: an output image net label
+  # a description of the output parameter
+  description: the output label
   parameters:
     # type parameters
-    layer_name: "vgg_19/fc8/squeezed"
-    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset.txt
+    features_url: http://data.dmlc.ml/mxnet/models/imagenet/synset.txt
     features_checksum: 4d234b5833aca44928065a180db3016a
-model:
-  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/graphs
-  graph_path: vgg_19_frozen.pb
-  graph_checksum: 9b09d4bdc8fcee61678ec44107d92190
-  is_archive: false
-attributes:
+model: # specifies model graph and weights resources
+  graph_path: https://gist.githubusercontent.com/ksimonyan/3785162f95cd2d5fee77/raw/f43eeefc869d646b449aa6ce66f87bf987a1c9b5/VGG_ILSVRC_19_layers_deploy.prototxt
+  weights_path: http://www.robots.ox.ac.uk/~vgg/software/very_deep/Tensorflow/VGG_ILSVRC_19_layers.Tensorflowmodel
+  is_archive: false # if set, then the base_url is a url to an archive
+                    # the graph_path and weights_path then denote the
+                    # file names of the graph and weights within the archive
+  graph_checksum: ccbbdda59210208be39f8974f5b5765e
+  weights_checksum: b5c644beabd7cf06bdd9065cfd674c97
+attributes: # extra network attributes
+  kind: CNN # the kind of neural network (CNN, RNN, ...)
+  training_dataset: ImageNet # dataset used to for training
   manifest_author: abduld
-  training_dataset: ImageNet
