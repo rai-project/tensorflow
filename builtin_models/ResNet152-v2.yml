@@ -42,15 +42,14 @@ output:
     features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset.txt
     features_checksum: 4d234b5833aca44928065a180db3016a
 model: # specifies model graph and weights resources
-  graph_path: http://s3.amazonaws.com/store.carml.org/models/Tensorflow/resnet152-v2/deploy_resnet152-v2.prototxt
-  weights_path: http://s3.amazonaws.com/store.carml.org/models/Tensorflow/resnet152-v2/resnet152-v2.Tensorflowmodel
+  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
+  graph_path: resnet152_2.0/frozen_model.pb
   is_archive: false # if set, then the base_url is a url to an archive
                     # the graph_path and weights_path then denote the
                     # file names of the graph and weights within the archive
   # graph_checksum: 406d50860ba0c201f583c75d2d229f7b
   # weights_checksum: f08957a745720ba1fbf394568decb9df
-  graph_checksum: e2eb074fe56c4854ad10938e37d76500
-  weights_checksum: 982360ab64c0a1a5ed7efafd84c55d0a
+  graph_checksum: 9b771b292a73d100e304cc7696bdf44f
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: ImageNet # dataset used to for training

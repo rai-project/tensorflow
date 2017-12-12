@@ -38,13 +38,12 @@ output:
     features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset-21k.txt
     features_checksum: 851bbe06499cf53fa6f8fb72ad61e906
 model: # specifies model graph and weights resources
-  graph_path: http://s3.amazonaws.com/store.carml.org/models/Tensorflow/inceptionbn-21k/deploy.prototxt
-  weights_path: http://s3.amazonaws.com/store.carml.org/models/Tensorflow/inceptionbn-21k/Inception21k.Tensorflowmodel
+  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
+  graph_path: inceptionbn_21k_2.0/frozen_model.pb
   is_archive: false # if set, then the base_url is a url to an archive
                     # the graph_path and weights_path then denote the
                     # file names of the graph and weights within the archive
-  graph_checksum: 39865f78d0f94aad33c6bc8a779ff343
-  weights_checksum: 6bf65186cee08b47ba6a767f5a5c8ce1
+  graph_checksum: 4f68f1a05561b56e4aa646c7613e164f
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: ImageNet # dataset used to for training

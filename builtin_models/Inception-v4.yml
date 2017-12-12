@@ -41,13 +41,12 @@ output:
     features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset.txt
     features_checksum: 4d234b5833aca44928065a180db3016a
 model: # specifies model graph and weights resources
-  graph_path: http://s3.amazonaws.com/store.carml.org/models/Tensorflow/inception-v4/deploy_inception-v4.prototxt
-  weights_path: http://s3.amazonaws.com/store.carml.org/models/Tensorflow/inception-v4/inception-v4.Tensorflowmodel
+  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
+  graph_path: inception_4.0/frozen_model.pb
   is_archive: false # if set, then the base_url is a url to an archive
                     # the graph_path and weights_path then denote the
                     # file names of the graph and weights within the archive
-  graph_checksum: 7d285a61595715cd7d0a503c7df1be02
-  weights_checksum: c7bd2e74e0ab376671af6c388f622e80
+  graph_checksum: ed46d4b60a8adaff6802bc25a53a1f4d
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: ImageNet # dataset used to for training

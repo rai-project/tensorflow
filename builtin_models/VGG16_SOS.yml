@@ -39,13 +39,12 @@ output:
     features_url: http://s3.amazonaws.com/store.carml.org/models/Tensorflow/vgg16_sos/%20salient_object_subitizing.txt
     features_checksum: da8e6ab825a44a900f1654f09f51d71f
 model: # specifies model graph and weights resources
-  graph_path: http://s3.amazonaws.com/store.carml.org/models/Tensorflow/vgg16_sos/deploy.prototxt
-  weights_path: http://s3.amazonaws.com/store.carml.org/models/Tensorflow/vgg16_sos/VGG16_SalObjSub.Tensorflowmodel
+  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
+  graph_path: #vgg16_sos_1.0/frozen_model.pb
   is_archive: false # if set, then the base_url is a url to an archive
                     # the graph_path and weights_path then denote the
                     # file names of the graph and weights within the archive
   graph_checksum: eb820e9e4d6f35a961666acf0f2f15a2
-  weights_checksum: fa7886a2fcf21b0c49fe2f2b20fe5643
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: The SOS Dataset # dataset used to for training

@@ -44,14 +44,13 @@ output:
     features_url: http://data.dmlc.ml/mxnet/models/imagenet/synset.txt
     features_checksum: 4d234b5833aca44928065a180db3016a
 model: # specifies model graph and weights resources
-  graph_path: https://raw.githubusercontent.com/BVLC/Tensorflow/master/models/bvlc_reference_Tensorflownet/deploy.prototxt
-  weights_path: http://dl.Tensorflow.berkeleyvision.org/bvlc_reference_Tensorflownet.Tensorflowmodel
+  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
+  graph_path: bvlc_reference_caffenet_1.0/frozen_model.pb
 
   is_archive: false # if set, then the base_url is a url to an archive
                     # the graph_path and weights_path then denote the
                     # file names of the graph and weights within the archive
-  graph_checksum: 955051d11e44bd29dd87a25dd766ec23
-  weights_checksum: af678f0bd3cdd2437e35679d88665170
+  graph_checksum: b7a4d3d30e623768c0bbc2fc94d712ff
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: ImageNet # dataset used to for training

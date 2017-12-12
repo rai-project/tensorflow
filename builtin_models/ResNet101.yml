@@ -41,13 +41,12 @@ output:
     features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset.txt
     features_checksum: 4d234b5833aca44928065a180db3016a
 model: # specifies model graph and weights resources
-  graph_path: http://s3.amazonaws.com/store.carml.org/models/Tensorflow/resnet101/ResNet-101-deploy.prototxt
-  weights_path: http://s3.amazonaws.com/store.carml.org/models/Tensorflow/resnet101/ResNet-101-model.Tensorflowmodel
+  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
+  graph_path: resnet101_1.0/frozen_model.pb
   is_archive: false # if set, then the base_url is a url to an archive
                     # the graph_path and weights_path then denote the
                     # file names of the graph and weights within the archive
-  graph_checksum: 3ec3d1a5d432ef54cb2d1afc9f83403a
-  weights_checksum: 3f8ccc93329ddc280b91efae09f71973
+  graph_checksum: eca863d264a7680ae082fc155de3e75a
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: ImageNet # dataset used to for training
