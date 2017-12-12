@@ -15,7 +15,7 @@ description: >
   The model is an improved version of the 16-layer model used by the VGG team in the ILSVRC-2014 competition.
 references: # references to papers / websites / etc.. describing the model
   - https://gist.github.com/ksimonyan/211839e770f7b538e2d8
-  - https://github.com/BVLC/Tensorflow/wiki/Model-Zoo#models-used-by-the-vgg-team-in-ilsvrc-2014
+  - https://github.com/BVLC/Caffe/wiki/Model-Zoo#models-used-by-the-vgg-team-in-ilsvrc-2014
   - https://arxiv.org/abs/1409.1556
 # license of the model
 license: CC BY 4.0 (commercial use is allowed)

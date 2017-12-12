@@ -15,7 +15,7 @@ description: >
   Inception-v3 is trained for the ImageNet Large Visual Recognition Challenge using the data from 2012.
   This is a standard task in computer vision, where models try to classify entire images into 1000 classes, like "Zebra", "Dalmatian", and "Dishwasher".
 references: # references to papers / websites / etc.. describing the model
-  - https://github.com/soeaver/Tensorflow-model/tree/master/cls
+  - https://github.com/soeaver/Caffe-model/tree/master/cls
   - https://github.com/dmlc/mxnet-model-gallery/blob/master/imagenet-1k-inception-v3.md
   - https://github.com/tensorflow/models/blob/master/research/slim/preprocessing/inception_preprocessing.py
 # license of the model

@@ -23,8 +23,8 @@ description: >
   a bit higher accuracy.)
   This model was trained by Evan Shelhamer @shelhamer
 references: # references to papers / websites / etc.. describing the model
-  - https://github.com/BVLC/Tensorflow/tree/master/models/bvlc_alexnet
-  - https://github.com/BVLC/Tensorflow/wiki/Models-accuracy-on-ImageNet-2012-val
+  - https://github.com/BVLC/Caffe/tree/master/models/bvlc_alexnet
+  - https://github.com/BVLC/Caffe/wiki/Models-accuracy-on-ImageNet-2012-val
   - http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf
 # license of the model
 license: unrestricted

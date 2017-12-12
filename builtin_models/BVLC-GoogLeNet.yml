@@ -27,7 +27,7 @@ description: >
   Average Forward-Backward: 1688.8 ms.
   This model was trained by Sergio Guadarrama @sguada
 references: # references to papers / websites / etc.. describing the model
-  - https://github.com/BVLC/Tensorflow/tree/master/models/bvlc_googlenet
+  - https://github.com/BVLC/Caffe/tree/master/models/bvlc_googlenet
   - https://arxiv.org/abs/1409.4842
 # license of the model
 license: unrestricted

@@ -18,7 +18,7 @@ description: >
   N.B. For research purposes, make use of the official R-CNN package and not this example.
   This model was trained by Ross Girshick @rbgirshick
 references: # references to papers / websites / etc.. describing the model
-  - https://github.com/BVLC/Tensorflow/tree/master/models/bvlc_reference_rcnn_ilsvrc13
+  - https://github.com/BVLC/Caffe/tree/master/models/bvlc_reference_rcnn_ilsvrc13
   - https://arxiv.org/abs/1311.2524
   - http://nbviewer.jupyter.org/github/BVLC/Tensorflow/blob/master/examples/detection.ipynb
 # license of the model
@@ -46,11 +46,11 @@ output:
     features_checksum: fe0fe33bc8cb071f8ca73073d97973c6
 model: # specifies model graph and weights resources
   base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
-  graph_path:
+  graph_path: bvlc_reference_rcnn_ilsvrc13_1.0/frozen_model.pb
   is_archive: false # if set, then the base_url is a url to an archive
                     # the graph_path and weights_path then denote the
                     # file names of the graph and weights within the archive
-  graph_checksum: 487294811977b91daa2a5e97651bb85c
+  graph_checksum: 4733f8f3f3d7293b10f4e176be2fa02d
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: ImageNet # dataset used to for training

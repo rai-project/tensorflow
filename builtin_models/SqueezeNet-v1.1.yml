@@ -17,7 +17,7 @@ description: >
 references: # references to papers / websites / etc.. describing the model
   - https://github.com/DeepScale/SqueezeNet
   - https://arxiv.org/abs/1602.07360
-  - https://github.com/dividiti/ck-Tensorflow/tree/master/package/Tensorflowmodel-deepscale-squeezenet-1.1
+  - https://github.com/dividiti/ck-caffe/tree/master/package/caffemodel-deepscale-squeezenet-1.1
   - http://cknowledge.org/repo/web.php?template=cknowledge&&wcid=package:59414348b1bdedb5
 # license of the model
 license: BAIR

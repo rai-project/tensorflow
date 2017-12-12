@@ -19,7 +19,7 @@ description: >
   based on which we propose a novel architecture where we decrease depth and increase width of residual networks. We call the resulting network structures wide residual networks (WRNs)
   and show that these are far superior over their commonly used thin and very deep counterparts
 references: # references to papers / websites / etc.. describing the model
-  - https://github.com/soeaver/Tensorflow-model/tree/master/cls
+  - https://github.com/soeaver/Caffe-model/tree/master/cls
   - https://arxiv.org/abs/1605.07146
   - https://github.com/szagoruyko/wide-residual-networks
   - https://github.com/szagoruyko/functional-zoo/blob/master/imagenet-validation.py#L69-L88
