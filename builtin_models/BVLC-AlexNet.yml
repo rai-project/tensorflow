@@ -35,7 +35,7 @@ inputs:
     # description of the first input
     description: the input image
     parameters: # type parameters
-      layer_name: "input"
+      layer_name: "import/data"
       dimensions: [3, 227, 227]
       mean: [123, 117, 104]
 output:
