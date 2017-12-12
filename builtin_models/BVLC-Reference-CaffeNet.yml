@@ -1,4 +1,4 @@
-name: BVLC-Reference-TensorflowNet # name of your model
+name: BVLC-Reference-CaffeNet # name of your model
 framework:
   name: Tensorflow # framework for the model
   version: 1.4 # framework version contraint
