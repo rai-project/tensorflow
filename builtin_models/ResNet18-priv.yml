@@ -32,7 +32,7 @@ inputs:
     parameters: # type parameters
       layer_name: "data"
       layout: "CHW"
-      rgb_mode: "BGR"
+      color_mode: "BGR"
       dimensions: [3, 224, 224]
       mean: [123.675, 116.28, 103.52]
       scale: 128
