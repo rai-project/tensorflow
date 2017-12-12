@@ -38,7 +38,7 @@ output:
   description: the output label
   parameters:
     # type parameters
-    layer_name: "prob"
+    layer_name: "softmax"
     features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset-21k.txt
     features_checksum: 851bbe06499cf53fa6f8fb72ad61e906
 model: # specifies model graph and weights resources

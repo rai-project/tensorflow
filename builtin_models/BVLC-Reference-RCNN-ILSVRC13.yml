@@ -41,7 +41,7 @@ output:
   description: the output label
   parameters:
     # type parameters
-    layer_name: "prob"
+    layer_name: "fc7"
     features_url: https://raw.githubusercontent.com/rai-project/carml-models/master/data/ilsvrc12/det_synset_words.txt
     features_checksum: fe0fe33bc8cb071f8ca73073d97973c6
 model: # specifies model graph and weights resources
