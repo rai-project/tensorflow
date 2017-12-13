@@ -402,8 +402,6 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 
 	probabilities := utils.Flatten2DFloat32(fetches[0].Value())
 
-	//pp.Println(probabilities[:1])
-
 	var output []dlframework.Features
 	for _, prob := range probabilities {
 		rprobs := make([]*dlframework.Feature, len(prob))
