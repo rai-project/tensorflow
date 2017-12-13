@@ -44,13 +44,12 @@ output:
     features_checksum: da8e6ab825a44a900f1654f09f51d71f
 model: # specifies model graph and weights resources
   base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
-  graph_path: #vgg16_sos_1.0/frozen_model.pb
+  graph_path: vgg16_sos_1.0/frozen_model.pb
   is_archive: false # if set, then the base_url is a url to an archive
                     # the graph_path and weights_path then denote the
                     # file names of the graph and weights within the archive
-  graph_checksum:
+  graph_checksum: ef063144bcfdda671cc88078e22c82a0
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: The SOS Dataset # dataset used to for training
   manifest_author: abduld
-hidden: true
