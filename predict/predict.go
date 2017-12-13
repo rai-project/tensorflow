@@ -38,6 +38,7 @@ import (
 	"github.com/rai-project/tensorflow"
 	proto "github.com/rai-project/tensorflow"
 	"github.com/rai-project/tracer"
+	"github.com/rai-project/utils"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 	context "golang.org/x/net/context"
 )
@@ -399,7 +400,9 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 		return nil, errors.Wrapf(err, "failed to perform inference")
 	}
 
-	probabilities := fetches[0].Value().([][]float32)
+	probabilities := utils.Flatten2DFloat32(fetches[0].Value())
+
+	//pp.Println(probabilities[:1])
 
 	var output []dlframework.Features
 	for _, prob := range probabilities {
