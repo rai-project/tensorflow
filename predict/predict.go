@@ -408,7 +408,7 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 		for j, v := range prob {
 			rprobs[j] = &dlframework.Feature{
 				Index:       int64(j),
-				Name:        "<> " + p.features[j],
+				Name:        p.features[j],
 				Probability: v,
 			}
 		}
