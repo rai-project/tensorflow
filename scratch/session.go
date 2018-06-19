@@ -31,6 +31,7 @@ import (
 
 	"github.com/k0kubun/pp"
 
+	"context"
 	protobuf "github.com/golang/protobuf/proto"
 	opentracing "github.com/opentracing/opentracing-go"
 	cupti "github.com/rai-project/go-cupti"
@@ -38,7 +39,6 @@ import (
 	proto "github.com/rai-project/tensorflow"
 	"github.com/rai-project/tracer"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
-	"golang.org/x/net/context"
 )
 
 // Session drives a TensorFlow graph computation.

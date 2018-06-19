@@ -23,6 +23,7 @@ import (
 	"runtime"
 	"strings"
 
+	context "context"
 	opentracing "github.com/opentracing/opentracing-go"
 	olog "github.com/opentracing/opentracing-go/log"
 	"github.com/pkg/errors"
@@ -40,7 +41,6 @@ import (
 	"github.com/rai-project/tracer"
 	"github.com/rai-project/utils"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
-	context "golang.org/x/net/context"
 )
 
 type ImagePredictor struct {

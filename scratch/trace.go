@@ -4,9 +4,9 @@ import (
 	"errors"
 	"time"
 
+	"context"
 	opentracing "github.com/opentracing/opentracing-go"
 	proto "github.com/rai-project/tensorflow"
-	"golang.org/x/net/context"
 )
 
 type Trace struct {

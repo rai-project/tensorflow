@@ -15,8 +15,8 @@ import (
 	"runtime"
 	"unsafe"
 
+	"context"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
-	"golang.org/x/net/context"
 )
 
 var tftypes = []struct {

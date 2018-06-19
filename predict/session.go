@@ -29,7 +29,7 @@ import (
 	"sync"
 	"unsafe"
 
-	"golang.org/x/net/context"
+	"context"
 
 	protobuf "github.com/golang/protobuf/proto"
 	proto "github.com/rai-project/tensorflow"

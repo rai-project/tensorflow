@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	context "context"
 	sourcepath "github.com/GeertJohan/go-sourcepath"
 	"github.com/anthonynsimon/bild/imgio"
 	"github.com/anthonynsimon/bild/transform"
@@ -14,7 +15,6 @@ import (
 	"github.com/rai-project/go-mxnet-predictor/utils"
 	tf "github.com/rai-project/tensorflow"
 	"github.com/stretchr/testify/assert"
-	context "golang.org/x/net/context"
 )
 
 var (
