@@ -12,7 +12,7 @@ import:
   - proto
 - package: github.com/helinwang/tfsum
 - package: github.com/k0kubun/pp
-  version: ^2.3.0
+  version: ~2.3.0
 - package: github.com/mattn/go-colorable
   version: ^0.0.9
 - package: github.com/opentracing/opentracing-go
@@ -20,7 +20,7 @@ import:
   subpackages:
   - log
 - package: github.com/pkg/errors
-  version: ^0.8.0
+  version: ~0.8.0
 - package: github.com/rai-project/config
 - package: github.com/rai-project/dlframework
   subpackages:
@@ -47,13 +47,9 @@ import:
   subpackages:
   - tensorflow/go
   - tensorflow/go/op
-- package: golang.org/x/net
-  subpackages:
-  - context
 - package: google.golang.org/grpc
   version: ^1.9.1
 testImport:
 - package: github.com/stretchr/testify
-  version: ^1.2.0
   subpackages:
   - assert
