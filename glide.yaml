@@ -49,7 +49,6 @@ import:
   - tensorflow/go/op
 - package: google.golang.org/grpc
   version: ^1.12.2
-testImport:
 - package: github.com/stretchr/testify
   subpackages:
   - assert
