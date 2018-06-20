@@ -41,7 +41,7 @@ import:
   - all
 - package: github.com/rai-project/utils
 - package: github.com/sirupsen/logrus
-  version: ^1.0.4
+  version: ^1.0.0
 - package: github.com/tensorflow/tensorflow
   version: ^1.5.0-rc0
   subpackages:
