@@ -8,6 +8,7 @@ import:
   - proto
   - types
 - package: github.com/golang/protobuf
+  version: master
   subpackages:
   - proto
 - package: github.com/helinwang/tfsum
