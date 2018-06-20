@@ -7,6 +7,8 @@ import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
 
+import binary "encoding/binary"
+
 import io "io"
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -209,14 +211,8 @@ func (m *TensorProto) MarshalTo(dAtA []byte) (int, error) {
 		i = encodeVarintTensor(dAtA, i, uint64(len(m.FloatVal)*4))
 		for _, num := range m.FloatVal {
 			f2 := math.Float32bits(float32(num))
-			dAtA[i] = uint8(f2)
-			i++
-			dAtA[i] = uint8(f2 >> 8)
-			i++
-			dAtA[i] = uint8(f2 >> 16)
-			i++
-			dAtA[i] = uint8(f2 >> 24)
-			i++
+			binary.LittleEndian.PutUint32(dAtA[i:], uint32(f2))
+			i += 4
 		}
 	}
 	if len(m.DoubleVal) > 0 {
@@ -225,22 +221,8 @@ func (m *TensorProto) MarshalTo(dAtA []byte) (int, error) {
 		i = encodeVarintTensor(dAtA, i, uint64(len(m.DoubleVal)*8))
 		for _, num := range m.DoubleVal {
 			f3 := math.Float64bits(float64(num))
-			dAtA[i] = uint8(f3)
-			i++
-			dAtA[i] = uint8(f3 >> 8)
-			i++
-			dAtA[i] = uint8(f3 >> 16)
-			i++
-			dAtA[i] = uint8(f3 >> 24)
-			i++
-			dAtA[i] = uint8(f3 >> 32)
-			i++
-			dAtA[i] = uint8(f3 >> 40)
-			i++
-			dAtA[i] = uint8(f3 >> 48)
-			i++
-			dAtA[i] = uint8(f3 >> 56)
-			i++
+			binary.LittleEndian.PutUint64(dAtA[i:], uint64(f3))
+			i += 8
 		}
 	}
 	if len(m.IntVal) > 0 {
@@ -275,14 +257,8 @@ func (m *TensorProto) MarshalTo(dAtA []byte) (int, error) {
 		i = encodeVarintTensor(dAtA, i, uint64(len(m.ScomplexVal)*4))
 		for _, num := range m.ScomplexVal {
 			f6 := math.Float32bits(float32(num))
-			dAtA[i] = uint8(f6)
-			i++
-			dAtA[i] = uint8(f6 >> 8)
-			i++
-			dAtA[i] = uint8(f6 >> 16)
-			i++
-			dAtA[i] = uint8(f6 >> 24)
-			i++
+			binary.LittleEndian.PutUint32(dAtA[i:], uint32(f6))
+			i += 4
 		}
 	}
 	if len(m.Int64Val) > 0 {
@@ -322,22 +298,8 @@ func (m *TensorProto) MarshalTo(dAtA []byte) (int, error) {
 		i = encodeVarintTensor(dAtA, i, uint64(len(m.DcomplexVal)*8))
 		for _, num := range m.DcomplexVal {
 			f9 := math.Float64bits(float64(num))
-			dAtA[i] = uint8(f9)
-			i++
-			dAtA[i] = uint8(f9 >> 8)
-			i++
-			dAtA[i] = uint8(f9 >> 16)
-			i++
-			dAtA[i] = uint8(f9 >> 24)
-			i++
-			dAtA[i] = uint8(f9 >> 32)
-			i++
-			dAtA[i] = uint8(f9 >> 40)
-			i++
-			dAtA[i] = uint8(f9 >> 48)
-			i++
-			dAtA[i] = uint8(f9 >> 56)
-			i++
+			binary.LittleEndian.PutUint64(dAtA[i:], uint64(f9))
+			i += 8
 		}
 	}
 	if len(m.HalfVal) > 0 {
@@ -373,24 +335,6 @@ func (m *TensorProto) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func encodeFixed64Tensor(dAtA []byte, offset int, v uint64) int {
-	dAtA[offset] = uint8(v)
-	dAtA[offset+1] = uint8(v >> 8)
-	dAtA[offset+2] = uint8(v >> 16)
-	dAtA[offset+3] = uint8(v >> 24)
-	dAtA[offset+4] = uint8(v >> 32)
-	dAtA[offset+5] = uint8(v >> 40)
-	dAtA[offset+6] = uint8(v >> 48)
-	dAtA[offset+7] = uint8(v >> 56)
-	return offset + 8
-}
-func encodeFixed32Tensor(dAtA []byte, offset int, v uint32) int {
-	dAtA[offset] = uint8(v)
-	dAtA[offset+1] = uint8(v >> 8)
-	dAtA[offset+2] = uint8(v >> 16)
-	dAtA[offset+3] = uint8(v >> 24)
-	return offset + 4
-}
 func encodeVarintTensor(dAtA []byte, offset int, v uint64) int {
 	for v >= 1<<7 {
 		dAtA[offset] = uint8(v&0x7f | 0x80)
@@ -618,11 +562,8 @@ func (m *TensorProto) Unmarshal(dAtA []byte) error {
 				if (iNdEx + 4) > l {
 					return io.ErrUnexpectedEOF
 				}
+				v = uint32(binary.LittleEndian.Uint32(dAtA[iNdEx:]))
 				iNdEx += 4
-				v = uint32(dAtA[iNdEx-4])
-				v |= uint32(dAtA[iNdEx-3]) << 8
-				v |= uint32(dAtA[iNdEx-2]) << 16
-				v |= uint32(dAtA[iNdEx-1]) << 24
 				v2 := float32(math.Float32frombits(v))
 				m.FloatVal = append(m.FloatVal, v2)
 			} else if wireType == 2 {
@@ -653,11 +594,8 @@ func (m *TensorProto) Unmarshal(dAtA []byte) error {
 					if (iNdEx + 4) > l {
 						return io.ErrUnexpectedEOF
 					}
+					v = uint32(binary.LittleEndian.Uint32(dAtA[iNdEx:]))
 					iNdEx += 4
-					v = uint32(dAtA[iNdEx-4])
-					v |= uint32(dAtA[iNdEx-3]) << 8
-					v |= uint32(dAtA[iNdEx-2]) << 16
-					v |= uint32(dAtA[iNdEx-1]) << 24
 					v2 := float32(math.Float32frombits(v))
 					m.FloatVal = append(m.FloatVal, v2)
 				}
@@ -670,15 +608,8 @@ func (m *TensorProto) Unmarshal(dAtA []byte) error {
 				if (iNdEx + 8) > l {
 					return io.ErrUnexpectedEOF
 				}
+				v = uint64(binary.LittleEndian.Uint64(dAtA[iNdEx:]))
 				iNdEx += 8
-				v = uint64(dAtA[iNdEx-8])
-				v |= uint64(dAtA[iNdEx-7]) << 8
-				v |= uint64(dAtA[iNdEx-6]) << 16
-				v |= uint64(dAtA[iNdEx-5]) << 24
-				v |= uint64(dAtA[iNdEx-4]) << 32
-				v |= uint64(dAtA[iNdEx-3]) << 40
-				v |= uint64(dAtA[iNdEx-2]) << 48
-				v |= uint64(dAtA[iNdEx-1]) << 56
 				v2 := float64(math.Float64frombits(v))
 				m.DoubleVal = append(m.DoubleVal, v2)
 			} else if wireType == 2 {
@@ -709,15 +640,8 @@ func (m *TensorProto) Unmarshal(dAtA []byte) error {
 					if (iNdEx + 8) > l {
 						return io.ErrUnexpectedEOF
 					}
+					v = uint64(binary.LittleEndian.Uint64(dAtA[iNdEx:]))
 					iNdEx += 8
-					v = uint64(dAtA[iNdEx-8])
-					v |= uint64(dAtA[iNdEx-7]) << 8
-					v |= uint64(dAtA[iNdEx-6]) << 16
-					v |= uint64(dAtA[iNdEx-5]) << 24
-					v |= uint64(dAtA[iNdEx-4]) << 32
-					v |= uint64(dAtA[iNdEx-3]) << 40
-					v |= uint64(dAtA[iNdEx-2]) << 48
-					v |= uint64(dAtA[iNdEx-1]) << 56
 					v2 := float64(math.Float64frombits(v))
 					m.DoubleVal = append(m.DoubleVal, v2)
 				}
@@ -821,11 +745,8 @@ func (m *TensorProto) Unmarshal(dAtA []byte) error {
 				if (iNdEx + 4) > l {
 					return io.ErrUnexpectedEOF
 				}
+				v = uint32(binary.LittleEndian.Uint32(dAtA[iNdEx:]))
 				iNdEx += 4
-				v = uint32(dAtA[iNdEx-4])
-				v |= uint32(dAtA[iNdEx-3]) << 8
-				v |= uint32(dAtA[iNdEx-2]) << 16
-				v |= uint32(dAtA[iNdEx-1]) << 24
 				v2 := float32(math.Float32frombits(v))
 				m.ScomplexVal = append(m.ScomplexVal, v2)
 			} else if wireType == 2 {
@@ -856,11 +777,8 @@ func (m *TensorProto) Unmarshal(dAtA []byte) error {
 					if (iNdEx + 4) > l {
 						return io.ErrUnexpectedEOF
 					}
+					v = uint32(binary.LittleEndian.Uint32(dAtA[iNdEx:]))
 					iNdEx += 4
-					v = uint32(dAtA[iNdEx-4])
-					v |= uint32(dAtA[iNdEx-3]) << 8
-					v |= uint32(dAtA[iNdEx-2]) << 16
-					v |= uint32(dAtA[iNdEx-1]) << 24
 					v2 := float32(math.Float32frombits(v))
 					m.ScomplexVal = append(m.ScomplexVal, v2)
 				}
@@ -997,15 +915,8 @@ func (m *TensorProto) Unmarshal(dAtA []byte) error {
 				if (iNdEx + 8) > l {
 					return io.ErrUnexpectedEOF
 				}
+				v = uint64(binary.LittleEndian.Uint64(dAtA[iNdEx:]))
 				iNdEx += 8
-				v = uint64(dAtA[iNdEx-8])
-				v |= uint64(dAtA[iNdEx-7]) << 8
-				v |= uint64(dAtA[iNdEx-6]) << 16
-				v |= uint64(dAtA[iNdEx-5]) << 24
-				v |= uint64(dAtA[iNdEx-4]) << 32
-				v |= uint64(dAtA[iNdEx-3]) << 40
-				v |= uint64(dAtA[iNdEx-2]) << 48
-				v |= uint64(dAtA[iNdEx-1]) << 56
 				v2 := float64(math.Float64frombits(v))
 				m.DcomplexVal = append(m.DcomplexVal, v2)
 			} else if wireType == 2 {
@@ -1036,15 +947,8 @@ func (m *TensorProto) Unmarshal(dAtA []byte) error {
 					if (iNdEx + 8) > l {
 						return io.ErrUnexpectedEOF
 					}
+					v = uint64(binary.LittleEndian.Uint64(dAtA[iNdEx:]))
 					iNdEx += 8
-					v = uint64(dAtA[iNdEx-8])
-					v |= uint64(dAtA[iNdEx-7]) << 8
-					v |= uint64(dAtA[iNdEx-6]) << 16
-					v |= uint64(dAtA[iNdEx-5]) << 24
-					v |= uint64(dAtA[iNdEx-4]) << 32
-					v |= uint64(dAtA[iNdEx-3]) << 40
-					v |= uint64(dAtA[iNdEx-2]) << 48
-					v |= uint64(dAtA[iNdEx-1]) << 56
 					v2 := float64(math.Float64frombits(v))
 					m.DcomplexVal = append(m.DcomplexVal, v2)
 				}

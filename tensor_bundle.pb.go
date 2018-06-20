@@ -7,6 +7,8 @@ import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
 
+import binary "encoding/binary"
+
 import io "io"
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -250,7 +252,8 @@ func (m *BundleEntryProto) MarshalTo(dAtA []byte) (int, error) {
 	if m.Crc32C != 0 {
 		dAtA[i] = 0x35
 		i++
-		i = encodeFixed32TensorBundle(dAtA, i, uint32(m.Crc32C))
+		binary.LittleEndian.PutUint32(dAtA[i:], uint32(m.Crc32C))
+		i += 4
 	}
 	if len(m.Slices) > 0 {
 		for _, msg := range m.Slices {
@@ -267,24 +270,6 @@ func (m *BundleEntryProto) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func encodeFixed64TensorBundle(dAtA []byte, offset int, v uint64) int {
-	dAtA[offset] = uint8(v)
-	dAtA[offset+1] = uint8(v >> 8)
-	dAtA[offset+2] = uint8(v >> 16)
-	dAtA[offset+3] = uint8(v >> 24)
-	dAtA[offset+4] = uint8(v >> 32)
-	dAtA[offset+5] = uint8(v >> 40)
-	dAtA[offset+6] = uint8(v >> 48)
-	dAtA[offset+7] = uint8(v >> 56)
-	return offset + 8
-}
-func encodeFixed32TensorBundle(dAtA []byte, offset int, v uint32) int {
-	dAtA[offset] = uint8(v)
-	dAtA[offset+1] = uint8(v >> 8)
-	dAtA[offset+2] = uint8(v >> 16)
-	dAtA[offset+3] = uint8(v >> 24)
-	return offset + 4
-}
 func encodeVarintTensorBundle(dAtA []byte, offset int, v uint64) int {
 	for v >= 1<<7 {
 		dAtA[offset] = uint8(v&0x7f | 0x80)
@@ -621,11 +606,8 @@ func (m *BundleEntryProto) Unmarshal(dAtA []byte) error {
 			if (iNdEx + 4) > l {
 				return io.ErrUnexpectedEOF
 			}
+			m.Crc32C = uint32(binary.LittleEndian.Uint32(dAtA[iNdEx:]))
 			iNdEx += 4
-			m.Crc32C = uint32(dAtA[iNdEx-4])
-			m.Crc32C |= uint32(dAtA[iNdEx-3]) << 8
-			m.Crc32C |= uint32(dAtA[iNdEx-2]) << 16
-			m.Crc32C |= uint32(dAtA[iNdEx-1]) << 24
 		case 7:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Slices", wireType)

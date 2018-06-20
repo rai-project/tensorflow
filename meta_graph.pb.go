@@ -8,6 +8,8 @@ import fmt "fmt"
 import math "math"
 import google_protobuf "github.com/gogo/protobuf/types"
 
+import binary "encoding/binary"
+
 import io "io"
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1283,14 +1285,8 @@ func (m *CollectionDef_FloatList) MarshalTo(dAtA []byte) (int, error) {
 		i = encodeVarintMetaGraph(dAtA, i, uint64(len(m.Value)*4))
 		for _, num := range m.Value {
 			f16 := math.Float32bits(float32(num))
-			dAtA[i] = uint8(f16)
-			i++
-			dAtA[i] = uint8(f16 >> 8)
-			i++
-			dAtA[i] = uint8(f16 >> 16)
-			i++
-			dAtA[i] = uint8(f16 >> 24)
-			i++
+			binary.LittleEndian.PutUint32(dAtA[i:], uint32(f16))
+			i += 4
 		}
 	}
 	return i, nil
@@ -1538,24 +1534,6 @@ func (m *AssetFileDef) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func encodeFixed64MetaGraph(dAtA []byte, offset int, v uint64) int {
-	dAtA[offset] = uint8(v)
-	dAtA[offset+1] = uint8(v >> 8)
-	dAtA[offset+2] = uint8(v >> 16)
-	dAtA[offset+3] = uint8(v >> 24)
-	dAtA[offset+4] = uint8(v >> 32)
-	dAtA[offset+5] = uint8(v >> 40)
-	dAtA[offset+6] = uint8(v >> 48)
-	dAtA[offset+7] = uint8(v >> 56)
-	return offset + 8
-}
-func encodeFixed32MetaGraph(dAtA []byte, offset int, v uint32) int {
-	dAtA[offset] = uint8(v)
-	dAtA[offset+1] = uint8(v >> 8)
-	dAtA[offset+2] = uint8(v >> 16)
-	dAtA[offset+3] = uint8(v >> 24)
-	return offset + 4
-}
 func encodeVarintMetaGraph(dAtA []byte, offset int, v uint64) int {
 	for v >= 1<<7 {
 		dAtA[offset] = uint8(v&0x7f | 0x80)
@@ -3045,11 +3023,8 @@ func (m *CollectionDef_FloatList) Unmarshal(dAtA []byte) error {
 				if (iNdEx + 4) > l {
 					return io.ErrUnexpectedEOF
 				}
+				v = uint32(binary.LittleEndian.Uint32(dAtA[iNdEx:]))
 				iNdEx += 4
-				v = uint32(dAtA[iNdEx-4])
-				v |= uint32(dAtA[iNdEx-3]) << 8
-				v |= uint32(dAtA[iNdEx-2]) << 16
-				v |= uint32(dAtA[iNdEx-1]) << 24
 				v2 := float32(math.Float32frombits(v))
 				m.Value = append(m.Value, v2)
 			} else if wireType == 2 {
@@ -3080,11 +3055,8 @@ func (m *CollectionDef_FloatList) Unmarshal(dAtA []byte) error {
 					if (iNdEx + 4) > l {
 						return io.ErrUnexpectedEOF
 					}
+					v = uint32(binary.LittleEndian.Uint32(dAtA[iNdEx:]))
 					iNdEx += 4
-					v = uint32(dAtA[iNdEx-4])
-					v |= uint32(dAtA[iNdEx-3]) << 8
-					v |= uint32(dAtA[iNdEx-2]) << 16
-					v |= uint32(dAtA[iNdEx-1]) << 24
 					v2 := float32(math.Float32frombits(v))
 					m.Value = append(m.Value, v2)
 				}

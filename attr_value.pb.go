@@ -7,6 +7,8 @@ import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
 
+import binary "encoding/binary"
+
 import io "io"
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -528,7 +530,8 @@ func (m *AttrValue_F) MarshalTo(dAtA []byte) (int, error) {
 	i := 0
 	dAtA[i] = 0x25
 	i++
-	i = encodeFixed32AttrValue(dAtA, i, uint32(math.Float32bits(float32(m.F))))
+	binary.LittleEndian.PutUint32(dAtA[i:], uint32(math.Float32bits(float32(m.F))))
+	i += 4
 	return i, nil
 }
 func (m *AttrValue_B) MarshalTo(dAtA []byte) (int, error) {
@@ -647,14 +650,8 @@ func (m *AttrValue_ListValue) MarshalTo(dAtA []byte) (int, error) {
 		i = encodeVarintAttrValue(dAtA, i, uint64(len(m.F)*4))
 		for _, num := range m.F {
 			f8 := math.Float32bits(float32(num))
-			dAtA[i] = uint8(f8)
-			i++
-			dAtA[i] = uint8(f8 >> 8)
-			i++
-			dAtA[i] = uint8(f8 >> 16)
-			i++
-			dAtA[i] = uint8(f8 >> 24)
-			i++
+			binary.LittleEndian.PutUint32(dAtA[i:], uint32(f8))
+			i += 4
 		}
 	}
 	if len(m.B) > 0 {
@@ -778,24 +775,6 @@ func (m *NameAttrList) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func encodeFixed64AttrValue(dAtA []byte, offset int, v uint64) int {
-	dAtA[offset] = uint8(v)
-	dAtA[offset+1] = uint8(v >> 8)
-	dAtA[offset+2] = uint8(v >> 16)
-	dAtA[offset+3] = uint8(v >> 24)
-	dAtA[offset+4] = uint8(v >> 32)
-	dAtA[offset+5] = uint8(v >> 40)
-	dAtA[offset+6] = uint8(v >> 48)
-	dAtA[offset+7] = uint8(v >> 56)
-	return offset + 8
-}
-func encodeFixed32AttrValue(dAtA []byte, offset int, v uint32) int {
-	dAtA[offset] = uint8(v)
-	dAtA[offset+1] = uint8(v >> 8)
-	dAtA[offset+2] = uint8(v >> 16)
-	dAtA[offset+3] = uint8(v >> 24)
-	return offset + 4
-}
 func encodeVarintAttrValue(dAtA []byte, offset int, v uint64) int {
 	for v >= 1<<7 {
 		dAtA[offset] = uint8(v&0x7f | 0x80)
@@ -1095,11 +1074,8 @@ func (m *AttrValue) Unmarshal(dAtA []byte) error {
 			if (iNdEx + 4) > l {
 				return io.ErrUnexpectedEOF
 			}
+			v = uint32(binary.LittleEndian.Uint32(dAtA[iNdEx:]))
 			iNdEx += 4
-			v = uint32(dAtA[iNdEx-4])
-			v |= uint32(dAtA[iNdEx-3]) << 8
-			v |= uint32(dAtA[iNdEx-2]) << 16
-			v |= uint32(dAtA[iNdEx-1]) << 24
 			m.Value = &AttrValue_F{float32(math.Float32frombits(v))}
 		case 5:
 			if wireType != 0 {
@@ -1414,11 +1390,8 @@ func (m *AttrValue_ListValue) Unmarshal(dAtA []byte) error {
 				if (iNdEx + 4) > l {
 					return io.ErrUnexpectedEOF
 				}
+				v = uint32(binary.LittleEndian.Uint32(dAtA[iNdEx:]))
 				iNdEx += 4
-				v = uint32(dAtA[iNdEx-4])
-				v |= uint32(dAtA[iNdEx-3]) << 8
-				v |= uint32(dAtA[iNdEx-2]) << 16
-				v |= uint32(dAtA[iNdEx-1]) << 24
 				v2 := float32(math.Float32frombits(v))
 				m.F = append(m.F, v2)
 			} else if wireType == 2 {
@@ -1449,11 +1422,8 @@ func (m *AttrValue_ListValue) Unmarshal(dAtA []byte) error {
 					if (iNdEx + 4) > l {
 						return io.ErrUnexpectedEOF
 					}
+					v = uint32(binary.LittleEndian.Uint32(dAtA[iNdEx:]))
 					iNdEx += 4
-					v = uint32(dAtA[iNdEx-4])
-					v |= uint32(dAtA[iNdEx-3]) << 8
-					v |= uint32(dAtA[iNdEx-2]) << 16
-					v |= uint32(dAtA[iNdEx-1]) << 24
 					v2 := float32(math.Float32frombits(v))
 					m.F = append(m.F, v2)
 				}
