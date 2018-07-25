@@ -16,6 +16,9 @@ limitations under the License.
 
 package predict
 
-// #cgo LDFLAGS: -ltensorflow
-// #cgo CFLAGS: -I${SRCDIR}/../../../tensorflow/tensorflow
+// #cgo LDFLAGS: -ltensorflow -lstdc++
+// #cgo LDFLAGS: -lcublas -lcudart -lcudnn -lcurand -lcusparse -lcufft
+// #cgo LDFLAGS: -L/usr/local/cuda/lib64 -L/home/as29/.gvm/pkgsets/go1.10/global/src/github.com/rai-project/tensorflow/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow
+// #cgo CFLAGS: -I/home/as29/.gvm/pkgsets/go1.10/global/src/github.com/rai-project/tensorflow/vendor/github.com/tensorflow/tensorflow -I/usr/local/cuda/include
+// #cgo CFLAGS: -O3 -Wall -g
 import "C"

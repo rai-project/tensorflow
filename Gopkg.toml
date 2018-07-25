@@ -74,7 +74,7 @@
   name = "github.com/rai-project/config"
 
 [[constraint]]
-  branch = "master"
+  revision = "eb0b9937d67b6bf363b1d177284d6c050e698821"
   name = "github.com/rai-project/dlframework"
 
 [[constraint]]
@@ -87,7 +87,7 @@
 
 [[constraint]]
   name = "github.com/rai-project/go-mxnet-predictor"
-  version = "0.3.16"
+  branch = "master"
 
 [[constraint]]
   branch = "master"
@@ -119,7 +119,7 @@
 
 [[constraint]]
   name = "github.com/tensorflow/tensorflow"
-  version = "1.8.0"
+  version = "1.9.0"
 
 [[constraint]]
   branch = "master"
@@ -129,6 +129,15 @@
   name = "google.golang.org/grpc"
   version = "1.13.0"
 
+[[override]]
+  branch = "master"
+  name = "github.com/apache/thrift"
+
+[[override]]
+  branch = "master"
+  name = "github.com/VividCortex/robustly"
+
 [prune]
   go-tests = true
-  unused-packages = true
+
+
