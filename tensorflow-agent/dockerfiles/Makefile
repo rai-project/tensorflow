@@ -49,10 +49,10 @@ BUILD_ARGS = --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
 
 docker_build: docker_build_gpu
 
-docker_build_gpu: 
+docker_build_gpu: # Build GPU Docker image 
 	@docker build $(BUILD_ARGS) \
-	-f Dockerfile $(ARCH)_gpu \
-	-t $(DOCKER_IMAGE):$(ARCH)-gpu-$(DOCKER_TAG)
+		-f Dockerfile.$(ARCH)_gpu \
+		-t $(DOCKER_IMAGE):$(ARCH)-gpu-$(DOCKER_TAG) .
 
 docker_push_gpu: # Tag image as latest and Push to DockerHub
 	docker tag $(DOCKER_IMAGE):$(ARCH)-gpu-$(DOCKER_TAG) $(DOCKER_IMAGE):$(ARCH)-gpu-latest
