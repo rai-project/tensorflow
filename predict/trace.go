@@ -40,7 +40,7 @@ func NewTrace(data *proto.StepStats) (*Trace, error) {
 }
 
 func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption) error {
-	for ii, tr := range t.nodes {
+	for layerSequenceIndex, tr := range t.nodes {
 		device := tr.device
 		node := tr.node
 		startTime := time.Unix(0, node.GetAllStartMicros()*int64(time.Microsecond))
@@ -57,7 +57,7 @@ func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption
 			"thread_id":        node.GetThreadId(),
 			// "start_time":          startTime,
 			// "end_time":            endTime,
-			"layer_sequence_index": ii,
+			"layer_sequence_index": layerSequenceIndex,
 		}
 		if len(node.GetOutput()) != 0 {
 			shapes := make([][]int64, len(node.GetOutput()))
