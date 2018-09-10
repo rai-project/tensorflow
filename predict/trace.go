@@ -62,10 +62,14 @@ func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption
 		if len(node.GetOutput()) != 0 {
 			shapes := make([][]int64, len(node.GetOutput()))
 			for jj, o := range node.GetOutput() {
-				ss := o.GetTensorDescription().GetShape()
+				ss := o.GetTensorDescription().GetShape().GetDim()
+				if len(ss) == 0 {
+					shapes[jj] = []int64{}
+					continue
+				}
 				shape := make([]int64, len(ss))
 				for ii, s := range ss {
-					shape[ii] = s
+					shape[ii] = s.GetSize_()
 				}
 				shapes[jj] = shape
 			}
