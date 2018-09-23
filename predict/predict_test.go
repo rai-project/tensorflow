@@ -24,12 +24,8 @@ var (
 )
 
 func XXXTestPredictLoad(t *testing.T) {
-	err := tf.Register()
-	if err != nil {
-		log.WithError(err).Error("Failed to register server")
-	}
-
-	model, err := tf.FrameworkManifest.FindModel("alexnet:1.0")
+	tf.Register()
+	model, err := tf.FrameworkManifest.FindModel("inception:3.0")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
 
@@ -48,12 +44,8 @@ func XXXTestPredictLoad(t *testing.T) {
 }
 
 func TestPredictInference(t *testing.T) {
-	err := tf.Register()
-	if err != nil {
-		log.WithError(err).Error("Failed to register server")
-	}
-
-	model, err := tf.FrameworkManifest.FindModel("alexnet:1.0")
+	tf.Register()
+	model, err := tf.FrameworkManifest.FindModel("inception:3.0")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
 
