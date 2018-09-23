@@ -24,6 +24,7 @@ import (
 	"strings"
 
 	context "context"
+
 	opentracing "github.com/opentracing/opentracing-go"
 	olog "github.com/opentracing/opentracing-go/log"
 	"github.com/pkg/errors"
@@ -65,6 +66,39 @@ func New(model dlframework.ModelManifest, opts ...options.Option) (common.Predic
 	predictor := new(ImagePredictor)
 
 	return predictor.Load(context.Background(), model, opts...)
+}
+
+// Download ...
+func (p *ImagePredictor) Download(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) error {
+	span, ctx := tracer.StartSpanFromContext(ctx, tracer.STEP_TRACE, "Download")
+	defer span.Finish()
+
+	framework, err := model.ResolveFramework()
+	if err != nil {
+		return err
+	}
+
+	workDir, err := model.WorkDir()
+	if err != nil {
+		return err
+	}
+
+	ip := &ImagePredictor{
+		ImagePredictor: common.ImagePredictor{
+			Base: common.Base{
+				Framework: framework,
+				Model:     model,
+				Options:   options.New(opts...),
+			},
+			WorkDir: workDir,
+		},
+	}
+
+	if err = ip.download(ctx); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (p *ImagePredictor) Load(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {

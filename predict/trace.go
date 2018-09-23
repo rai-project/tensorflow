@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"context"
+
 	opentracing "github.com/opentracing/opentracing-go"
 	proto "github.com/rai-project/tensorflow"
 )
@@ -39,7 +40,7 @@ func NewTrace(data *proto.StepStats) (*Trace, error) {
 }
 
 func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption) error {
-	for _, tr := range t.nodes {
+	for layerSequenceIndex, tr := range t.nodes {
 		device := tr.device
 		node := tr.node
 		startTime := time.Unix(0, node.GetAllStartMicros()*int64(time.Microsecond))
@@ -56,6 +57,23 @@ func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption
 			"thread_id":        node.GetThreadId(),
 			// "start_time":          startTime,
 			// "end_time":            endTime,
+			"layer_sequence_index": layerSequenceIndex,
+		}
+		if len(node.GetOutput()) != 0 {
+			shapes := make([][]int64, len(node.GetOutput()))
+			for jj, o := range node.GetOutput() {
+				ss := o.GetTensorDescription().GetShape().GetDim()
+				if len(ss) == 0 {
+					shapes[jj] = []int64{}
+					continue
+				}
+				shape := make([]int64, len(ss))
+				for ii, s := range ss {
+					shape[ii] = s.GetSize_()
+				}
+				shapes[jj] = shape
+			}
+			tags["shape"] = shapes
 		}
 		memStatsTags := opentracing.Tags{}
 		if node.GetMemoryStats() != nil {
