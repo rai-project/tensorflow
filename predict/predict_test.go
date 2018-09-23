@@ -14,8 +14,13 @@ import (
 	"github.com/k0kubun/pp"
 	"github.com/rai-project/config"
 	"github.com/rai-project/dlframework/framework/options"
+	nvidiasmi "github.com/rai-project/nvidia-smi"
 	tf "github.com/rai-project/tensorflow"
 	"github.com/stretchr/testify/assert"
+)
+
+var (
+	batchSize = 64
 )
 
 // convert go Image to 1-dim array
@@ -32,9 +37,9 @@ func cvtImageTo1DArray(src image.Image, mean []float32) ([]float32, error) {
 	for y := 0; y < h; y++ {
 		for x := 0; x < w; x++ {
 			r, g, b, _ := src.At(x+b.Min.X, y+b.Min.Y).RGBA()
-			res[y*w+x] = float32(b>>8) - mean[0]
-			res[w*h+y*w+x] = float32(g>>8) - mean[1]
-			res[2*w*h+y*w+x] = float32(r>>8) - mean[2]
+			res[3*(y*w+x)] = float32(b>>8) - mean[0]
+			res[3*(y*w+x)+1] = float32(g>>8) - mean[1]
+			res[3*(y*w+x)+2] = float32(r>>8) - mean[2]
 		}
 	}
 
@@ -48,7 +53,7 @@ var (
 
 func XXXTestPredictLoad(t *testing.T) {
 	tf.Register()
-	model, err := tf.FrameworkManifest.FindModel("inception:3.0")
+	model, err := tf.FrameworkManifest.FindModel("bvlc-alexnet:1.0")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
 
@@ -68,14 +73,20 @@ func XXXTestPredictLoad(t *testing.T) {
 
 func TestPredictInference(t *testing.T) {
 	tf.Register()
-	model, err := tf.FrameworkManifest.FindModel("inception:3.0")
+	model, err := tf.FrameworkManifest.FindModel("bvlc-alexnet:1.0")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
+
+	device := options.CPU_DEVICE
+	if nvidiasmi.HasGPU {
+		device = options.CUDA_DEVICE
+	} else {
+		panic("no GPU")
+	}
 
 	ctx := context.Background()
 	opts := options.New(options.Context(ctx),
 		options.Device(device, 0),
-		options.Graph([]byte(graph)),
 		options.InputNode("data", []uint32{3, 227, 227}),
 		options.OutputNode("prob"),
 		options.BatchSize(uint32(batchSize)))
@@ -110,7 +121,7 @@ func TestPredictInference(t *testing.T) {
 
 	_ = preds
 
-	pp.Println(preds[0])
+	pp.Println(preds[0][0])
 
 }
 
