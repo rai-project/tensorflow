@@ -16,14 +16,12 @@ import (
 	"github.com/anthonynsimon/bild/imgio"
 	"github.com/anthonynsimon/bild/transform"
 	"github.com/k0kubun/pp"
-	"github.com/rai-project/config"
 	"github.com/rai-project/dlframework/framework/options"
 	nvidiasmi "github.com/rai-project/nvidia-smi"
 	tf "github.com/rai-project/tensorflow"
 	"github.com/rai-project/tensorflow/predict"
 
 	"github.com/rai-project/config"
-	"github.com/rai-project/dlframework/framework/options"
 
 	//_ "github.com/rai-project/tracer/all"
 
@@ -102,14 +100,12 @@ func main() {
 	}
 
 	C.cudaProfilerStart()
-	predictor.StartProfiling("predict", "")
 
 	preds, err := predictor.Predict(ctx, input)
 	if err != nil {
 		return
 	}
 
-	predictor.EndProfiling()
 	C.cudaProfilerStop()
 
 	_ = preds
