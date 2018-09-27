@@ -48,9 +48,9 @@ func cvtImageTo1DArray(src image.Image, mean []float32) ([]float32, error) {
 	for y := 0; y < h; y++ {
 		for x := 0; x < w; x++ {
 			r, g, b, _ := src.At(x+b.Min.X, y+b.Min.Y).RGBA()
-			res[y*w+x] = float32(b>>8) - mean[0]
+			res[y*w+x] = float32(r>>8) - mean[0]
 			res[w*h+y*w+x] = float32(g>>8) - mean[1]
-			res[2*w*h+y*w+x] = float32(r>>8) - mean[2]
+			res[2*w*h+y*w+x] = float32(b>>8) - mean[2]
 			// res[3*(y*w+x)] = float32(b>>8) - mean[0]
 			// res[3*(y*w+x)+1] = float32(g>>8) - mean[1]
 			// res[3*(y*w+x)+2] = float32(r>>8) - mean[2]
@@ -74,7 +74,6 @@ func main() {
 	ctx := context.Background()
 	opts := options.New(options.Context(ctx),
 		options.Device(device, 0),
-		options.Graph([]byte(graph)),
 		options.InputNode("data", []uint32{3, 227, 227}),
 		options.OutputNode("prob"),
 		options.BatchSize(uint32(batchSize)))
@@ -82,7 +81,7 @@ func main() {
 	predictor, err := predict.New(*model, options.WithOptions(opts))
 	defer predictor.Close()
 
-	imgDir, _ := filepath.Abs("../_fixtures")
+	imgDir, _ := filepath.Abs("../../_fixtures")
 	imagePath := filepath.Join(imgDir, "platypus.jpg")
 	img, err := imgio.Open(imagePath)
 	if err != nil {
