@@ -156,7 +156,7 @@ func (s *Session) Run(ctx context.Context, feeds map[tf.Output]*tf.Tensor, fetch
 		ptrOperation(c.targets), C.int(len(targets)),
 		runMetaData, status.c)
 
-	if runOpts != nil {
+	if false && runOpts != nil {
 
 		var meta proto.RunMetadata
 

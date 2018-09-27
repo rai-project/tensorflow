@@ -3,6 +3,10 @@ package predict
 // #cgo LDFLAGS: -ltensorflow
 // #cgo CFLAGS: -I${SRCDIR}/../../../tensorflow/tensorflow
 // #include "tensorflow/c/c_api.h"
+// #cgo linux CFLAGS: -I/usr/local/cuda/include
+// #cgo linux LDFLAGS: -lcuda -lcudart -L/usr/local/cuda/lib64
+// #include <cuda.h>
+// #include <cuda_runtime.h>
 import "C"
 
 // #include "tensorflow/core/framework/graph.pb.h"
@@ -22,6 +26,7 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"time"
 
 	context "context"
 
@@ -433,6 +438,38 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to perform inference")
 	}
+
+	runner := func() {
+		fetches, err := session.Run(ctx,
+			map[tf.Output]*tf.Tensor{
+				graph.Operation(p.inputLayer).Output(0): tensor,
+			},
+			[]tf.Output{
+				graph.Operation(p.outputLayer).Output(0),
+			},
+			nil,
+			p.runOptions(),
+		)
+		_ = fetches
+		_ = err
+	}
+
+	for ii := 0; ii < 10; ii++ {
+		runner()
+	}
+	C.cudaDeviceSynchronize()
+	elapsed := time.Duration(0)
+	for ii := 0; ii < 100; ii++ {
+		start := time.Now()
+		runner()
+		C.cudaDeviceSynchronize()
+		elapsed += time.Since(start)
+	}
+
+	avg := elapsed / time.Duration(100)
+
+	//	fmt.Printf("%v,%v\n", int(s.options.BatchSize()), avg)
+	fmt.Printf(">>>%v\n", avg)
 
 	probabilities := utils.Flatten2DFloat32(fetches[0].Value())
 

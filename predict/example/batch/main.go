@@ -62,6 +62,12 @@ func cvtImageTo1DArray(src image.Image, mean []float32) ([]float32, error) {
 
 func main() {
 	tf.Register()
+	for _, ii := range []int{1, 2, 4, 8, 16, 32, 64, 128, 256, 384} {
+		batchSize = ii
+		run()
+	}
+}
+func run() {
 	model, err := tf.FrameworkManifest.FindModel("bvlc-alexnet:1.0")
 
 	device := options.CPU_DEVICE
@@ -98,18 +104,20 @@ func main() {
 		input = append(input, res)
 	}
 
-	C.cudaProfilerStart()
+	//C.cudaProfilerStart()
 
 	preds, err := predictor.Predict(ctx, input)
 	if err != nil {
 		return
 	}
 
-	C.cudaProfilerStop()
+	//C.cudaProfilerStop()
 
 	_ = preds
 
-	pp.Println(preds[0][0])
+	if false {
+		pp.Println(preds[0][0])
+	}
 
 }
 
