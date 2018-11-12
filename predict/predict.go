@@ -46,14 +46,19 @@ import (
 
 type ImagePredictor struct {
 	common.ImagePredictor
-	features    []string
+	labels      []string
 	tfGraph     *tf.Graph
 	tfSession   *Session
 	inputLayer  string
 	outputLayer string
+	output      []float32
 }
 
 func New(model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
+	ctx := context.Background()
+	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "new_predictor")
+	defer span.Finish()
+
 	modelInputs := model.GetInputs()
 	if len(modelInputs) != 1 {
 		return nil, errors.New("number of inputs not supported")
@@ -70,9 +75,6 @@ func New(model dlframework.ModelManifest, opts ...options.Option) (common.Predic
 
 // Download ...
 func (p *ImagePredictor) Download(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) error {
-	span, ctx := tracer.StartSpanFromContext(ctx, tracer.FRAMEWORK_TRACE, "Download")
-	defer span.Finish()
-
 	framework, err := model.ResolveFramework()
 	if err != nil {
 		return err
@@ -102,9 +104,6 @@ func (p *ImagePredictor) Download(ctx context.Context, model dlframework.ModelMa
 }
 
 func (p *ImagePredictor) Load(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
-	span, ctx := opentracing.StartSpanFromContext(ctx, "Load")
-	defer span.Finish()
-
 	framework, err := model.ResolveFramework()
 	if err != nil {
 		return nil, err
@@ -165,7 +164,7 @@ func (p *ImagePredictor) GetPreprocessOptions(ctx context.Context) (common.Prepr
 func (p *ImagePredictor) download(ctx context.Context) error {
 	span, ctx := opentracing.StartSpanFromContext(
 		ctx,
-		"Download",
+		"download",
 		opentracing.Tags{
 			"graph_url":           p.GetGraphUrl(),
 			"target_graph_file":   p.GetGraphPath(),
@@ -266,7 +265,7 @@ func (p ImagePredictor) GetOutputLayerName(reader io.Reader) (string, error) {
 }
 
 func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
-	span, ctx := opentracing.StartSpanFromContext(ctx, "LoadPredictor")
+	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "load_predictor")
 	defer span.Finish()
 
 	if p.tfSession != nil {
@@ -277,7 +276,7 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 		olog.String("event", "read features"),
 	)
 
-	var features []string
+	var labels []string
 	f, err := os.Open(p.GetFeaturesPath())
 	if err != nil {
 		return errors.Wrapf(err, "cannot read %s", p.GetFeaturesPath())
@@ -286,9 +285,9 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		line := scanner.Text()
-		features = append(features, line)
+		labels = append(labels, line)
 	}
-	p.features = features
+	p.labels = labels
 
 	span.LogFields(
 		olog.String("event", "read graph"),
@@ -367,7 +366,7 @@ func zeros(height, width, channels int) [][][]float32 {
 }
 
 func (p *ImagePredictor) createTensor(ctx context.Context, data [][]float32) (*tf.Tensor, error) {
-	span, ctx := tracer.StartSpanFromContext(ctx, tracer.STEP_TRACE, "createTensor")
+	span, ctx := tracer.StartSpanFromContext(ctx, tracer.MODEL_TRACE, "create_tensor")
 	defer span.Finish()
 
 	imageDims, err := p.GetImageDimensions()
@@ -398,11 +397,21 @@ type operation struct {
 	g *Graph
 }
 
-func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...options.Option) ([]dlframework.Features, error) {
+func (p *ImagePredictor) runOptions() *proto.RunOptions {
+	if p.TraceLevel() >= tracer.FRAMEWORK_TRACE {
+		return &proto.RunOptions{
+			TraceLevel: proto.RunOptions_SOFTWARE_TRACE,
+		}
+	}
+	return nil
+}
 
-	// check input
+func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...options.Option) error {
+  span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "predict")
+  defer span.Finish()
+
 	if data == nil || len(data) < 1 {
-		return nil, fmt.Errorf("intput data nil or empty")
+		return errors.New("intput data nil or empty")
 	}
 
 	session := p.tfSession
@@ -410,14 +419,14 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 
 	options := options.New(opts...)
 
-	batchSize := int(options.BatchSize())
+	batchSize := options.BatchSize()
 	if batchSize == 0 {
 		batchSize = 1
 	}
 
 	tensor, err := p.createTensor(ctx, data)
 	if err != nil {
-		return nil, errors.Wrap(err, "cannot make tensor from image data")
+		return  errors.Wrap(err, "cannot make tensor from image data")
 	}
 
 	fetches, err := session.Run(ctx,
@@ -431,34 +440,20 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 		p.runOptions(),
 	)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to perform inference")
+		return errors.Wrapf(err, "failed to perform inference")
 	}
 
-	probabilities := utils.Flatten2DFloat32(fetches[0].Value())
+	p.output := utils.Flatten(fetches[0].Value())
 
-	var output []dlframework.Features
-	for _, prob := range probabilities {
-		rprobs := make([]*dlframework.Feature, len(prob))
-		for j, v := range prob {
-			rprobs[j] = &dlframework.Feature{
-				Index:       int64(j),
-				Name:        p.features[j],
-				Probability: v,
-			}
-		}
-		output = append(output, rprobs)
-	}
-
-	return output, nil
+  return  nil
 }
 
-func (p *ImagePredictor) runOptions() *proto.RunOptions {
-	if p.TraceLevel() >= tracer.FRAMEWORK_TRACE {
-		return &proto.RunOptions{
-			TraceLevel: proto.RunOptions_SOFTWARE_TRACE,
-		}
-	}
-	return nil
+// ReadPredictedFeatures ...
+func (p *ImagePredictor) ReadPredictedFeatures(ctx context.Context) ([]dlframework.Features, error) {
+	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "read_predicted_features")
+  defer span.Finish()
+
+	return p.CreatePredictedFeatures(ctx, p.output, p.labels)
 }
 
 func (p *ImagePredictor) Reset(ctx context.Context) error {
