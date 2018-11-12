@@ -70,7 +70,7 @@ func New(model dlframework.ModelManifest, opts ...options.Option) (common.Predic
 
 // Download ...
 func (p *ImagePredictor) Download(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) error {
-	span, ctx := tracer.StartSpanFromContext(ctx, tracer.STEP_TRACE, "Download")
+	span, ctx := tracer.StartSpanFromContext(ctx, tracer.FRAMEWORK_TRACE, "Download")
 	defer span.Finish()
 
 	framework, err := model.ResolveFramework()
@@ -88,9 +88,9 @@ func (p *ImagePredictor) Download(ctx context.Context, model dlframework.ModelMa
 			Base: common.Base{
 				Framework: framework,
 				Model:     model,
+				WorkDir:   workDir,
 				Options:   options.New(opts...),
 			},
-			WorkDir: workDir,
 		},
 	}
 
@@ -120,9 +120,9 @@ func (p *ImagePredictor) Load(ctx context.Context, model dlframework.ModelManife
 			Base: common.Base{
 				Framework: framework,
 				Model:     model,
+				WorkDir:   workDir,
 				Options:   options.New(opts...),
 			},
-			WorkDir: workDir,
 		},
 	}
 
