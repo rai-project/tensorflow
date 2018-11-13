@@ -103,14 +103,14 @@ func TestPredictInference(t *testing.T) {
 		panic(err)
 	}
 
-	var input [][]float32
+	input := make([][]float32, batchSize)
 	for ii := 0; ii < batchSize; ii++ {
 		resized := transform.Resize(img, 227, 227, transform.Linear)
 		res, err := cvtImageTo1DArray(resized, []float32{123, 117, 104})
 		if err != nil {
 			panic(err)
 		}
-		input = append(input, res)
+		input[ii] = res
 	}
 
 	err = predictor.Predict(ctx, input)
@@ -125,7 +125,7 @@ func TestPredictInference(t *testing.T) {
 		return
 	}
 
-	pp.Println(pred[0])
+	pp.Println(pred[0][0])
 
 }
 
