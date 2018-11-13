@@ -39,7 +39,6 @@ import (
 	"github.com/rai-project/tensorflow"
 	proto "github.com/rai-project/tensorflow"
 	"github.com/rai-project/tracer"
-	"github.com/rai-project/utils"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 )
 
@@ -50,7 +49,7 @@ type ImagePredictor struct {
 	tfSession   *Session
 	inputLayer  string
 	outputLayer string
-	output      []interface{}
+	output      interface{}
 }
 
 func New(model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
@@ -452,9 +451,14 @@ func (p *ImagePredictor) ReadPredictedFeatures(ctx context.Context) ([]dlframewo
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "read_predicted_features")
 	defer span.Finish()
 
-	output, err = utils.Tofloat32SliceE(p.output)
-	if err != nil {
-		return errors.Wrapf(err, "cannot cast output to []float32")
+	output := []float32{}
+	e, ok := p.output.([][]float32)
+	if !ok {
+		return nil, errors.New("output is not of type [][]float32")
+	}
+
+	for _, v := range e {
+		output = append(output, v...)
 	}
 
 	return p.CreatePredictedFeatures(ctx, output, p.labels)
