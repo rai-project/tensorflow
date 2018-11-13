@@ -24,7 +24,6 @@ import (
 
 	context "context"
 
-	"github.com/k0kubun/pp"
 	opentracing "github.com/opentracing/opentracing-go"
 	olog "github.com/opentracing/opentracing-go/log"
 	"github.com/pkg/errors"
@@ -51,7 +50,7 @@ type ImagePredictor struct {
 	tfSession   *Session
 	inputLayer  string
 	outputLayer string
-	output      []float32
+	output      []interface{}
 }
 
 func New(model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
@@ -443,7 +442,7 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 		return errors.Wrapf(err, "failed to perform inference")
 	}
 
-	p.output = utils.FlattenFloat32(fetches[0].Value())
+	p.output = fetches[0].Value()
 
 	return nil
 }
@@ -453,8 +452,12 @@ func (p *ImagePredictor) ReadPredictedFeatures(ctx context.Context) ([]dlframewo
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "read_predicted_features")
 	defer span.Finish()
 
-	pp.Println(p.output)
-	return p.CreatePredictedFeatures(ctx, p.output, p.labels)
+	output, err = utils.Tofloat32SliceE(p.output)
+	if err != nil {
+		return errors.Wrapf(err, "cannot cast output to []float32")
+	}
+
+	return p.CreatePredictedFeatures(ctx, output, p.labels)
 }
 
 func (p *ImagePredictor) Reset(ctx context.Context) error {
