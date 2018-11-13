@@ -16,7 +16,6 @@ import "C"
 import (
 	"bufio"
 	"bytes"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -407,8 +406,8 @@ func (p *ImagePredictor) runOptions() *proto.RunOptions {
 }
 
 func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...options.Option) error {
-  span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "predict")
-  defer span.Finish()
+	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "predict")
+	defer span.Finish()
 
 	if data == nil || len(data) < 1 {
 		return errors.New("intput data nil or empty")
@@ -426,7 +425,7 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 
 	tensor, err := p.createTensor(ctx, data)
 	if err != nil {
-		return  errors.Wrap(err, "cannot make tensor from image data")
+		return errors.Wrap(err, "cannot make tensor from image data")
 	}
 
 	fetches, err := session.Run(ctx,
@@ -443,15 +442,15 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 		return errors.Wrapf(err, "failed to perform inference")
 	}
 
-	p.output := utils.Flatten(fetches[0].Value())
+	p.output = utils.FlattenFloat32(fetches[0].Value())
 
-  return  nil
+	return nil
 }
 
 // ReadPredictedFeatures ...
 func (p *ImagePredictor) ReadPredictedFeatures(ctx context.Context) ([]dlframework.Features, error) {
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "read_predicted_features")
-  defer span.Finish()
+	defer span.Finish()
 
 	return p.CreatePredictedFeatures(ctx, p.output, p.labels)
 }

@@ -87,9 +87,9 @@ func TestPredictInference(t *testing.T) {
 	ctx := context.Background()
 	opts := options.New(options.Context(ctx),
 		options.Device(device, 0),
-		options.InputNode("data", []uint32{3, 227, 227}),
+		options.InputNode("data", []int{3, 227, 227}),
 		options.OutputNode("prob"),
-		options.BatchSize(uint32(batchSize)))
+		options.BatchSize(batchSize))
 
 	predictor, err := New(*model, options.WithOptions(opts))
 	assert.NoError(t, err)
@@ -113,15 +113,19 @@ func TestPredictInference(t *testing.T) {
 		input = append(input, res)
 	}
 
-	preds, err := predictor.Predict(ctx, input)
+	err = predictor.Predict(ctx, input)
 	assert.NoError(t, err)
 	if err != nil {
 		return
 	}
 
-	_ = preds
+	pred, err := predictor.ReadPredictedFeatures(ctx)
+	assert.NoError(t, err)
+	if err != nil {
+		return
+	}
 
-	pp.Println(preds[0][0])
+	pp.Println(pred[0])
 
 }
 
