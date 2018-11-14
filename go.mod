@@ -4,7 +4,7 @@ require (
 	cloud.google.com/go v0.24.0
 	github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78
 	github.com/GeertJohan/go-sourcepath v0.0.0-20150925135350-83e8b8723a9b
-	github.com/Masterminds/semver v1.4.2
+	github.com/Masterminds/semver v1.12.2
 	github.com/Microsoft/go-winio v0.4.7
 	github.com/Nvveen/Gotty v0.0.0-20120604004816-cd527374f1e5
 	github.com/Shopify/sarama v1.17.0
@@ -47,7 +47,7 @@ require (
 	github.com/fatih/color v1.7.0
 	github.com/fatih/structs v1.0.0
 	github.com/fluent/fluent-logger-golang v1.3.0
-	github.com/fsnotify/fsnotify v1.4.7
+	github.com/fsnotify/fsnotify v1.12.7
 	github.com/gbbr/memstats v0.0.0-20141117200020-3f4151ce3189
 	github.com/go-ini/ini v1.37.0
 	github.com/go-logfmt/logfmt v0.3.0
@@ -60,7 +60,7 @@ require (
 	github.com/google/go-querystring v0.0.0-20170111101155-53e6ce116135
 	github.com/google/gops v0.3.3
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.0
-	github.com/grpc-ecosystem/grpc-gateway v1.4.1
+	github.com/grpc-ecosystem/grpc-gateway v1.12.1
 	github.com/hashicorp/consul v1.1.0
 	github.com/hashicorp/go-cleanhttp v0.0.0-20171218145408-d5fe4b57a186
 	github.com/hashicorp/go-getter v0.0.0-20180425224130-3f60ec5cfbb2

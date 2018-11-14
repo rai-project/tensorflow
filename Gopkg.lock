@@ -34,7 +34,7 @@
   packages = ["."]
   pruneopts = "T"
   revision = "c7af12943936e8c39859482e61f0574c2fd7fc75"
-  version = "v1.4.2"
+  version = "v1.12.2"
 
 [[projects]]
   digest = "1:79c6f659957a562ef5037444d5690391c85b91c3976cfdeffb17f5f2633caf89"
@@ -470,7 +470,7 @@
   packages = ["."]
   pruneopts = "T"
   revision = "c2828203cd70a50dcccfb2761f8b1f8ceef9a8e9"
-  version = "v1.4.7"
+  version = "v1.12.7"
 
 [[projects]]
   branch = "master"
@@ -619,7 +619,7 @@
   ]
   pruneopts = "T"
   revision = "92583770e3f01b09a0d3e9bdf64321d8bebd48f2"
-  version = "v1.4.1"
+  version = "v1.12.1"
 
 [[projects]]
   digest = "1:3f758fc85eac2686ca76733cc16e6a52fa2bba5852c946423f758b3e3fe7eccc"

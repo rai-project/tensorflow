@@ -1,7 +1,7 @@
 name: Inception-ResNet # name of your model
 framework:
   name: Tensorflow # framework for the model
-  version: 1.4 # framework version contraint
+  version: 1.12 # framework version contraint
 version: 2.0 # version information in semantic version format
 container: # containers used to perform model prediction
            # multiple platforms can be specified
