@@ -174,6 +174,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:1548bbc4aec81a311d8f24d51f2974b73a287f160aa47cdf9e11fef4fbe72dd7"
+  name = "github.com/benesch/cgosymbolizer"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "70e1ee2b39d3b616a6ab9996820dde224c27f351"
+
+[[projects]]
+  branch = "master"
   digest = "1:1080d62019d783a0e582b00f7b01216df64a889ecf9fa3751290721e00fc978a"
   name = "github.com/bgentry/go-netrc"
   packages = ["netrc"]
@@ -508,7 +516,7 @@
   version = "v1.2.1"
 
 [[projects]]
-  digest = "1:aba848b77ff362b03db51ac06379c36a120bc05b4cc6c5c74f6e6fa310454fa5"
+  digest = "1:da39f4a22829ca95e63566208e0ea42d6f055f41dff1b14fdab88d88f62df653"
   name = "github.com/gogo/protobuf"
   packages = [
     "gogoproto",
@@ -519,8 +527,8 @@
     "types",
   ]
   pruneopts = "T"
-  revision = "1adfc126b41513cc696b209667c8656ea7aac67c"
-  version = "v1.0.0"
+  revision = "636bf0302bc95575d69441b25a2603156ffdddf1"
+  version = "v1.1.1"
 
 [[projects]]
   branch = "master"
@@ -713,6 +721,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:755e508e9ef8f15227aac3ab9f6a6ea8c90cc2716a152732e6a7ea20e253d96c"
+  name = "github.com/iancoleman/orderedmap"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "fec04b9a4f6dd6d27c3f0b2c4df147fab396bc7f"
+
+[[projects]]
+  branch = "master"
   digest = "1:e345ab0697f8f63d0ff3cc4c4c90fa470fa79c8d3c0b461a1d16df2f5b0c1fd1"
   name = "github.com/ianlancetaylor/cgosymbolizer"
   packages = ["."]
@@ -825,6 +841,14 @@
   packages = ["."]
   pruneopts = "T"
   revision = "7a285b4a65ce116fae73281c456d26c763ee181d"
+
+[[projects]]
+  digest = "1:0a69a1c0db3591fcefb47f115b224592c8dfa4368b7ba9fae509d5e16cdc95c8"
+  name = "github.com/konsorten/go-windows-terminal-sequences"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "5c8c8bd35d3832f5d134ae1e1e375b69a4d25242"
+  version = "v1.0.1"
 
 [[projects]]
   branch = "master"
@@ -1096,6 +1120,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:0b402a4945ad833186e00c89697cb6cfb0dfd9759d6e2df8e4f11010d853133c"
+  name = "github.com/rai-project/batching"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "765f34aba1b13b13948693898c0eb3058e34c851"
+
+[[projects]]
+  branch = "master"
   digest = "1:82d354223621bd0f5eb177102d731c965f934cccda869f1e6b29374b425b67d6"
   name = "github.com/rai-project/cmd"
   packages = ["."]
@@ -1143,7 +1175,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:9ee29c7fb193b7b6a6324d64a5f24e487cf90ca00e30e382117953efe691ff2e"
+  digest = "1:4fdffc394e1f6c0a31ab6bc76aa7b3a03631b5ee498ca02f4bed46603601d0f7"
   name = "github.com/rai-project/dlframework"
   packages = [
     ".",
@@ -1151,12 +1183,13 @@
     "framework/agent",
     "framework/cmd",
     "framework/cmd/server",
+    "framework/feature",
     "framework/options",
     "framework/predict",
     "steps",
   ]
   pruneopts = "T"
-  revision = "0bf83e30cbf8cf8756b55a9e68448b0c921d2154"
+  revision = "8000b4200c0f169009212949103f9086664f817c"
 
 [[projects]]
   branch = "master"
@@ -1179,7 +1212,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:1868c524172a907a7f6071dfe206d4802118001463dab1b46af9162abca62d23"
+  digest = "1:97ab4a991c14e6a97cd099cb6c0fe7e7f5d1c28ac6420a0d51a1913cec25408c"
   name = "github.com/rai-project/evaluation"
   packages = [
     ".",
@@ -1187,18 +1220,18 @@
     "eventflow",
   ]
   pruneopts = "T"
-  revision = "cd41eb1b97067a47b951a2bce5765d4307b87576"
+  revision = "192cbc55d455b2194f76f745ceca53aa0b6ba62f"
 
 [[projects]]
   branch = "master"
-  digest = "1:cafe2fbff4e342bc1ca77ab3a39ed6aa40fe98a11f3bfb747228c4c7a6b6d996"
+  digest = "1:d34027d99de469443b3e2ade46646b98a2acf3972ad7c8d9bf2b34ab2c4cdf61"
   name = "github.com/rai-project/go-cupti"
   packages = [
     ".",
     "types",
   ]
   pruneopts = "T"
-  revision = "2344ad3955bc9bd7f981183f3c2329c68dd386c8"
+  revision = "fef5dd06e505b02990fc30e92491906553568d86"
 
 [[projects]]
   branch = "master"
@@ -1207,14 +1240,6 @@
   packages = ["."]
   pruneopts = "T"
   revision = "a3eb81100bdb1b634dce526e43ea57aa80bf4f0d"
-
-[[projects]]
-  branch = "master"
-  digest = "1:7860c5027d494562ca9ad203be3a24b3bef39f953dfe4f7f7b912e13391a17c2"
-  name = "github.com/rai-project/go-mxnet-predictor"
-  packages = ["utils"]
-  pruneopts = "T"
-  revision = "311c8ef2fcfabf49e90c56d6fe0fe77e77a57307"
 
 [[projects]]
   branch = "master"
@@ -1234,15 +1259,15 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:a558158955fdd7ccc2a306ecbf2753786a8439e0ea66a5fd7c61c59965ee91ae"
+  digest = "1:375d71f91cb0adb4d0169390e51f4414582c3b538ff506e6ec0e8417592350c0"
   name = "github.com/rai-project/grpc"
   packages = ["."]
   pruneopts = "T"
-  revision = "588fc0280cbd434fe9111e13c99fa4b4cbfc584a"
+  revision = "bed6f8e760628d2725f5fbf21f52ecb4da448217"
 
 [[projects]]
   branch = "master"
-  digest = "1:354dfcd7a5758c5d49b2cedf259fa5479c6974bc470bbcd5794aa562ba58b168"
+  digest = "1:b0cfc0a0ed8e85f54818fa227536ac4c6c544f4817eb0f2fd58aa15f284f2ebf"
   name = "github.com/rai-project/image"
   packages = [
     ".",
@@ -1250,7 +1275,7 @@
     "types",
   ]
   pruneopts = "T"
-  revision = "1711f3528cd592e2351e61a35b7f8e11ea348866"
+  revision = "ac2b99ebb689aaf5beca7c005bb803c0dba19734"
 
 [[projects]]
   branch = "master"
@@ -1378,6 +1403,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:b6e59fb38a7d436d6e889bd47a2adbb2f72fc81f67c77e180613a6d19b94762c"
+  name = "github.com/rai-project/synthetic_load"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "e1dc7a0d1182274f824ba9ce91d2b6a2bb2b2d92"
+
+[[projects]]
+  branch = "master"
   digest = "1:a253305be83b2a3e8dbb5f4198339b8c620b1a935760310354c9c2bbaa4d7a19"
   name = "github.com/rai-project/tegra"
   packages = ["."]
@@ -1385,8 +1418,7 @@
   revision = "e67904ef854ae00a55270b7bc2a3a2bd875ee080"
 
 [[projects]]
-  branch = "master"
-  digest = "1:5ac7474674b8101e440216152a09c41e2e9c06ac09e92282bf9e07e2e85297a6"
+  digest = "1:9d4471473703e5ebf8e8f77770c254d2c874c36203624f98e249e0b48decdcb7"
   name = "github.com/rai-project/tracer"
   packages = [
     ".",
@@ -1400,7 +1432,8 @@
     "zipkin",
   ]
   pruneopts = "T"
-  revision = "1813199cbcd257a5b9bbeff9496a877303a24523"
+  revision = "99de7d4e81ce7fc75f5d12a31cddd5db8f233281"
+  version = "v0.2.0"
 
 [[projects]]
   branch = "master"
@@ -1478,6 +1511,14 @@
   revision = "3235eccb8edc74d09a3e9727b13cce44644188f1"
 
 [[projects]]
+  branch = "master"
+  digest = "1:5872a011cd88c3f563afc9a390a5cca80a76cae19e94698e418e0ef7b8d7b7cd"
+  name = "github.com/seehuhn/mt19937"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "cc7708819361f78dfcab8d72169c86917da88816"
+
+[[projects]]
   digest = "1:54bd573538ca13ccf85d18c99249d934f17957f17263256b42565a11c854c1de"
   name = "github.com/segmentio/go-loggly"
   packages = ["."]
@@ -1497,15 +1538,15 @@
   version = "v2.18.05"
 
 [[projects]]
-  digest = "1:047075087eff9bcda0806c636c479fae29b9ae55da320d3d961eb5d3203e2a75"
+  digest = "1:a204f9aa04d3305be0d4d8f69f42aee6c649a8f9f9a8dbbbaff54bdad5ce50c7"
   name = "github.com/sirupsen/logrus"
   packages = [
     ".",
     "hooks/syslog",
   ]
   pruneopts = "T"
-  revision = "c155da19408a8799da419ed3eeb0cb5db0ad5dbc"
-  version = "v1.0.5"
+  revision = "bcd833dfe83d3cebad139e4a29ed79cb2318bf95"
+  version = "v1.2.0"
 
 [[projects]]
   digest = "1:7e4d5394f3d5d87eff2b1b4d8a8756bbabbe670b28db7cb3c6878d7ace89605f"
@@ -1856,6 +1897,8 @@
     "proxy",
     "publicsuffix",
     "trace",
+    "webdav",
+    "webdav/internal/xml",
     "websocket",
   ]
   pruneopts = "T"
@@ -2051,7 +2094,6 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/GeertJohan/go-sourcepath",
     "github.com/anthonynsimon/bild/imgio",
     "github.com/anthonynsimon/bild/transform",
     "github.com/elazarl/go-bindata-assetfs",
@@ -2074,14 +2116,13 @@
     "github.com/rai-project/dlframework/framework/predict",
     "github.com/rai-project/downloadmanager",
     "github.com/rai-project/go-cupti",
-    "github.com/rai-project/go-mxnet-predictor/utils",
     "github.com/rai-project/image",
     "github.com/rai-project/image/types",
     "github.com/rai-project/logger",
     "github.com/rai-project/nvidia-smi",
     "github.com/rai-project/tracer",
     "github.com/rai-project/tracer/all",
-    "github.com/rai-project/utils",
+    "github.com/rai-project/tracer/jaeger",
     "github.com/sirupsen/logrus",
     "github.com/stretchr/testify/assert",
     "github.com/tensorflow/tensorflow/tensorflow/go",
