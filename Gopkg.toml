@@ -86,10 +86,6 @@
   name = "github.com/rai-project/go-cupti"
 
 [[constraint]]
-  name = "github.com/rai-project/go-mxnet-predictor"
-  branch = "master"
-
-[[constraint]]
   branch = "master"
   name = "github.com/rai-project/image"
 
@@ -102,8 +98,8 @@
   name = "github.com/rai-project/nvidia-smi"
 
 [[constraint]]
+  branch = "master"
   name = "github.com/rai-project/tracer"
-  version = "0.2.0"
 
 [[constraint]]
   branch = "master"
