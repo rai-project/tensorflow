@@ -68,7 +68,7 @@ WORKDIR $GOPATH/src/$PKG
 
 RUN git clone --depth=1 --branch=master https://${PKG}.git . && \
   cd $GOPATH/src/$PKG && \
-  dep ensure
+  dep ensure -v
 
 RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   export GCC_HOST_COMPILER_PATH=/usr/bin/gcc && \

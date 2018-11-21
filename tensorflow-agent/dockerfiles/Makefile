@@ -47,19 +47,29 @@ BUILD_ARGS = --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
          --build-arg ARCH=$(ARCH) \
        --build-arg FRAMEWORK_VERSION="1.9.0"
 
-docker_build: docker_build_gpu
+docker_build: docker_build_cpu docker_build_gpu
+
+docker_build_cpu: # Build CPU Docker image
+	@docker build $(BUILD_ARGS) \
+		-f Dockerfile.$(ARCH)_cpu \
+		-t $(DOCKER_IMAGE):$(ARCH)-cpu-$(DOCKER_TAG) .
 
 docker_build_gpu: # Build GPU Docker image 
 	@docker build $(BUILD_ARGS) \
 		-f Dockerfile.$(ARCH)_gpu \
 		-t $(DOCKER_IMAGE):$(ARCH)-gpu-$(DOCKER_TAG) .
 
+docker_push_cpu: # Tag image as latest and Push to Dockerhub
+	docker tag $(DOCKER_IMAGE):$(ARCH)-cpu-$(DOCKER_TAG) $(DOCKER_IMAGE):$(ARCH)-cpu-latest
+	docker push $(DOCKER_IMAGE):$(ARCH)-cpu-$(DOCKER_TAG)
+	docker push $(DOCKER_IMAGE):$(ARCH)-cpu-latest
+
 docker_push_gpu: # Tag image as latest and Push to DockerHub
 	docker tag $(DOCKER_IMAGE):$(ARCH)-gpu-$(DOCKER_TAG) $(DOCKER_IMAGE):$(ARCH)-gpu-latest
 	docker push $(DOCKER_IMAGE):$(ARCH)-gpu-$(DOCKER_TAG)
 	docker push $(DOCKER_IMAGE):$(ARCH)-gpu-latest
 
-docker_push: docker_push_gpu
+docker_push: docker_push_cpu docker_push_gpu
 
 output:
 	@echo Docker Image: $(DOCKER_IMAGE):$(DOCKER_TAG)
