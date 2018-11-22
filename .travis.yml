@@ -1,10 +1,12 @@
 language: go
 dist: xenial
 sudo: required
-services:
-  - docker
+before_install:
+  - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+install:
+  - dep ensure -vendor-only -v
+  - go build
 script:
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - cd ${TRAVIS_BUILD_DIR}/tensorflow-agent/dockerfiles
-  - make build
-  - make push
+  - echo "Skip tests..."
+after_script:
+  - go test -race -v

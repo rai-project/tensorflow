@@ -45,7 +45,7 @@ BUILD_ARGS = --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
        --build-arg VCS_URL=`git config --get remote.origin.url` \
          --build-arg VCS_REF=$(GIT_COMMIT) \
          --build-arg ARCH=$(ARCH) \
-       --build-arg FRAMEWORK_VERSION="1.9.0"
+       --build-arg FRAMEWORK_VERSION="v1.12.0"
 
 docker_build: docker_build_cpu docker_build_gpu
 
@@ -54,7 +54,7 @@ docker_build_cpu: # Build CPU Docker image
 		-f Dockerfile.$(ARCH)_cpu \
 		-t $(DOCKER_IMAGE):$(ARCH)-cpu-$(DOCKER_TAG) .
 
-docker_build_gpu: # Build GPU Docker image 
+docker_build_gpu: # Build GPU Docker image
 	@docker build $(BUILD_ARGS) \
 		-f Dockerfile.$(ARCH)_gpu \
 		-t $(DOCKER_IMAGE):$(ARCH)-gpu-$(DOCKER_TAG) .

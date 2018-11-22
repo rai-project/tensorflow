@@ -14,7 +14,7 @@ LABEL org.carml.tensorflow.build-date=$BUILD_DATE \
   org.carml.tensorflow.url="https://www.carml.org/" \
   org.carml.tensorflow.vcs-ref=$VCS_REF \
   org.carml.tensorflow.vcs-url=$VCS_URL \
-  org.carml.tensorflow.vendor="CarML" \
+  org.carml.tensorflow.vendor="MLModelScope" \
   org.carml.tensorflow.arch=$ARCH \
   org.carml.tensorflow.version=$VERSION \
   org.carml.tensorflow.framework_version=$FRAMEWORK_VERSION \
@@ -47,9 +47,9 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 # install bazel
 RUN mkdir bazel && \
   cd bazel && \
-  wget https://github.com/bazelbuild/bazel/releases/download/0.16.1/bazel-0.16.1-installer-linux-x86_64.sh  && \
-  chmod +x bazel-0.16.1-installer-linux-x86_64.sh && \
-  ./bazel-0.16.1-installer-linux-x86_64.sh --user && \
+  wget https://github.com/bazelbuild/bazel/releases/download/0.16.1/bazel-0.18.1-installer-linux-x86_64.sh  && \
+  chmod +x bazel-0.18.1-installer-linux-x86_64.sh && \
+  ./bazel-0.18.1-installer-linux-x86_64.sh --user && \
   export PATH="$PATH:/root/bin"
 
 # check for bazel
@@ -57,10 +57,10 @@ RUN echo $HOME
 
 # install pre-requisites
 RUN pip install -U setuptools && \
-        pip --no-cache-dir install \
-        six \
-        numpy==1.12.0 \
-        wheel
+  pip --no-cache-dir install \
+  six \
+  numpy \
+  wheel
 
 # get rai-project/tensorflow repository
 ENV PKG github.com/rai-project/tensorflow
@@ -80,9 +80,9 @@ RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   export TF_ENABLE_XLA=1 && \
   export TF_NEED_OPENCL=0 && \
   export TF_NEED_CUDA=1 && \
-  export TF_CUDA_VERSION=9.2 && \
-  export CUDA_TOOLKIT_PATH=/usr/local/cuda-9.2 && \
-  export TF_CUDA_COMPUTE_CAPABILITIES=3.5,3.7,5.2,6.0 && \
+  export TF_CUDA_VERSION=10.0 && \
+  export CUDA_TOOLKIT_PATH=/usr/local/cuda && \
+  export TF_CUDA_COMPUTE_CAPABILITIES=3.0,3.5,3.7,5.0,5.2,5.3,6.0,6.1,6,2,7.0,7.5 && \
   export CUDNN_INSTALL_PATH=/usr/lib/x86_64-linux-gnu && \
   export TF_NEED_MKL=0 && \
   export TF_NEED_VERBS=0 && \
@@ -92,7 +92,7 @@ RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH} \
   /root/bin/bazel build -c opt //tensorflow:libtensorflow.so && \
   export LD_LIBRARY_PATH=${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow:${LD_LIBRARY_PATH}
-  
+
 RUN cd ${GOPATH}/src/$PKG && \
   go build -a -installsuffix cgo -ldflags "-s -w -X ${PKG}/Version=${VERSION} -X ${PKG}/GitCommit=${VCS_REF} -X ${PKG}/BuildDate=${BUILD_DATE}"&& \
   go install
