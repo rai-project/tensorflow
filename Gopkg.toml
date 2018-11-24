@@ -24,11 +24,6 @@
 #   go-tests = true
 #   unused-packages = true
 
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/GeertJohan/go-sourcepath"
-
 [[constraint]]
   name = "github.com/anthonynsimon/bild"
   version = "0.10.0"
@@ -100,10 +95,6 @@
 [[constraint]]
   branch = "master"
   name = "github.com/rai-project/tracer"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/rai-project/utils"
 
 [[constraint]]
   name = "github.com/sirupsen/logrus"
