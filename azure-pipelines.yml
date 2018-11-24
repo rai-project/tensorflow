@@ -1,0 +1,23 @@
+jobs:
+  - job: CPU
+    steps:
+      - bash: |
+          docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
+          cd tensorflow-agent/dockerfiles
+          make docker_pull_cpu
+          make docker_build_cpu
+          while $(make docker_push_cpu); do :; done
+  - job: GPU
+    steps:
+      - bash: |
+          docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
+          cd tensorflow-agent/dockerfiles
+          make docker_pull_gpu
+          make docker_build_gpu
+          while $(make docker_push_gpu); do :; done
+  - job: Update_Microbadger
+    dependsOn:
+      - CPU
+      - GPU
+    # steps:
+    #   - script: 'curl -X POST https://hooks.microbadger.com/images/carml/go-mxnet/1MrtzLGOTLhD_lTAZ2Ksy0HP-nI='
