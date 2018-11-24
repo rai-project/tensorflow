@@ -2,7 +2,7 @@
 build: docker_build output
 
 # Build and push Docker image
-release: docker_build docker_push
+release: docker_pull docker_build docker_push
 
 # Image and binary can be overidden with env vars.
 DOCKER_IMAGE ?= carml/tensorflow
@@ -58,6 +58,14 @@ docker_build_gpu: # Build GPU Docker image
 	@docker build $(BUILD_ARGS) \
 		-f Dockerfile.$(ARCH)_gpu \
 		-t $(DOCKER_IMAGE):$(ARCH)-gpu-$(DOCKER_TAG) .
+
+docker_pull_cpu:
+	docker pull carml/base:$(ARCH)-cpu-latest
+
+docker_pull_gpu:
+	docker pull carml/base:$(ARCH)-gpu-latest
+
+docker_pull: docker_pull_cpu docker_pull_gpu
 
 docker_push_cpu: # Tag image as latest and Push to Dockerhub
 	docker tag $(DOCKER_IMAGE):$(ARCH)-cpu-$(DOCKER_TAG) $(DOCKER_IMAGE):$(ARCH)-cpu-latest

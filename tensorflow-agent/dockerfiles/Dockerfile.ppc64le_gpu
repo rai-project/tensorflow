@@ -61,7 +61,7 @@ RUN mkdir bazel && cd bazel && \
 RUN pip install -U setuptools && \
   pip --no-cache-dir install \
   six \
-  numpy==1.12.0 \
+  numpy \
   wheel
 
 # get rai-project/tensorflow repository
