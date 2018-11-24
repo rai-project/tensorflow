@@ -40,9 +40,6 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
   python-dev \
   swig \
   python-pip \
-  libatlas-dev \
-  python-numpy \
-  libopenblas-dev \
   libcurl3-dev \
   libfreetype6-dev \
   libzmq3-dev \

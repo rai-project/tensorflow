@@ -36,9 +36,6 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
   python-dev \
   swig \
   python-pip \
-  libatlas-dev \
-  python-numpy \
-  libopenblas-dev \
   libcurl3-dev \
   libfreetype6-dev \
   libzmq3-dev \
@@ -47,7 +44,7 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 # install bazel
 RUN mkdir bazel && \
   cd bazel && \
-  wget https://github.com/bazelbuild/bazel/releases/download/0.16.1/bazel-0.18.1-installer-linux-x86_64.sh  && \
+  wget https://github.com/bazelbuild/bazel/releases/download/0.18.1/bazel-0.18.1-installer-linux-x86_64.sh  && \
   chmod +x bazel-0.18.1-installer-linux-x86_64.sh && \
   ./bazel-0.18.1-installer-linux-x86_64.sh --user && \
   export PATH="$PATH:/root/bin"
