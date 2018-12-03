@@ -1,4 +1,4 @@
-# Agent for Tensorflow Prediction
+# MLModelScope Tensorflow Agent
 
 [![Build Status](https://dev.azure.com/dakkak/rai/_apis/build/status/tensorflow)](https://dev.azure.com/dakkak/rai/_build/latest?definitionId=14)
 [![Build Status](https://travis-ci.org/rai-project/tensorflow.svg?branch=master)](https://travis-ci.org/rai-project/tensorflow)
