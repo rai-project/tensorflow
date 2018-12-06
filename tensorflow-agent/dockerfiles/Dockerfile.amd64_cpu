@@ -35,7 +35,8 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
   libcurl3-dev \
   libfreetype6-dev \
   libzmq3-dev \
-  libhdf5-dev
+  libhdf5-dev && \
+  rm -rf /var/lib/apt/lists/*
 
 # install bazel 0.18.1
 RUN mkdir bazel && \
@@ -45,8 +46,6 @@ RUN mkdir bazel && \
   ./bazel-0.18.1-installer-linux-x86_64.sh --user && \
   export PATH="$PATH:/root/bin"
 
-# check for bazel
-RUN echo $HOME
 
 # install pre-requisites
 RUN pip install -U setuptools && \
@@ -54,14 +53,6 @@ RUN pip install -U setuptools && \
   six \
   numpy \
   wheel
-
-# get rai-project/tensorflow repository
-ENV PKG github.com/rai-project/tensorflow
-WORKDIR $GOPATH/src/$PKG
-
-RUN git clone --depth=1 --branch=master https://${PKG}.git . && \
-  cd $GOPATH/src/$PKG && \
-  dep ensure -v -vendor-only
 
 RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   export GCC_HOST_COMPILER_PATH=/usr/bin/gcc && \
@@ -80,7 +71,12 @@ RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   /root/bin/bazel build -c opt //tensorflow:libtensorflow.so && \
   export LD_LIBRARY_PATH=${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow:${LD_LIBRARY_PATH}
 
-RUN cd ${GOPATH}/src/$PKG && \
+# get rai-project/tensorflow repository
+ENV PKG github.com/rai-project/tensorflow
+WORKDIR $GOPATH/src/$PKG
+
+RUN git clone --depth=1 --branch=master https://${PKG}.git . && \
+  cd $GOPATH/src/$PKG && \
   dep ensure -vendor-only -v && \
   go build -a -installsuffix cgo -ldflags "-s -w -X ${PKG}/Version=${VERSION} -X ${PKG}/GitCommit=${VCS_REF} -X ${PKG}/BuildDate=${BUILD_DATE}"&& \
   cd tensorflow-agent && \

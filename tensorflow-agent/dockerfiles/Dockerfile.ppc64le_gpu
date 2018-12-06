@@ -43,7 +43,8 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
   libcurl3-dev \
   libfreetype6-dev \
   libzmq3-dev \
-  libhdf5-dev
+  libhdf5-dev && \
+  rm -rf /var/lib/apt/lists/*
 
 # install bazel (from source)
 RUN mkdir bazel && cd bazel && \
@@ -60,14 +61,6 @@ RUN pip install -U setuptools && \
   six \
   numpy \
   wheel
-
-# get rai-project/tensorflow repository
-ENV PKG github.com/rai-project/tensorflow
-WORKDIR $GOPATH/src/$PKG
-
-RUN git clone --depth=1 --branch=master https://${PKG}.git . && \
-  cd $GOPATH/src/$PKG && \
-  dep ensure
 
 RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   export CC_OPT_FLAGS="-mcpu=power8 -mtune=power8" && \
@@ -89,12 +82,17 @@ RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   export TF_NEED_MPI=0 && \
   export TF_CUDA_CLANG=0 && \
   ./configure && \
-  LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH} \
+  export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH} \
   tensorflow/tools/ci_build/builds/configured GPU \
   /bazel/output/bazel build -c opt //tensorflow:libtensorflow.so && \
   export LD_LIBRARY_PATH=${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow:${LD_LIBRARY_PATH}
 
-RUN cd ${GOPATH}/src/$PKG && \
+# get rai-project/tensorflow repository
+ENV PKG github.com/rai-project/tensorflow
+WORKDIR $GOPATH/src/$PKG
+
+RUN git clone --depth=1 --branch=master https://${PKG}.git . && \
+  cd $GOPATH/src/$PKG && \
   dep ensure -vendor-only -v && \
   go build -a -installsuffix cgo -ldflags "-s -w -X ${PKG}/Version=${VERSION} -X ${PKG}/GitCommit=${VCS_REF} -X ${PKG}/BuildDate=${BUILD_DATE}"&& \
   cd tensorflow-agent && \
