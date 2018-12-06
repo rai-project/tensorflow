@@ -92,8 +92,11 @@ RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   ./configure && \
   export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH} \
   tensorflow/tools/ci_build/builds/configured GPU \
-  /bazel/output/bazel build -c opt //tensorflow:libtensorflow.so && \
-  export LD_LIBRARY_PATH=${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow:${LD_LIBRARY_PATH}
+  /bazel/output/bazel build -c opt //tensorflow:libtensorflow.so
+
+
+ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH}
+ENV LD_LIBRARY_PATH=${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow:${LD_LIBRARY_PATH}
 
 RUN cd $GOPATH/src/$PKG && \
   go build -a -installsuffix cgo -ldflags "-s -w -X ${PKG}/Version=${VERSION} -X ${PKG}/GitCommit=${VCS_REF} -X ${PKG}/BuildDate=${BUILD_DATE}"&& \
