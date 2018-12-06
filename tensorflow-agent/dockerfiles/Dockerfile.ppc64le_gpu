@@ -29,21 +29,22 @@ ENV PATH ${JAVA_HOME}/bin:$PATH
 ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
 ENV LD_LIBRARY_PATH /usr/local/cuda/lib64:$LD_LIBRARY_PATH
 
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-  openjdk-8-jdk \
-  wget \
-  curl \
-  unzip \
-  zip \
-  git \
-  rsync \
-  python-dev \
-  swig \
-  python-pip \
-  libcurl3-dev \
-  libfreetype6-dev \
-  libzmq3-dev \
-  libhdf5-dev && \
+RUN add-apt-repository ppa:webupd8team/java &&\
+  apt-get update -y && apt-get install -y --no-install-recommends \
+    openjdk-8-jdk \
+    wget \
+    curl \
+    unzip \
+    zip \
+    git \
+    rsync \
+    python-dev \
+    swig \
+    python-pip \
+    libcurl3-dev \
+    libfreetype6-dev \
+    libzmq3-dev \
+    libhdf5-dev && \
   rm -rf /var/lib/apt/lists/*
 
 # install bazel (from source)

@@ -26,25 +26,26 @@ ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
 ENV LD_LIBRARY_PATH /usr/local/cuda/lib64:$LD_LIBRARY_PATH
 ENV LD_LIBRARY_PATH /usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
 
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-  wget \
-  curl \
-  unzip \
-  zip \
-  git \
-  rsync \
-  python-dev \
-  swig \
-  python-pip \
-  libcurl3-dev \
-  libfreetype6-dev \
-  libzmq3-dev \
-  libhdf5-dev && \
+RUN add-apt-repository ppa:webupd8team/java &&\
+  apt-get update -y && apt-get install -y --no-install-recommends \
+    openjdk-8-jdk \
+    wget \
+    curl \
+    unzip \
+    zip \
+    git \
+    rsync \
+    python-dev \
+    swig \
+    python-pip \
+    libcurl3-dev \
+    libfreetype6-dev \
+    libzmq3-dev \
+    libhdf5-dev && \
   rm -rf /var/lib/apt/lists/*
 
 # Install bazel (https://docs.bazel.build/versions/master/install-ubuntu.html)
-RUN apt-get -y install openjdk-8-jdk && \
-    echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list && \
+RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list && \
     curl https://bazel.build/bazel-release.pub.gpg | apt-key add - && \
     apt-get update && \
 
