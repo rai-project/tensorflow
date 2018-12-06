@@ -93,7 +93,7 @@ RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
 RUN cd ${GOPATH}/src/$PKG && \
   go build -a -installsuffix cgo -ldflags "-s -w -X ${PKG}/Version=${VERSION} -X ${PKG}/GitCommit=${VCS_REF} -X ${PKG}/BuildDate=${BUILD_DATE}"&& \
   cd tensorflow-agent && \
-  go install -tags=nogpu && \
+  go install && \
   cd .. && \
   rm -fr vendor
 
