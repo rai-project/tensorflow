@@ -62,6 +62,10 @@ RUN pip install -U setuptools && \
   numpy \
   wheel
 
+RUN git clone --depth=1 --branch=master https://${PKG}.git . && \
+  cd $GOPATH/src/$PKG && \
+  dep ensure -vendor-only -v
+
 RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   export CC_OPT_FLAGS="-mcpu=power8 -mtune=power8" && \
   export GCC_HOST_COMPILER_PATH=/usr/bin/gcc && \
@@ -91,9 +95,7 @@ RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
 ENV PKG github.com/rai-project/tensorflow
 WORKDIR $GOPATH/src/$PKG
 
-RUN git clone --depth=1 --branch=master https://${PKG}.git . && \
-  cd $GOPATH/src/$PKG && \
-  dep ensure -vendor-only -v && \
+RUN cd $GOPATH/src/$PKG && \
   go build -a -installsuffix cgo -ldflags "-s -w -X ${PKG}/Version=${VERSION} -X ${PKG}/GitCommit=${VCS_REF} -X ${PKG}/BuildDate=${BUILD_DATE}"&& \
   cd tensorflow-agent && \
   go install && \
