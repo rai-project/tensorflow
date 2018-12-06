@@ -57,6 +57,10 @@ RUN pip install -U setuptools && \
   numpy \
   wheel
 
+# get rai-project/tensorflow repository
+ENV PKG github.com/rai-project/tensorflow
+WORKDIR $GOPATH/src/$PKG
+
 RUN git clone --depth=1 --branch=master https://${PKG}.git . && \
   cd $GOPATH/src/$PKG && \
   dep ensure -vendor-only -v
@@ -86,9 +90,6 @@ RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   /bazel/output/bazel build -c opt //tensorflow:libtensorflow.so && \
   export LD_LIBRARY_PATH=${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow:${LD_LIBRARY_PATH}
 
-# get rai-project/tensorflow repository
-ENV PKG github.com/rai-project/tensorflow
-WORKDIR $GOPATH/src/$PKG
 
 RUN cd $GOPATH/src/$PKG && \
   go build -a -installsuffix cgo -ldflags "-s -w -X ${PKG}/Version=${VERSION} -X ${PKG}/GitCommit=${VCS_REF} -X ${PKG}/BuildDate=${BUILD_DATE}"&& \
