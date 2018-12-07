@@ -41,23 +41,28 @@ RUN add-apt-repository ppa:webupd8team/java &&\
     libcurl3-dev \
     libfreetype6-dev \
     libzmq3-dev \
-    libhdf5-dev && \
+    libhdf5-dev \
+		libc-ares-dev \
+		gpg-agent && \
   rm -rf /var/lib/apt/lists/*
 
 # Install bazel (https://docs.bazel.build/versions/master/install-ubuntu.html)
-RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list && \
-    curl https://bazel.build/bazel-release.pub.gpg | apt-key add - && \
-    apt-get update && \
+#RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list && \
+#  curl https://bazel.build/bazel-release.pub.gpg | apt-key add - && \
+#	apt-get update && \
+#  apt-get -y install bazel && \
+#  apt-get -y install --only-upgrade bazel && \
+#  bazel version
 
-    apt-get -y install bazel && \
-    apt-get -y upgrade bazel && \
-
-    mv /usr/bin/bazel /builder/bazel           && \
-    mv /usr/bin/bazel-real /builder/bazel-real && \
-    mv /builder/bazel.sh /usr/bin/bazel        && \
-
-    # Unpack bazel for future use.
-    bazel version
+# Install bazel
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends \
+   bash-completion \
+   g++ \
+   zlib1g-dev && \
+	curl -LO "https://github.com/bazelbuild/bazel/releases/download/0.18.0/bazel_0.18.0-linux-x86_64.deb" && \
+	dpkg -i bazel_*.deb && \
+	bazel version
 
 
 # install pre-requisites
@@ -76,7 +81,6 @@ RUN git clone --depth=1 --branch=master https://${PKG}.git . && \
   dep ensure -vendor-only -v
 
 RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
-  export CC_OPT_FLAGS="-mcpu=power8 -mtune=power8" && \
   export GCC_HOST_COMPILER_PATH=/usr/bin/gcc && \
   export PYTHON_BIN_PATH=/usr/bin/python && \
   export USE_DEFAULT_PYTHON_LIB_PATH=1 && \
@@ -86,19 +90,20 @@ RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   export TF_ENABLE_XLA=1 && \
   export TF_NEED_OPENCL=0 && \
   export TF_NEED_CUDA=1 && \
-  export TF_CUDA_VERSION=9.2 && \
-  export CUDA_TOOLKIT_PATH=/usr/local/cuda-9.2 && \
-  export TF_CUDA_COMPUTE_CAPABILITIES=3.0,3.5,3.7,5.0,5.2,5.3,6.0,6.1,6,2,7.0,7.5 && \
-  export CUDNN_INSTALL_PATH=/usr/lib/powerpc64le-linux-gnu && \
+  export TF_CUDA_VERSION=10.0 && \
+  export CUDA_TOOLKIT_PATH=/usr/local/cuda && \
+  export TF_CUDA_COMPUTE_CAPABILITIES=3.0,3.5,3.7,5.0,5.2,5.3,6.0,6.1,6.2,7.0,7.5 && \
+  export CUDNN_INSTALL_PATH=/usr/lib/x86_64-linux-gnu  && \
   export TF_NEED_MKL=0 && \
   export TF_NEED_VERBS=0 && \
   export TF_NEED_MPI=0 && \
   export TF_CUDA_CLANG=0 && \
   ./configure && \
-  export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH} \
-  tensorflow/tools/ci_build/builds/configured GPU \
-  /bazel/output/bazel build -c opt //tensorflow:libtensorflow.so && \
+  export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH} && \
+  bazel build -c opt --incompatible_remove_native_http_archive=false --define=grpc_no_ares=true //tensorflow:libtensorflow.so
 
+RUN	export LD_LIBRARY_PATH=${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow:${LD_LIBRARY_PATH} && \
+	ls -la ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow
 
 ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH}
 ENV LD_LIBRARY_PATH=${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow:${LD_LIBRARY_PATH}
