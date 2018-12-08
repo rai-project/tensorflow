@@ -93,7 +93,8 @@ RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   bazel build -c opt --incompatible_remove_native_http_archive=false --define=grpc_no_ares=true //tensorflow:libtensorflow.so
 
 RUN	export LD_LIBRARY_PATH=${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow:${LD_LIBRARY_PATH} && \
-	ls -la ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow
+	ls -la ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow && \
+	cp ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow/libtensorflow.so /usr/local/lib
 
 ENV LD_LIBRARY_PATH=${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow:${LD_LIBRARY_PATH}
 
