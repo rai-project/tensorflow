@@ -82,7 +82,7 @@ RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   export TF_NEED_VERBS=0 && \
   export TF_NEED_MPI=0 && \
   ./configure && \
-  bazel build --jobs 4 -c opt --local_resources 20000,1,0.25 --incompatible_remove_native_http_archive=false --define=grpc_no_ares=true //tensorflow:libtensorflow.so
+  bazel build --jobs 4 -c opt --local_resources 20000,1,0.25 //tensorflow:libtensorflow.so
 
 RUN	export LD_LIBRARY_PATH=${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow:${LD_LIBRARY_PATH} && \
 	ls -la ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow && \
