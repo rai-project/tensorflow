@@ -43,14 +43,15 @@ RUN add-apt-repository ppa:webupd8team/java &&\
   rm -rf /var/lib/apt/lists/*
 
 # Install bazel
+ENV BAZEL_VERSION 0.20.0
 RUN apt-get update && \
-  apt-get install -y --no-install-recommends \
+	apt-get install -y --no-install-recommends \
    bash-completion \
    g++ \
    zlib1g-dev && \
-  curl -LO "https://github.com/bazelbuild/bazel/releases/download/0.18.0/bazel_0.18.0-linux-x86_64.deb" && \
-  dpkg -i bazel_*.deb && \
-  bazel version
+	curl -LO "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel_${BAZEL_VERSION}-linux-x86_64.deb" && \
+	dpkg -i bazel_*.deb && \
+	bazel version
 
 # install pre-requisites
 RUN pip install -U setuptools && \
