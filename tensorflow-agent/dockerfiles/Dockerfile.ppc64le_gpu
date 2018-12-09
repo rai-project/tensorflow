@@ -48,13 +48,17 @@ RUN add-apt-repository ppa:webupd8team/java &&\
   rm -rf /var/lib/apt/lists/*
 
 # install bazel (from source)
-RUN mkdir bazel && cd bazel && \
-  wget https://github.com/bazelbuild/bazel/releases/download/0.16.1/bazel-0.16.1-dist.zip  && \
-  unzip bazel-0.16.1-dist.zip  && \
-  chmod -R +w . && \
-  ./compile.sh && \
-  cd / && \
-  export PATH=$PATH:/bazel/output
+ # Build and install bazel
+ENV BAZEL_VERSION 0.20.0
+WORKDIR /
+RUN mkdir /bazel && \
+    cd /bazel && \
+    curl -fSsL -O https://github.com/bazelbuild/bazel/releases/download/$BAZEL_VERSION/bazel-$BAZEL_VERSION-dist.zip && \
+    unzip bazel-$BAZEL_VERSION-dist.zip && \
+    bash ./compile.sh && \
+    cp output/bazel /usr/local/bin/ && \
+    rm -rf /bazel && \
+    cd -
 
 # install pre-requisites
 RUN pip install -U setuptools && \
@@ -82,8 +86,8 @@ RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   export TF_ENABLE_XLA=1 && \
   export TF_NEED_OPENCL=0 && \
   export TF_NEED_CUDA=1 && \
-  export TF_CUDA_VERSION=9.2 && \
-  export CUDA_TOOLKIT_PATH=/usr/local/cuda-9.2 && \
+  export TF_CUDA_VERSION=10 && \
+  export CUDA_TOOLKIT_PATH=/usr/local/cuda && \
   export TF_CUDA_COMPUTE_CAPABILITIES=3.0,3.5,3.7,5.0,5.2,5.3,6.0,6.1,6,2,7.0,7.5 && \
   export CUDNN_INSTALL_PATH=/usr/lib/powerpc64le-linux-gnu && \
   export TF_NEED_MKL=0 && \
@@ -91,9 +95,10 @@ RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   export TF_NEED_MPI=0 && \
   export TF_CUDA_CLANG=0 && \
   ./configure && \
+  ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
   export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH} \
   tensorflow/tools/ci_build/builds/configured GPU \
-  /bazel/output/bazel build -c opt //tensorflow:libtensorflow.so
+  /bazel/output/bazel build -c opt --local_resources=32000,8,1.0 --config=cuda //tensorflow:libtensorflow.so
 
 
 ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH}
