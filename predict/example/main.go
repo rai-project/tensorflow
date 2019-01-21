@@ -1,10 +1,5 @@
 package main
 
-// #cgo linux CFLAGS: -I/usr/local/cuda/include
-// #cgo linux LDFLAGS: -lcuda -lcudart -L/usr/local/cuda/lib64
-// #include <cuda.h>
-// #include <cuda_runtime.h>
-// #include <cuda_profiler_api.h>
 import "C"
 
 import (
@@ -13,19 +8,16 @@ import (
 	"image"
 	"path/filepath"
 
+	"github.com/Unknwon/com"
 	"github.com/anthonynsimon/bild/imgio"
 	"github.com/anthonynsimon/bild/transform"
 	"github.com/k0kubun/pp"
 	"github.com/rai-project/dlframework/framework/options"
-	nvidiasmi "github.com/rai-project/nvidia-smi"
 	tf "github.com/rai-project/tensorflow"
 	"github.com/rai-project/tensorflow/predict"
 
 	"github.com/rai-project/config"
-
-	//_ "github.com/rai-project/tracer/all"
-
-	_ "github.com/rai-project/tracer/jaeger"
+	// _ "github.com/rai-project/tracer/jaeger"
 )
 
 var (
@@ -65,23 +57,17 @@ func main() {
 	model, err := tf.FrameworkManifest.FindModel("bvlc-alexnet:1.0")
 
 	device := options.CPU_DEVICE
-	if nvidiasmi.HasGPU {
-		device = options.CUDA_DEVICE
-	} else {
-		panic("no GPU")
-	}
-
 	ctx := context.Background()
 	opts := options.New(options.Context(ctx),
 		options.Device(device, 0),
-		options.InputNode("data", []uint32{3, 227, 227}),
+		options.InputNode("data", []int{3, 227, 227}),
 		options.OutputNode("prob"),
-		options.BatchSize(uint32(batchSize)))
+		options.BatchSize(batchSize))
 
 	predictor, err := predict.New(*model, options.WithOptions(opts))
 	defer predictor.Close()
 
-	imgDir, _ := filepath.Abs("../../_fixtures")
+	imgDir, _ := com.GetSrcPath("github.com/rai-project/tensorflow/predict/_fixtures")
 	imagePath := filepath.Join(imgDir, "platypus.jpg")
 	img, err := imgio.Open(imagePath)
 	if err != nil {
@@ -98,16 +84,15 @@ func main() {
 		input = append(input, res)
 	}
 
-	C.cudaProfilerStart()
-
-	preds, err := predictor.Predict(ctx, input)
+	err = predictor.Predict(ctx, input)
 	if err != nil {
 		return
 	}
 
-	C.cudaProfilerStop()
-
-	_ = preds
+	preds, err := predictor.ReadPredictedFeatures(ctx)
+	if err != nil {
+		return
+	}
 
 	pp.Println(preds[0][0])
 
