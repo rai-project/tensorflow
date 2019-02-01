@@ -1,13 +1,12 @@
 package predict
 
 import (
+	"context"
 	"fmt"
 	"image"
 	"os"
 	"path/filepath"
 	"testing"
-
-	context "context"
 
 	"github.com/anthonynsimon/bild/imgio"
 	"github.com/anthonynsimon/bild/transform"

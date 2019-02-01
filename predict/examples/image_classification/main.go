@@ -22,7 +22,7 @@ import (
 
 var (
 	batchSize    = 64
-	graph_url    = "https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/bvlc_alexnet_1.0/frozen_model.pb"
+	graph_url    = "s3.amazonaws.com/store.carml.org/models/tensorflow/models/bvlc_alexnet_1.0/frozen_model.pb"
 	features_url = "http://data.dmlc.ml/mxnet/models/imagenet/synset.txt"
 )
 
@@ -40,12 +40,8 @@ func cvtImageTo1DArray(src image.Image, mean []float32) ([]float32, error) {
 	for y := 0; y < h; y++ {
 		for x := 0; x < w; x++ {
 			r, g, b, _ := src.At(x+b.Min.X, y+b.Min.Y).RGBA()
-			res[y*w+x] = float32(r>>8) - mean[0]
-			res[w*h+y*w+x] = float32(g>>8) - mean[1]
-			res[2*w*h+y*w+x] = float32(b>>8) - mean[2]
-			// res[3*(y*w+x)] = float32(b>>8) - mean[0]
-			// res[3*(y*w+x)+1] = float32(g>>8) - mean[1]
-			// res[3*(y*w+x)+2] = float32(r>>8) - mean[2]
+			res[3*(y*w+x)+1] = float32(g>>8) - mean[1]
+			res[3*(y*w+x)+2] = float32(r>>8) - mean[2]
 		}
 	}
 
@@ -55,6 +51,9 @@ func cvtImageTo1DArray(src image.Image, mean []float32) ([]float32, error) {
 func main() {
 	tf.Register()
 	model, err := tf.FrameworkManifest.FindModel("bvlc-alexnet:1.0")
+	if err != nil {
+		panic(err)
+	}
 
 	device := options.CPU_DEVICE
 	ctx := context.Background()
@@ -67,31 +66,31 @@ func main() {
 	predictor, err := predict.New(*model, options.WithOptions(opts))
 	defer predictor.Close()
 
-	imgDir, _ := com.GetSrcPath("github.com/rai-project/tensorflow/predict/_fixtures")
+	imgDir, _ := com.GetSrcPath("github.com/rai-project/tensorflow/predict/examples/image_classification/")
 	imagePath := filepath.Join(imgDir, "platypus.jpg")
 	img, err := imgio.Open(imagePath)
 	if err != nil {
 		panic(err)
 	}
 
-	var input [][]float32
+	resized := transform.Resize(img, 227, 227, transform.Linear)
+	res, err := cvtImageTo1DArray(resized, []float32{123, 117, 104})
+	if err != nil {
+		panic(err)
+	}
+	input := make([][]float32, batchSize)
 	for ii := 0; ii < batchSize; ii++ {
-		resized := transform.Resize(img, 227, 227, transform.Linear)
-		res, err := cvtImageTo1DArray(resized, []float32{123, 117, 104})
-		if err != nil {
-			panic(err)
-		}
-		input = append(input, res)
+		input[ii] = res
 	}
 
 	err = predictor.Predict(ctx, input)
 	if err != nil {
-		return
+		panic(err)
 	}
 
 	preds, err := predictor.ReadPredictedFeatures(ctx)
 	if err != nil {
-		return
+		panic(err)
 	}
 
 	pp.Println(preds[0][0])

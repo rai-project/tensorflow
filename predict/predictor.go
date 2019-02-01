@@ -10,19 +10,18 @@ import "C"
 // #include <string.h>
 // void setDefaultDevice(const char * device, TF_Graph * graph_def) {
 //  tensorflow::GraphDef def;
-// GetGraphDef(graph_def, &def);
-// graph::SetDefaultDevice(device, def);
+//  GetGraphDef(graph_def, &def);
+//  graph::SetDefaultDevice(device, def);
 // 	}
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"io"
 	"io/ioutil"
 	"os"
 	"runtime"
 	"strings"
-
-	context "context"
 
 	opentracing "github.com/opentracing/opentracing-go"
 	olog "github.com/opentracing/opentracing-go/log"
@@ -308,7 +307,7 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 	}
 	p.outputLayer, err = p.GetOutputLayerName(modelReader)
 	if err != nil {
-		return errors.Wrap(err, "failed to get input layer name")
+		return errors.Wrap(err, "failed to get output layer name")
 	}
 
 	// Create a session for inference over graph.
@@ -351,43 +350,6 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 	return nil
 }
 
-func zeros(height, width, channels int) [][][]float32 {
-	rows := make([][][]float32, height)
-	for ii := range rows {
-		columns := make([][]float32, width)
-		for jj := range columns {
-			columns[jj] = make([]float32, channels)
-		}
-		rows[ii] = columns
-	}
-	return rows
-}
-
-func (p *ImagePredictor) createTensor(ctx context.Context, data [][]float32) (*tf.Tensor, error) {
-	span, ctx := tracer.StartSpanFromContext(ctx, tracer.MODEL_TRACE, "create_tensor")
-	defer span.Finish()
-
-	imageDims, err := p.GetImageDimensions()
-	if err != nil {
-		return nil, err
-	}
-
-	channels, height, width := int64(imageDims[0]), int64(imageDims[1]), int64(imageDims[2])
-	batchSize := int64(p.BatchSize())
-	if batchSize == 0 {
-		batchSize = 1
-	}
-
-	shapeLen := width * height * channels
-	dataLen := int64(len(data))
-	if batchSize > dataLen {
-		padding := make([]float32, (batchSize-dataLen)*shapeLen)
-		data = append(data, padding)
-	}
-
-	return NewTensor(ctx, data, []int64{batchSize, height, width, channels})
-}
-
 type operation struct {
 	c *C.TF_Operation
 	// A reference to the Graph to prevent it from
@@ -404,6 +366,7 @@ func (p *ImagePredictor) runOptions() *proto.RunOptions {
 	return nil
 }
 
+// Predict ...
 func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...options.Option) error {
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "predict")
 	defer span.Finish()
@@ -451,12 +414,12 @@ func (p *ImagePredictor) ReadPredictedFeatures(ctx context.Context) ([]dlframewo
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "read_predicted_features")
 	defer span.Finish()
 
-	output := []float32{}
 	e, ok := p.output.([][]float32)
 	if !ok {
 		return nil, errors.New("output is not of type [][]float32")
 	}
 
+	output := []float32{}
 	for _, v := range e {
 		output = append(output, v...)
 	}

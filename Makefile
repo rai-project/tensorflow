@@ -6,7 +6,7 @@ fmt:
 install-deps:
 	go get github.com/jteeuwen/go-bindata/...
 	go get github.com/elazarl/go-bindata-assetfs/...
-  go get github.com/golang/dep
+	go get github.com/golang/dep
 	dep ensure -v
 
 
