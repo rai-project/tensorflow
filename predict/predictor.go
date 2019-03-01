@@ -43,12 +43,12 @@ import (
 
 type ImagePredictor struct {
 	common.ImagePredictor
-	labels      []string
-	tfGraph     *tf.Graph
+  tfGraph     *tf.Graph
 	tfSession   *Session
-	inputLayer  string
-	outputLayer string
-	output      interface{}
+	labels      []string
+	inputLayers  []string
+	outputLayers []string
+	outputs      []interface{}
 }
 
 func New(model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
