@@ -14,17 +14,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func XXXTestPredictInference(t *testing.T) {
+func TestObjectDetectionInference(t *testing.T) {
 	tf.Register()
-	model, err := tf.FrameworkManifest.FindModel("bvlc-alexnet:1.0")
+	model, err := tf.FrameworkManifest.FindModel("ssd_mobilenet_v1_coco:1.0")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
 
 	device := options.CPU_DEVICE
 	if nvidiasmi.HasGPU {
 		device = options.CUDA_DEVICE
-	} else {
-		panic("no GPU")
 	}
 
 	ctx := context.Background()

@@ -45,12 +45,7 @@ func cvtImageTo1DArray(src image.Image, mean []float32) ([]float32, error) {
 	return res, nil
 }
 
-var (
-	graph_url    = "https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/bvlc_alexnet_1.0/frozen_model.pb"
-	features_url = "http://data.dmlc.ml/mxnet/models/imagenet/synset.txt"
-)
-
-func XXXTestPredictLoad(t *testing.T) {
+func XXXTestPredictorNew(t *testing.T) {
 	tf.Register()
 	model, err := tf.FrameworkManifest.FindModel("bvlc-alexnet:1.0")
 	assert.NoError(t, err)
@@ -70,7 +65,7 @@ func XXXTestPredictLoad(t *testing.T) {
 
 }
 
-func TestPredictInference(t *testing.T) {
+func TestImageClassification(t *testing.T) {
 	tf.Register()
 	model, err := tf.FrameworkManifest.FindModel("bvlc-alexnet:1.0")
 	assert.NoError(t, err)
