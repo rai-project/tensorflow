@@ -1,4 +1,4 @@
-package predict
+package predictor
 
 // #include <stdlib.h>
 // #include "tensorflow/c/c_api.h"

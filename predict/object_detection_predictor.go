@@ -1,4 +1,4 @@
-package predict
+package predictor
 
 // #cgo LDFLAGS: -ltensorflow
 // #cgo CFLAGS: -I${SRCDIR}/../../../tensorflow/tensorflow
@@ -15,9 +15,7 @@ import "C"
 // 	}
 import (
 	"bufio"
-	"bytes"
 	"context"
-	"io"
 	"io/ioutil"
 	"os"
 	"runtime"
@@ -30,7 +28,7 @@ import (
 	"github.com/rai-project/dlframework"
 	"github.com/rai-project/dlframework/framework/agent"
 	"github.com/rai-project/dlframework/framework/options"
-	common "github.com/rai-project/dlframework/framework/predict"
+	common "github.com/rai-project/dlframework/framework/predictor"
 	"github.com/rai-project/downloadmanager"
 	"github.com/rai-project/image"
 	"github.com/rai-project/image/types"
@@ -41,14 +39,14 @@ import (
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 )
 
-type ImagePredictor struct {
+type ObejctDetectionPredictor struct {
 	common.ImagePredictor
-  tfGraph     *tf.Graph
-	tfSession   *Session
-	labels      []string
-	inputLayers  []string
+	tfGraph      *tf.Graph
+	tfSession    *Session
+	labels       []string
+	inputLayer   string
 	outputLayers []string
-	outputs      []interface{}
+	output       []*tf.Tensor
 }
 
 func New(model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
@@ -65,13 +63,13 @@ func New(model dlframework.ModelManifest, opts ...options.Option) (common.Predic
 		return nil, errors.New("input type not supported")
 	}
 
-	predictor := new(ImagePredictor)
+	predictor := new(ObejctDetectionPredictor)
 
 	return predictor.Load(context.Background(), model, opts...)
 }
 
 // Download ...
-func (p *ImagePredictor) Download(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) error {
+func (p *ObejctDetectionPredictor) Download(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) error {
 	framework, err := model.ResolveFramework()
 	if err != nil {
 		return err
@@ -82,7 +80,7 @@ func (p *ImagePredictor) Download(ctx context.Context, model dlframework.ModelMa
 		return err
 	}
 
-	ip := &ImagePredictor{
+	ip := &ObejctDetectionPredictor{
 		ImagePredictor: common.ImagePredictor{
 			Base: common.Base{
 				Framework: framework,
@@ -100,7 +98,7 @@ func (p *ImagePredictor) Download(ctx context.Context, model dlframework.ModelMa
 	return nil
 }
 
-func (p *ImagePredictor) Load(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
+func (p *ObejctDetectionPredictor) Load(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
 	framework, err := model.ResolveFramework()
 	if err != nil {
 		return nil, err
@@ -111,7 +109,7 @@ func (p *ImagePredictor) Load(ctx context.Context, model dlframework.ModelManife
 		return nil, err
 	}
 
-	ip := &ImagePredictor{
+	ip := &ObejctDetectionPredictor{
 		ImagePredictor: common.ImagePredictor{
 			Base: common.Base{
 				Framework: framework,
@@ -133,7 +131,7 @@ func (p *ImagePredictor) Load(ctx context.Context, model dlframework.ModelManife
 	return ip, nil
 }
 
-func (p *ImagePredictor) GetPreprocessOptions(ctx context.Context) (common.PreprocessOptions, error) {
+func (p *ObejctDetectionPredictor) GetPreprocessOptions(ctx context.Context) (common.PreprocessOptions, error) {
 	mean, err := p.GetMeanImage()
 	if err != nil {
 		return common.PreprocessOptions{}, err
@@ -158,7 +156,7 @@ func (p *ImagePredictor) GetPreprocessOptions(ctx context.Context) (common.Prepr
 	}, nil
 }
 
-func (p *ImagePredictor) download(ctx context.Context) error {
+func (p *ObejctDetectionPredictor) download(ctx context.Context) error {
 	span, ctx := opentracing.StartSpanFromContext(
 		ctx,
 		"download",
@@ -213,55 +211,7 @@ func (p *ImagePredictor) download(ctx context.Context) error {
 	return nil
 }
 
-func (p ImagePredictor) GetInputLayerName(reader io.Reader) (string, error) {
-	model := p.Model
-	modelInputs := model.GetInputs()
-	typeParameters := modelInputs[0].GetParameters()
-	name, err := p.GetLayerName(typeParameters)
-	if err != nil {
-		graphDef, err := tensorflow.FromCheckpoint(reader)
-		if err != nil {
-			return "", errors.Wrap(err, "failed to read metagraph from checkpoint")
-		}
-		nodes := graphDef.GetNode()
-		if nodes == nil {
-			return "", errors.New("failed to read graph nodes")
-		}
-		// get the first node which has no input
-		for _, n := range nodes {
-			if len(n.GetInput()) == 0 {
-				return n.GetName(), nil
-			}
-		}
-		return "", errors.New("cannot determin the name of the input layer")
-	}
-	return name, nil
-}
-
-func (p ImagePredictor) GetOutputLayerName(reader io.Reader) (string, error) {
-	model := p.Model
-	modelOutput := model.GetOutput()
-	typeParameters := modelOutput.GetParameters()
-	name, err := p.GetLayerName(typeParameters)
-	if err != nil {
-		graphDef, err := tensorflow.FromCheckpoint(reader)
-		if err != nil {
-			return "", errors.Wrap(err, "failed to read metagraph from checkpoint")
-		}
-		nodes := graphDef.GetNode()
-		if nodes == nil {
-			return "", errors.New("failed to read graph nodes")
-		}
-		if len(nodes) == 0 {
-			return "", errors.New("cannot determin the name of the output layer")
-		}
-		// get the last node
-		return nodes[len(nodes)-1].GetName(), nil
-	}
-	return name, nil
-}
-
-func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
+func (p *ObejctDetectionPredictor) loadPredictor(ctx context.Context) error {
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "load_predictor")
 	defer span.Finish()
 
@@ -300,15 +250,9 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 		return errors.Wrap(err, "unable to create tensorflow model graph")
 	}
 
-	modelReader := bytes.NewReader(model)
-	p.inputLayer, err = p.GetInputLayerName(modelReader)
-	if err != nil {
-		return errors.Wrap(err, "failed to get input layer name")
-	}
-	p.outputLayer, err = p.GetOutputLayerName(modelReader)
-	if err != nil {
-		return errors.Wrap(err, "failed to get output layer name")
-	}
+	// modelReader := bytes.NewReader(model)
+	p.inputLayer = p.GetInputLayerName("")
+	p.outputLayers = p.GetOutputLayerNames(nil)
 
 	// Create a session for inference over graph.
 	var sessionConfig tensorflow.ConfigProto
@@ -350,14 +294,7 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 	return nil
 }
 
-type operation struct {
-	c *C.TF_Operation
-	// A reference to the Graph to prevent it from
-	// being GCed while the Operation is still alive.
-	g *Graph
-}
-
-func (p *ImagePredictor) runOptions() *proto.RunOptions {
+func (p *ObejctDetectionPredictor) runOptions() *proto.RunOptions {
 	if p.TraceLevel() >= tracer.FRAMEWORK_TRACE {
 		return &proto.RunOptions{
 			TraceLevel: proto.RunOptions_SOFTWARE_TRACE,
@@ -367,7 +304,7 @@ func (p *ImagePredictor) runOptions() *proto.RunOptions {
 }
 
 // Predict ...
-func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...options.Option) error {
+func (p *ObejctDetectionPredictor) Predict(ctx context.Context, data [][]float32, opts ...options.Option) error {
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "predict")
 	defer span.Finish()
 
@@ -380,22 +317,35 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 
 	options := options.New(opts...)
 
+	imageDims, err := p.GetImageDimensions()
+	if err != nil {
+		return err
+	}
+	channels, height, width := imageDims[0], imageDims[1], imageDims[2]
 	batchSize := options.BatchSize()
 	if batchSize == 0 {
 		batchSize = 1
 	}
+	shapeLen := width * height * channels
+	dataLen := len(data)
+	if batchSize > dataLen {
+		padding := make([]float32, (batchSize-dataLen)*shapeLen)
+		data = append(data, padding)
+	}
 
-	tensor, err := p.createTensor(ctx, data)
+	tensor, err := NewTensor(ctx, data, []int64{int64(batchSize), int64(height), int64(width), int64(channels)})
 	if err != nil {
 		return errors.Wrap(err, "cannot make tensor from image data")
 	}
 
-	fetches, err := session.Run(ctx,
+	p.output, err = session.Run(ctx,
 		map[tf.Output]*tf.Tensor{
 			graph.Operation(p.inputLayer).Output(0): tensor,
 		},
 		[]tf.Output{
-			graph.Operation(p.outputLayer).Output(0),
+			graph.Operation(p.outputLayers[0]).Output(0),
+			graph.Operation(p.outputLayers[1]).Output(0),
+			graph.Operation(p.outputLayers[2]).Output(0),
 		},
 		nil,
 		p.runOptions(),
@@ -404,35 +354,27 @@ func (p *ImagePredictor) Predict(ctx context.Context, data [][]float32, opts ...
 		return errors.Wrapf(err, "failed to perform inference")
 	}
 
-	p.output = fetches[0].Value()
-
 	return nil
 }
 
 // ReadPredictedFeatures ...
-func (p *ImagePredictor) ReadPredictedFeatures(ctx context.Context) ([]dlframework.Features, error) {
+func (p *ObejctDetectionPredictor) ReadPredictedFeatures(ctx context.Context) ([]dlframework.Features, error) {
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "read_predicted_features")
 	defer span.Finish()
 
-	e, ok := p.output.([][]float32)
-	if !ok {
-		return nil, errors.New("output is not of type [][]float32")
-	}
+	probabilities := p.output[1].Value().([][]float32)[0]
+	classes := p.output[2].Value().([][]float32)[0]
+	boxes := p.output[0].Value().([][][]float32)[0]
 
-	output := []float32{}
-	for _, v := range e {
-		output = append(output, v...)
-	}
-
-	return p.CreatePredictedFeatures(ctx, output, p.labels)
+	return p.CreateBoundingBoxFeatures(ctx, probabilities, classes, boxes, p.labels)
 }
 
-func (p *ImagePredictor) Reset(ctx context.Context) error {
+func (p *ObejctDetectionPredictor) Reset(ctx context.Context) error {
 
 	return nil
 }
 
-func (p *ImagePredictor) Close() error {
+func (p *ObejctDetectionPredictor) Close() error {
 	if p.tfSession != nil {
 		p.tfSession.Close()
 	}
@@ -442,7 +384,7 @@ func (p *ImagePredictor) Close() error {
 func init() {
 	config.AfterInit(func() {
 		framework := tensorflow.FrameworkManifest
-		agent.AddPredictor(framework, &ImagePredictor{
+		agent.AddPredictor(framework, &ObejctDetectionPredictor{
 			ImagePredictor: common.ImagePredictor{
 				Base: common.Base{
 					Framework: framework,

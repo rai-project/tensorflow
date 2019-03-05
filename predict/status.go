@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package predict
+package predictor
 
 // #include "tensorflow/c/c_api.h"
 import "C"

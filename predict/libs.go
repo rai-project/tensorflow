@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package predict
+package predictor
 
 // #cgo LDFLAGS: -L/opt/tensorflow/lib -ltensorflow -lstdc++
 // #cgo !nogpu LDFLAGS: -L/usr/local/cuda/lib64 -lcublas -lcudart -lcudnn -lcurand -lcusparse -lcufft

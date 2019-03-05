@@ -1,4 +1,4 @@
-package predict
+package predictor
 
 import (
 	"context"
@@ -19,7 +19,7 @@ import (
 )
 
 var (
-	batchSize = 64
+	batchSize = 1
 )
 
 // convert go Image to 1-dim array
@@ -56,13 +56,13 @@ func XXXTestPredictLoad(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
 
-	predictor, err := New(*model)
+	predictor, err := NewImageClassificationPredictor(*model)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, predictor)
 
 	defer predictor.Close()
 
-	imgPredictor, ok := predictor.(*ImagePredictor)
+	imgPredictor, ok := predictor.(*ImageClassificationPredictor)
 	assert.True(t, ok)
 
 	assert.NotEmpty(t, imgPredictor.tfGraph)
@@ -79,8 +79,6 @@ func TestPredictInference(t *testing.T) {
 	device := options.CPU_DEVICE
 	if nvidiasmi.HasGPU {
 		device = options.CUDA_DEVICE
-	} else {
-		panic("no GPU")
 	}
 
 	ctx := context.Background()
@@ -90,7 +88,7 @@ func TestPredictInference(t *testing.T) {
 		options.OutputNode("prob"),
 		options.BatchSize(batchSize))
 
-	predictor, err := New(*model, options.WithOptions(opts))
+	predictor, err := NewImageClassificationPredictor(*model, options.WithOptions(opts))
 	assert.NoError(t, err)
 	assert.NotEmpty(t, predictor)
 	defer predictor.Close()

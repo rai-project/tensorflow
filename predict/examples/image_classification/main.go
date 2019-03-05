@@ -67,7 +67,7 @@ func main() {
 	defer predictor.Close()
 
 	imgDir, _ := com.GetSrcPath("github.com/rai-project/tensorflow/predict/examples/image_classification/")
-	imagePath := filepath.Join(imgDir, "platypus.jpg")
+	imagePath := filepath.Join(imgDir, "octopus.jpg")
 	img, err := imgio.Open(imagePath)
 	if err != nil {
 		panic(err)
