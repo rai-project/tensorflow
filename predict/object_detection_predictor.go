@@ -50,7 +50,9 @@ type ObejctDetectionPredictor struct {
 	boxesLayer         string
 	probabilitiesLayer string
 	classesLayer       string
-	outputs            []*tf.Tensor
+	boxes              interface{}
+	probabilities      interface{}
+	classes            interface{}
 }
 
 func NewObjectDetectionPredictor(model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
@@ -398,7 +400,7 @@ func (p *ObejctDetectionPredictor) Predict(ctx context.Context, data interface{}
 			padding := make([]float32, (batchSize-dataLen)*shapeLen)
 			v = append(v, padding)
 		}
-		tensor, err = tf.NewTensor(v)
+		tensor, err = NewTensor(ctx, v, []int64{int64(batchSize), int64(height), int64(width), int64(channels)})
 		if err != nil {
 			return errors.Wrap(err, "cannot make tensor from floats")
 		}
@@ -414,7 +416,7 @@ func (p *ObejctDetectionPredictor) Predict(ctx context.Context, data interface{}
 		return errors.New("input data is not [][]float32 or [][]byte")
 	}
 
-	p.outputs, err = session.Run(ctx,
+	fetches, err := session.Run(ctx,
 		map[tf.Output]*tf.Tensor{
 			graph.Operation(p.inputLayer).Output(0): tensor,
 		},
@@ -430,6 +432,9 @@ func (p *ObejctDetectionPredictor) Predict(ctx context.Context, data interface{}
 		return errors.Wrapf(err, "failed to perform inference")
 	}
 
+	p.boxes = fetches[0].Value()
+	p.probabilities = fetches[1].Value()
+	p.classes = fetches[2].Value()
 	return nil
 }
 
@@ -438,9 +443,9 @@ func (p *ObejctDetectionPredictor) ReadPredictedFeatures(ctx context.Context) ([
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "read_predicted_features")
 	defer span.Finish()
 
-	probabilities := p.outputs[1].Value().([][]float32)[0]
-	classes := p.outputs[2].Value().([][]float32)[0]
-	boxes := p.outputs[0].Value().([][][]float32)[0]
+	boxes := p.boxes.([][][]float32)[0]
+	probabilities := p.probabilities.([][]float32)[0]
+	classes := p.classes.([][]float32)[0]
 
 	return p.CreateBoundingBoxFeatures(ctx, probabilities, classes, boxes, p.labels)
 }

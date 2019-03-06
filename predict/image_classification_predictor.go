@@ -389,7 +389,6 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interfa
 			v = append(v, padding)
 		}
 		tensor, err = NewTensor(ctx, v, []int64{int64(batchSize), int64(height), int64(width), int64(channels)})
-		// tensor, err = tf.NewTensor(v)
 		if err != nil {
 			return errors.New("cannot make tensor from floats")
 		}

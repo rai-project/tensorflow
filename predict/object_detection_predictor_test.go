@@ -56,6 +56,6 @@ func TestObjectDetectionInference(t *testing.T) {
 		return
 	}
 
-	pp.Println(pred[0][0])
+	pp.Println(pred[0][1])
 
 }
