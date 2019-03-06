@@ -2,11 +2,10 @@ package predictor
 
 import (
 	"context"
+	"io/ioutil"
 	"path/filepath"
 	"testing"
 
-	"github.com/anthonynsimon/bild/imgio"
-	"github.com/anthonynsimon/bild/transform"
 	"github.com/k0kubun/pp"
 	"github.com/rai-project/dlframework/framework/options"
 	nvidiasmi "github.com/rai-project/nvidia-smi"
@@ -31,26 +30,19 @@ func TestObjectDetectionInference(t *testing.T) {
 		options.Device(device, 0),
 		options.BatchSize(batchSize))
 
-	predictor, err := New(*model, options.WithOptions(opts))
+	predictor, err := NewObjectDetectionPredictor(*model, options.WithOptions(opts))
 	assert.NoError(t, err)
 	assert.NotEmpty(t, predictor)
 	defer predictor.Close()
 
 	imgDir, _ := filepath.Abs("./_fixtures")
 	imagePath := filepath.Join(imgDir, "platypus.jpg")
-	img, err := imgio.Open(imagePath)
+	b, err := ioutil.ReadFile(imagePath)
 	if err != nil {
 		panic(err)
 	}
-	input := make([][]float32, batchSize)
-	for ii := 0; ii < batchSize; ii++ {
-		resized := transform.Resize(img, 227, 227, transform.Linear)
-		res, err := cvtImageTo1DArray(resized, []float32{123, 117, 104})
-		if err != nil {
-			panic(err)
-		}
-		input[ii] = res
-	}
+	input := make([][]byte, batchSize)
+	input[0] = b
 
 	err = predictor.Predict(ctx, input)
 	assert.NoError(t, err)

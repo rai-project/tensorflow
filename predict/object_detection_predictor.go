@@ -53,7 +53,7 @@ type ObejctDetectionPredictor struct {
 	outputs            []*tf.Tensor
 }
 
-func New(model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
+func NewObjectDetectionPredictor(model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
 	ctx := context.Background()
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "new_predictor")
 	defer span.Finish()
@@ -370,38 +370,48 @@ func (p *ObejctDetectionPredictor) runOptions() *proto.RunOptions {
 }
 
 // Predict ...
-func (p *ObejctDetectionPredictor) Predict(ctx context.Context, data [][]float32, opts ...options.Option) error {
+func (p *ObejctDetectionPredictor) Predict(ctx context.Context, data interface{}, opts ...options.Option) error {
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "predict")
 	defer span.Finish()
 
-	if data == nil || len(data) < 1 {
-		return errors.New("intput data nil or empty")
+	if data == nil {
+		return errors.New("input data nil")
 	}
 
 	session := p.tfSession
 	graph := p.tfGraph
-
 	options := options.New(opts...)
+	var err error
+	var tensor *tf.Tensor
 
-	imageDims, err := p.GetImageDimensions()
-	if err != nil {
-		return err
-	}
-	channels, height, width := imageDims[0], imageDims[1], imageDims[2]
-	batchSize := options.BatchSize()
-	if batchSize == 0 {
-		batchSize = 1
-	}
-	shapeLen := width * height * channels
-	dataLen := len(data)
-	if batchSize > dataLen {
-		padding := make([]float32, (batchSize-dataLen)*shapeLen)
-		data = append(data, padding)
-	}
-
-	tensor, err := NewTensor(ctx, data, []int64{int64(batchSize), int64(height), int64(width), int64(channels)})
-	if err != nil {
-		return errors.Wrap(err, "cannot make tensor from image data")
+	switch v := data.(type) {
+	case [][]float32:
+		imageDims, err := p.GetImageDimensions()
+		if err != nil {
+			return err
+		}
+		channels, height, width := imageDims[0], imageDims[1], imageDims[2]
+		batchSize := options.BatchSize()
+		shapeLen := width * height * channels
+		dataLen := len(v)
+		if batchSize > dataLen {
+			padding := make([]float32, (batchSize-dataLen)*shapeLen)
+			v = append(v, padding)
+		}
+		tensor, err = tf.NewTensor(v)
+		if err != nil {
+			return errors.Wrap(err, "cannot make tensor from floats")
+		}
+	case [][]byte:
+		if options.BatchSize() != 1 {
+			return errors.New("batch size must be 1 for bytes input data")
+		}
+		tensor, err = makeTensorFromBytes(v[0])
+		if err != nil {
+			return errors.Wrap(err, "cannot make tensor from bytes")
+		}
+	default:
+		return errors.New("input data is not [][]float32 or [][]byte")
 	}
 
 	p.outputs, err = session.Run(ctx,

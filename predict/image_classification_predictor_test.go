@@ -91,7 +91,6 @@ func TestImageClassification(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-
 	input := make([][]float32, batchSize)
 	for ii := 0; ii < batchSize; ii++ {
 		resized := transform.Resize(img, 227, 227, transform.Linear)

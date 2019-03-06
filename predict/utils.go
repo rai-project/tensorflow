@@ -1,8 +1,6 @@
 package predictor
 
 import (
-	"io/ioutil"
-
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 	"github.com/tensorflow/tensorflow/tensorflow/go/op"
 )
@@ -51,12 +49,7 @@ func decodeJpegGraph() (graph *tf.Graph, input, output tf.Output, err error) {
 	return graph, input, output, err
 }
 
-func makeTensorFromImage(filename string) (*tf.Tensor, error) {
-	b, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return nil, err
-	}
-
+func makeTensorFromBytes(b []byte) (*tf.Tensor, error) {
 	// DecodeJpeg uses a scalar String-valued tensor as input.
 	tensor, err := tf.NewTensor(string(b))
 	if err != nil {
