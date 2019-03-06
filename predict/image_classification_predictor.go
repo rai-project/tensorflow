@@ -43,12 +43,12 @@ import (
 
 type ImageClassificationPredictor struct {
 	common.ImagePredictor
-	tfGraph     *tf.Graph
-	tfSession   *Session
-	labels      []string
-	inputLayer  string
-	outputLayer string
-	output      interface{}
+	tfGraph            *tf.Graph
+	tfSession          *Session
+	labels             []string
+	inputLayer         string
+	probabilitiesLayer string
+	probabilities      interface{}
 }
 
 func NewImageClassificationPredictor(model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
@@ -213,54 +213,6 @@ func (p *ImageClassificationPredictor) download(ctx context.Context) error {
 	return nil
 }
 
-func (p ImageClassificationPredictor) GetInputLayerName(reader io.Reader) (string, error) {
-	model := p.Model
-	modelInputs := model.GetInputs()
-	typeParameters := modelInputs[0].GetParameters()
-	name, err := p.GetLayerName(typeParameters)
-	if err != nil {
-		graphDef, err := tensorflow.FromCheckpoint(reader)
-		if err != nil {
-			return "", errors.Wrap(err, "failed to read metagraph from checkpoint")
-		}
-		nodes := graphDef.GetNode()
-		if nodes == nil {
-			return "", errors.New("failed to read graph nodes")
-		}
-		// get the first node which has no input
-		for _, n := range nodes {
-			if len(n.GetInput()) == 0 {
-				return n.GetName(), nil
-			}
-		}
-		return "", errors.New("cannot determin the name of the input layer")
-	}
-	return name, nil
-}
-
-func (p ImageClassificationPredictor) GetOutputLayerName(reader io.Reader) (string, error) {
-	model := p.Model
-	modelOutput := model.GetOutput()
-	typeParameters := modelOutput.GetParameters()
-	name, err := p.GetLayerName(typeParameters)
-	if err != nil {
-		graphDef, err := tensorflow.FromCheckpoint(reader)
-		if err != nil {
-			return "", errors.Wrap(err, "failed to read metagraph from checkpoint")
-		}
-		nodes := graphDef.GetNode()
-		if nodes == nil {
-			return "", errors.New("failed to read graph nodes")
-		}
-		if len(nodes) == 0 {
-			return "", errors.New("cannot determin the name of the output layer")
-		}
-		// get the last node
-		return nodes[len(nodes)-1].GetName(), nil
-	}
-	return name, nil
-}
-
 func (p *ImageClassificationPredictor) loadPredictor(ctx context.Context) error {
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "load_predictor")
 	defer span.Finish()
@@ -301,13 +253,13 @@ func (p *ImageClassificationPredictor) loadPredictor(ctx context.Context) error 
 	}
 
 	modelReader := bytes.NewReader(model)
-	p.inputLayer, err = p.GetInputLayerName(modelReader)
+	p.inputLayer, err = p.GetInputLayerName(modelReader, "input_layer")
 	if err != nil {
-		return errors.Wrap(err, "failed to get input layer name")
+		return errors.Wrap(err, "failed to get the input layer name")
 	}
-	p.outputLayer, err = p.GetOutputLayerName(modelReader)
+	p.probabilitiesLayer, err = p.GetOutputLayerName(modelReader, "probabilities_layer")
 	if err != nil {
-		return errors.Wrap(err, "failed to get output layer name")
+		return errors.Wrap(err, "failed to get the probabilities layer name")
 	}
 
 	// Create a session for inference over graph.
@@ -348,6 +300,54 @@ func (p *ImageClassificationPredictor) loadPredictor(ctx context.Context) error 
 	p.tfSession = session
 
 	return nil
+}
+
+func (p ImageClassificationPredictor) GetInputLayerName(reader io.Reader, layer string) (string, error) {
+	model := p.Model
+	modelInputs := model.GetInputs()
+	typeParameters := modelInputs[0].GetParameters()
+	name, err := p.GetTypeParameter(typeParameters, layer)
+	if err != nil {
+		graphDef, err := tensorflow.FromCheckpoint(reader)
+		if err != nil {
+			return "", errors.Wrap(err, "failed to read metagraph from checkpoint")
+		}
+		nodes := graphDef.GetNode()
+		if nodes == nil {
+			return "", errors.New("failed to read graph nodes")
+		}
+		// get the first node which has no input
+		for _, n := range nodes {
+			if len(n.GetInput()) == 0 {
+				return n.GetName(), nil
+			}
+		}
+		return "", errors.New("cannot determin the name of the input layer")
+	}
+	return name, nil
+}
+
+func (p ImageClassificationPredictor) GetOutputLayerName(reader io.Reader, layer string) (string, error) {
+	model := p.Model
+	modelOutput := model.GetOutput()
+	typeParameters := modelOutput.GetParameters()
+	name, err := p.GetTypeParameter(typeParameters, layer)
+	if err != nil {
+		graphDef, err := tensorflow.FromCheckpoint(reader)
+		if err != nil {
+			return "", errors.Wrap(err, "failed to read metagraph from checkpoint")
+		}
+		nodes := graphDef.GetNode()
+		if nodes == nil {
+			return "", errors.New("failed to read graph nodes")
+		}
+		if len(nodes) == 0 {
+			return "", errors.New("cannot determin the name of the output layer")
+		}
+		// get the last node in the graph
+		return nodes[len(nodes)-1].GetName(), nil
+	}
+	return name, nil
 }
 
 func (p *ImageClassificationPredictor) runOptions() *proto.RunOptions {
@@ -399,7 +399,7 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data [][]flo
 			graph.Operation(p.inputLayer).Output(0): tensor,
 		},
 		[]tf.Output{
-			graph.Operation(p.outputLayer).Output(0),
+			graph.Operation(p.probabilitiesLayer).Output(0),
 		},
 		nil,
 		p.runOptions(),
@@ -408,7 +408,7 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data [][]flo
 		return errors.Wrapf(err, "failed to perform inference")
 	}
 
-	p.output = fetches[0].Value()
+	p.probabilities = fetches[0].Value()
 
 	return nil
 }
@@ -418,7 +418,7 @@ func (p *ImageClassificationPredictor) ReadPredictedFeatures(ctx context.Context
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "read_predicted_features")
 	defer span.Finish()
 
-	e, ok := p.output.([][]float32)
+	e, ok := p.probabilities.([][]float32)
 	if !ok {
 		return nil, errors.New("output is not of type [][]float32")
 	}

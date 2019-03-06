@@ -19,7 +19,7 @@ inputs: # model inputs
   - type: image # first input modality
     description: the input image # description of the first input
     layer_name: 'image_tensor'
-    processing:
+    parameters:
       # decode:
       #   element_type: int8
       #   layout: HWC
@@ -32,11 +32,11 @@ inputs: # model inputs
 output:
   type: boundingbox
   description: the output bounding box # a description of the output parameter
-  layer_names:
-    - 'detection_boxes'
-    - 'detection_scores'
-    - 'detection_classes'
-  processing:
+  parameters:
+    layer_names:
+      - 'detection_boxes'
+      - 'detection_scores'
+      - 'detection_classes'
     features_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/ssd_mobilenet_v1_coco_2017_11_17/labels.txt
     features_checksum: 4418c85d01e6c82ff6849b8239759438
 model: # specifies model graph and weights sources

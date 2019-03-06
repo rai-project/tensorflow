@@ -15,7 +15,9 @@ import "C"
 // 	}
 import (
 	"bufio"
+	"bytes"
 	"context"
+	"io"
 	"io/ioutil"
 	"os"
 	"runtime"
@@ -41,12 +43,14 @@ import (
 
 type ObejctDetectionPredictor struct {
 	common.ImagePredictor
-	tfGraph      *tf.Graph
-	tfSession    *Session
-	labels       []string
-	inputLayer   string
-	outputLayers []string
-	output       []*tf.Tensor
+	tfGraph            *tf.Graph
+	tfSession          *Session
+	labels             []string
+	inputLayer         string
+	boxesLayer         string
+	probabilitiesLayer string
+	classesLayer       string
+	outputs            []*tf.Tensor
 }
 
 func New(model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
@@ -250,9 +254,23 @@ func (p *ObejctDetectionPredictor) loadPredictor(ctx context.Context) error {
 		return errors.Wrap(err, "unable to create tensorflow model graph")
 	}
 
-	// modelReader := bytes.NewReader(model)
-	p.inputLayer = p.GetInputLayerName("")
-	p.outputLayers = p.GetOutputLayerNames(nil)
+	modelReader := bytes.NewReader(model)
+	p.inputLayer, err = p.GetInputLayerName(modelReader, "input_layer")
+	if err != nil {
+		return errors.Wrap(err, "failed to get input layer name")
+	}
+	p.boxesLayer, err = p.GetOutputLayerName(modelReader, "boxes_layer")
+	if err != nil {
+		return errors.Wrap(err, "failed to get the boxes layer name")
+	}
+	p.probabilitiesLayer, err = p.GetOutputLayerName(modelReader, "probabilities_layer")
+	if err != nil {
+		return errors.Wrap(err, "failed to get the probabilities layer name")
+	}
+	p.classesLayer, err = p.GetOutputLayerName(modelReader, "classes_layer")
+	if err != nil {
+		return errors.Wrap(err, "failed to get the classes layer name")
+	}
 
 	// Create a session for inference over graph.
 	var sessionConfig tensorflow.ConfigProto
@@ -292,6 +310,54 @@ func (p *ObejctDetectionPredictor) loadPredictor(ctx context.Context) error {
 	p.tfSession = session
 
 	return nil
+}
+
+func (p ObejctDetectionPredictor) GetInputLayerName(reader io.Reader, layer string) (string, error) {
+	model := p.Model
+	modelInputs := model.GetInputs()
+	typeParameters := modelInputs[0].GetParameters()
+	name, err := p.GetTypeParameter(typeParameters, layer)
+	if err != nil {
+		graphDef, err := tensorflow.FromCheckpoint(reader)
+		if err != nil {
+			return "", errors.Wrap(err, "failed to read metagraph from checkpoint")
+		}
+		nodes := graphDef.GetNode()
+		if nodes == nil {
+			return "", errors.New("failed to read graph nodes")
+		}
+		// get the first node which has no input
+		for _, n := range nodes {
+			if len(n.GetInput()) == 0 {
+				return n.GetName(), nil
+			}
+		}
+		return "", errors.New("cannot determin the name of the input layer")
+	}
+	return name, nil
+}
+
+func (p ObejctDetectionPredictor) GetOutputLayerName(reader io.Reader, layer string) (string, error) {
+	model := p.Model
+	modelOutput := model.GetOutput()
+	typeParameters := modelOutput.GetParameters()
+	name, err := p.GetTypeParameter(typeParameters, layer)
+	if err != nil {
+		graphDef, err := tensorflow.FromCheckpoint(reader)
+		if err != nil {
+			return "", errors.Wrap(err, "failed to read metagraph from checkpoint")
+		}
+		nodes := graphDef.GetNode()
+		if nodes == nil {
+			return "", errors.New("failed to read graph nodes")
+		}
+		if len(nodes) == 0 {
+			return "", errors.New("cannot determin the name of the output layer")
+		}
+		// get the last node in the graph
+		return nodes[len(nodes)-1].GetName(), nil
+	}
+	return name, nil
 }
 
 func (p *ObejctDetectionPredictor) runOptions() *proto.RunOptions {
@@ -338,14 +404,14 @@ func (p *ObejctDetectionPredictor) Predict(ctx context.Context, data [][]float32
 		return errors.Wrap(err, "cannot make tensor from image data")
 	}
 
-	p.output, err = session.Run(ctx,
+	p.outputs, err = session.Run(ctx,
 		map[tf.Output]*tf.Tensor{
 			graph.Operation(p.inputLayer).Output(0): tensor,
 		},
 		[]tf.Output{
-			graph.Operation(p.outputLayers[0]).Output(0),
-			graph.Operation(p.outputLayers[1]).Output(0),
-			graph.Operation(p.outputLayers[2]).Output(0),
+			graph.Operation(p.boxesLayer).Output(0),
+			graph.Operation(p.probabilitiesLayer).Output(0),
+			graph.Operation(p.classesLayer).Output(0),
 		},
 		nil,
 		p.runOptions(),
@@ -362,9 +428,9 @@ func (p *ObejctDetectionPredictor) ReadPredictedFeatures(ctx context.Context) ([
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "read_predicted_features")
 	defer span.Finish()
 
-	probabilities := p.output[1].Value().([][]float32)[0]
-	classes := p.output[2].Value().([][]float32)[0]
-	boxes := p.output[0].Value().([][][]float32)[0]
+	probabilities := p.outputs[1].Value().([][]float32)[0]
+	classes := p.outputs[2].Value().([][]float32)[0]
+	boxes := p.outputs[0].Value().([][][]float32)[0]
 
 	return p.CreateBoundingBoxFeatures(ctx, probabilities, classes, boxes, p.labels)
 }
