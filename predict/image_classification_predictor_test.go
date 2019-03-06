@@ -18,10 +18,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var (
-	batchSize = 1
-)
-
 // convert go Image to 1-dim array
 func cvtImageTo1DArray(src image.Image, mean []float32) ([]float32, error) {
 	if src == nil {
@@ -76,11 +72,12 @@ func TestImageClassification(t *testing.T) {
 		device = options.CUDA_DEVICE
 	}
 
+	batchSize := 1
 	ctx := context.Background()
 	opts := options.New(options.Context(ctx),
 		options.Device(device, 0),
-		options.InputNode("data", []int{3, 227, 227}),
-		options.OutputNode("prob"),
+		// options.InputNode("data", []int{3, 227, 227}),
+		// options.OutputNode("prob"),
 		options.BatchSize(batchSize))
 
 	predictor, err := NewImageClassificationPredictor(*model, options.WithOptions(opts))

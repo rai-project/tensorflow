@@ -25,11 +25,10 @@ func TestObjectDetectionInference(t *testing.T) {
 		device = options.CUDA_DEVICE
 	}
 
+	batchSize := 1
 	ctx := context.Background()
 	opts := options.New(options.Context(ctx),
 		options.Device(device, 0),
-		options.InputNode("data", []int{3, 227, 227}),
-		options.OutputNode("prob"),
 		options.BatchSize(batchSize))
 
 	predictor, err := New(*model, options.WithOptions(opts))
@@ -43,7 +42,6 @@ func TestObjectDetectionInference(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-
 	input := make([][]float32, batchSize)
 	for ii := 0; ii < batchSize; ii++ {
 		resized := transform.Resize(img, 227, 227, transform.Linear)
