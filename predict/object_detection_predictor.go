@@ -1,3 +1,5 @@
+// +build ignore
+
 package predictor
 
 // #cgo LDFLAGS: -ltensorflow
@@ -33,7 +35,7 @@ import (
 	common "github.com/rai-project/dlframework/framework/predictor"
 	"github.com/rai-project/downloadmanager"
 	"github.com/rai-project/image"
-	"github.com/rai-project/image/types"
+	imageTypes "github.com/rai-project/image/types"
 	nvidiasmi "github.com/rai-project/nvidia-smi"
 	"github.com/rai-project/tensorflow"
 	proto "github.com/rai-project/tensorflow"
@@ -157,7 +159,7 @@ func (p *ObejctDetectionPredictor) GetPreprocessOptions(ctx context.Context) (co
 		MeanImage: mean,
 		Scale:     scale,
 		Size:      []int{int(imageDims[1]), int(imageDims[2])},
-		ColorMode: p.GetColorMode(types.RGBMode),
+		ColorMode: p.GetColorMode(imageTypes.RGBMode),
 		Layout:    p.GetLayout(image.HWCLayout),
 	}, nil
 }
@@ -400,7 +402,7 @@ func (p *ObejctDetectionPredictor) Predict(ctx context.Context, data interface{}
 			padding := make([]float32, (batchSize-dataLen)*shapeLen)
 			v = append(v, padding)
 		}
-		tensor, err = NewTensor(ctx, v, []int64{int64(batchSize), int64(height), int64(width), int64(channels)})
+		tensor, err = NewTensor(v)
 		if err != nil {
 			return errors.Wrap(err, "cannot make tensor from floats")
 		}

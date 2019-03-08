@@ -33,7 +33,7 @@ import (
 	common "github.com/rai-project/dlframework/framework/predictor"
 	"github.com/rai-project/downloadmanager"
 	"github.com/rai-project/image"
-	"github.com/rai-project/image/types"
+	imageTypes "github.com/rai-project/image/types"
 	nvidiasmi "github.com/rai-project/nvidia-smi"
 	"github.com/rai-project/tensorflow"
 	proto "github.com/rai-project/tensorflow"
@@ -153,7 +153,7 @@ func (p *ImageClassificationPredictor) GetPreprocessOptions(ctx context.Context)
 		MeanImage: mean,
 		Scale:     scale,
 		Size:      []int{int(imageDims[1]), int(imageDims[2])},
-		ColorMode: p.GetColorMode(types.RGBMode),
+		ColorMode: p.GetColorMode(imageTypes.RGBMode),
 		Layout:    p.GetLayout(image.HWCLayout),
 	}, nil
 }
@@ -388,7 +388,7 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interfa
 			padding := make([]float32, (batchSize-dataLen)*shapeLen)
 			v = append(v, padding)
 		}
-		tensor, err = NewTensor(ctx, v, []int64{int64(batchSize), int64(height), int64(width), int64(channels)})
+		tensor, err = tf.NewTensor(v)
 		if err != nil {
 			return errors.New("cannot make tensor from floats")
 		}
