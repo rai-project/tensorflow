@@ -1,5 +1,3 @@
-// +build ignore
-
 package predictor
 
 // #cgo LDFLAGS: -ltensorflow
@@ -394,15 +392,15 @@ func (p *ObejctDetectionPredictor) Predict(ctx context.Context, data interface{}
 		if err != nil {
 			return err
 		}
-		channels, height, width := imageDims[0], imageDims[1], imageDims[2]
-		batchSize := options.BatchSize()
+		channels, height, width := int64(imageDims[0]), int64(imageDims[1]), int64(imageDims[2])
+		batchSize := int64(options.BatchSize())
 		shapeLen := width * height * channels
-		dataLen := len(v)
+		dataLen := int64(len(v))
 		if batchSize > dataLen {
 			padding := make([]float32, (batchSize-dataLen)*shapeLen)
 			v = append(v, padding)
 		}
-		tensor, err = NewTensor(v)
+		tensor, err = reshapeTensor(v, []int64{batchSize, height, width, channels})
 		if err != nil {
 			return errors.Wrap(err, "cannot make tensor from floats")
 		}

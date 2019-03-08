@@ -1,6 +1,5 @@
 package predictor
 
-
 // #include "tensorflow/c/c_api.h"
 import "C"
 
