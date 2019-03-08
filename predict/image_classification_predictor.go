@@ -456,6 +456,10 @@ func (p *ImageClassificationPredictor) Close() error {
 	return nil
 }
 
+func (p ImageClassificationPredictor) Modality() (dlframework.Modality, error) {
+	return dlframework.ImageClassificationModality, nil
+}
+
 func init() {
 	config.AfterInit(func() {
 		framework := tensorflow.FrameworkManifest

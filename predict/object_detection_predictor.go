@@ -41,7 +41,7 @@ import (
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 )
 
-type ObejctDetectionPredictor struct {
+type ObjectDetectionPredictor struct {
 	common.ImagePredictor
 	tfGraph            *tf.Graph
 	tfSession          *Session
@@ -69,13 +69,13 @@ func NewObjectDetectionPredictor(model dlframework.ModelManifest, opts ...option
 		return nil, errors.New("input type not supported")
 	}
 
-	predictor := new(ObejctDetectionPredictor)
+	predictor := new(ObjectDetectionPredictor)
 
 	return predictor.Load(context.Background(), model, opts...)
 }
 
 // Download ...
-func (p *ObejctDetectionPredictor) Download(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) error {
+func (p *ObjectDetectionPredictor) Download(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) error {
 	framework, err := model.ResolveFramework()
 	if err != nil {
 		return err
@@ -86,7 +86,7 @@ func (p *ObejctDetectionPredictor) Download(ctx context.Context, model dlframewo
 		return err
 	}
 
-	ip := &ObejctDetectionPredictor{
+	ip := &ObjectDetectionPredictor{
 		ImagePredictor: common.ImagePredictor{
 			Base: common.Base{
 				Framework: framework,
@@ -104,7 +104,7 @@ func (p *ObejctDetectionPredictor) Download(ctx context.Context, model dlframewo
 	return nil
 }
 
-func (p *ObejctDetectionPredictor) Load(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
+func (p *ObjectDetectionPredictor) Load(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
 	framework, err := model.ResolveFramework()
 	if err != nil {
 		return nil, err
@@ -115,7 +115,7 @@ func (p *ObejctDetectionPredictor) Load(ctx context.Context, model dlframework.M
 		return nil, err
 	}
 
-	ip := &ObejctDetectionPredictor{
+	ip := &ObjectDetectionPredictor{
 		ImagePredictor: common.ImagePredictor{
 			Base: common.Base{
 				Framework: framework,
@@ -137,7 +137,7 @@ func (p *ObejctDetectionPredictor) Load(ctx context.Context, model dlframework.M
 	return ip, nil
 }
 
-func (p *ObejctDetectionPredictor) GetPreprocessOptions(ctx context.Context) (common.PreprocessOptions, error) {
+func (p *ObjectDetectionPredictor) GetPreprocessOptions(ctx context.Context) (common.PreprocessOptions, error) {
 	mean, err := p.GetMeanImage()
 	if err != nil {
 		return common.PreprocessOptions{}, err
@@ -162,7 +162,7 @@ func (p *ObejctDetectionPredictor) GetPreprocessOptions(ctx context.Context) (co
 	}, nil
 }
 
-func (p *ObejctDetectionPredictor) download(ctx context.Context) error {
+func (p *ObjectDetectionPredictor) download(ctx context.Context) error {
 	span, ctx := opentracing.StartSpanFromContext(
 		ctx,
 		"download",
@@ -217,7 +217,7 @@ func (p *ObejctDetectionPredictor) download(ctx context.Context) error {
 	return nil
 }
 
-func (p *ObejctDetectionPredictor) loadPredictor(ctx context.Context) error {
+func (p *ObjectDetectionPredictor) loadPredictor(ctx context.Context) error {
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "load_predictor")
 	defer span.Finish()
 
@@ -314,7 +314,7 @@ func (p *ObejctDetectionPredictor) loadPredictor(ctx context.Context) error {
 	return nil
 }
 
-func (p ObejctDetectionPredictor) GetInputLayerName(reader io.Reader, layer string) (string, error) {
+func (p ObjectDetectionPredictor) GetInputLayerName(reader io.Reader, layer string) (string, error) {
 	model := p.Model
 	modelInputs := model.GetInputs()
 	typeParameters := modelInputs[0].GetParameters()
@@ -339,7 +339,7 @@ func (p ObejctDetectionPredictor) GetInputLayerName(reader io.Reader, layer stri
 	return name, nil
 }
 
-func (p ObejctDetectionPredictor) GetOutputLayerName(reader io.Reader, layer string) (string, error) {
+func (p ObjectDetectionPredictor) GetOutputLayerName(reader io.Reader, layer string) (string, error) {
 	model := p.Model
 	modelOutput := model.GetOutput()
 	typeParameters := modelOutput.GetParameters()
@@ -362,7 +362,7 @@ func (p ObejctDetectionPredictor) GetOutputLayerName(reader io.Reader, layer str
 	return name, nil
 }
 
-func (p *ObejctDetectionPredictor) runOptions() *proto.RunOptions {
+func (p *ObjectDetectionPredictor) runOptions() *proto.RunOptions {
 	if p.TraceLevel() >= tracer.FRAMEWORK_TRACE {
 		return &proto.RunOptions{
 			TraceLevel: proto.RunOptions_SOFTWARE_TRACE,
@@ -372,7 +372,7 @@ func (p *ObejctDetectionPredictor) runOptions() *proto.RunOptions {
 }
 
 // Predict ...
-func (p *ObejctDetectionPredictor) Predict(ctx context.Context, data interface{}, opts ...options.Option) error {
+func (p *ObjectDetectionPredictor) Predict(ctx context.Context, data interface{}, opts ...options.Option) error {
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "predict")
 	defer span.Finish()
 
@@ -439,7 +439,7 @@ func (p *ObejctDetectionPredictor) Predict(ctx context.Context, data interface{}
 }
 
 // ReadPredictedFeatures ...
-func (p *ObejctDetectionPredictor) ReadPredictedFeatures(ctx context.Context) ([]dlframework.Features, error) {
+func (p *ObjectDetectionPredictor) ReadPredictedFeatures(ctx context.Context) ([]dlframework.Features, error) {
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "read_predicted_features")
 	defer span.Finish()
 
@@ -450,22 +450,26 @@ func (p *ObejctDetectionPredictor) ReadPredictedFeatures(ctx context.Context) ([
 	return p.CreateBoundingBoxFeatures(ctx, probabilities, classes, boxes, p.labels)
 }
 
-func (p *ObejctDetectionPredictor) Reset(ctx context.Context) error {
+func (p *ObjectDetectionPredictor) Reset(ctx context.Context) error {
 
 	return nil
 }
 
-func (p *ObejctDetectionPredictor) Close() error {
+func (p *ObjectDetectionPredictor) Close() error {
 	if p.tfSession != nil {
 		p.tfSession.Close()
 	}
 	return nil
 }
 
+func (p ObjectDetectionPredictor) Modality() (dlframework.Modality, error) {
+	return dlframework.ImageObjectDetectionModality, nil
+}
+
 func init() {
 	config.AfterInit(func() {
 		framework := tensorflow.FrameworkManifest
-		agent.AddPredictor(framework, &ObejctDetectionPredictor{
+		agent.AddPredictor(framework, &ObjectDetectionPredictor{
 			ImagePredictor: common.ImagePredictor{
 				Base: common.Base{
 					Framework: framework,
