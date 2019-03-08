@@ -17,6 +17,31 @@ func zeros(height, width, channels int) [][][]float32 {
 	return rows
 }
 
+func reshapeTensor(data [][]float32, shape []int64) (*tf.Tensor, error) {
+	N, H, W, C := shape[0], shape[1], shape[2], shape[3]
+	tensor := make([][][][]float32, N)
+	for n := int64(0); n < N; n++ {
+		ndata := data[n]
+		tn := make([][][]float32, H)
+		for h := int64(0); h < H; h++ {
+			th := make([][]float32, W)
+			for w := int64(0); w < W; w++ {
+				offset := C * (W*h + w)
+				tw := ndata[offset : offset+C]
+				th[w] = tw
+			}
+			tn[h] = th
+		}
+		tensor[n] = tn
+	}
+	return tf.NewTensor(tensor)
+}
+
+// func reshapeTensor(data [][]float32, shape [] int64) (*tf.Tensor, error) {
+//   buf :=
+//   return tf.ReadTensor(tf.Float, shape, buf)
+// }
+
 // func  makeTensorFromData(data [][]float32) (*tf.Tensor, error) {
 // 	imageDims, err := p.GetImageDimensions()
 // 	if err != nil {
@@ -36,7 +61,7 @@ func zeros(height, width, channels int) [][][]float32 {
 // 		data = append(data, padding)
 // 	}
 
-// 	return NewTensor(ctx, data, []int64{batchSize, height, width, channels})
+// 	return NewTensor(data)
 // }
 
 func decodeJpegGraph() (graph *tf.Graph, input, output tf.Output, err error) {

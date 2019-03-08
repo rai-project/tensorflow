@@ -380,15 +380,15 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interfa
 		if err != nil {
 			return err
 		}
-		channels, height, width := imageDims[0], imageDims[1], imageDims[2]
-		batchSize := options.BatchSize()
+		channels, height, width := int64(imageDims[0]), int64(imageDims[1]), int64(imageDims[2])
+		batchSize := int64(options.BatchSize())
 		shapeLen := width * height * channels
-		dataLen := len(v)
+		dataLen := int64(len(v))
 		if batchSize > dataLen {
 			padding := make([]float32, (batchSize-dataLen)*shapeLen)
 			v = append(v, padding)
 		}
-		tensor, err = tf.NewTensor(v)
+		tensor, err = reshapeTensor(v, []int64{batchSize, height, width, channels})
 		if err != nil {
 			return errors.New("cannot make tensor from floats")
 		}
@@ -404,6 +404,7 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interfa
 		return errors.New("input data is not [][]float32 or [][]byte")
 	}
 
+	sessionSpan, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "c_predict")
 	fetches, err := session.Run(ctx,
 		map[tf.Output]*tf.Tensor{
 			graph.Operation(p.inputLayer).Output(0): tensor,
@@ -414,6 +415,8 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interfa
 		nil,
 		p.runOptions(),
 	)
+	sessionSpan.Finish()
+
 	if err != nil {
 		return errors.Wrapf(err, "failed to perform inference")
 	}

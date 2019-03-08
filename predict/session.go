@@ -17,6 +17,7 @@ limitations under the License.
 package predictor
 
 // #include <stdlib.h>
+// #include <string.h>
 // #include "tensorflow/c/c_api.h"
 import "C"
 
@@ -27,6 +28,7 @@ import (
 	"runtime"
 	"sync"
   "unsafe"
+	protobuf "github.com/golang/protobuf/proto"
 	proto "github.com/rai-project/tensorflow"
 )
 
@@ -145,12 +147,37 @@ func (s *Session) Run(ctx context.Context, feeds map[Output]*Tensor, fetches []O
 	defer s.wg.Done()
 
 	c := newCRunArgs(feeds, fetches, targets)
-	status := newStatus()
-	C.TF_SessionRun(s.c, nil,
+  status := newStatus()
+  
+	var runOptsBuf *C.TF_Buffer
+	var runMetaData *C.TF_Buffer
+
+	if runOpts != nil {
+		runOptsBuf = C.TF_NewBuffer()
+		defer C.TF_DeleteBuffer(runOptsBuf)
+
+		buf, err := protobuf.Marshal(runOpts)
+		if err != nil {
+			return nil, err
+		}
+
+		runOptsBuf.length = C.size_t(len(buf))
+		runOptsBuf.data = C.malloc(runOptsBuf.length)
+		if runOptsBuf.data == nil {
+			return nil, fmt.Errorf("unable to allocate memory")
+		}
+		defer C.free(runOptsBuf.data)
+		C.memcpy(runOptsBuf.data, unsafe.Pointer(&buf[0]), runOptsBuf.length)
+	}
+
+	runMetaData = C.TF_NewBuffer()
+  defer C.TF_DeleteBuffer(runMetaData)
+  
+	C.TF_SessionRun(s.c, runOptsBuf,
 		ptrOutput(c.feeds), ptrTensor(c.feedTensors), C.int(len(feeds)),
 		ptrOutput(c.fetches), ptrTensor(c.fetchTensors), C.int(len(fetches)),
 		ptrOperation(c.targets), C.int(len(targets)),
-		nil, status.c)
+		runMetaData, status.c)
 
 	// Make sure GC won't harvest input tensors until SessionRun() is finished
 	runtime.KeepAlive(feeds)
