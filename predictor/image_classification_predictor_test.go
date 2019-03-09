@@ -76,8 +76,6 @@ func TestImageClassification(t *testing.T) {
 	ctx := context.Background()
 	opts := options.New(options.Context(ctx),
 		options.Device(device, 0),
-		// options.InputNode("data", []int{3, 227, 227}),
-		// options.OutputNode("prob"),
 		options.BatchSize(batchSize))
 
 	predictor, err := NewImageClassificationPredictor(*model, options.WithOptions(opts))
