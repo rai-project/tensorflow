@@ -6,7 +6,7 @@ import (
 
 	cmd "github.com/rai-project/dlframework/framework/cmd/server"
 	"github.com/rai-project/tensorflow"
-	_ "github.com/rai-project/tensorflow/predict"
+	_ "github.com/rai-project/tensorflow/predictor"
 	"github.com/rai-project/tracer"
 )
 

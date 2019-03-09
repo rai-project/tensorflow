@@ -365,7 +365,7 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interfa
 		if err != nil {
 			return errors.New("cannot make tensor from floats")
 		}
-	case [][]byte:
+	case [][]uint8:
 		if options.BatchSize() != 1 {
 			return errors.New("batch size must be 1 for bytes input data")
 		}
