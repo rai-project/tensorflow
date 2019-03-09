@@ -32,8 +32,6 @@ import (
 	"github.com/rai-project/dlframework/framework/options"
 	common "github.com/rai-project/dlframework/framework/predictor"
 	"github.com/rai-project/downloadmanager"
-	"github.com/rai-project/image"
-	imageTypes "github.com/rai-project/image/types"
 	nvidiasmi "github.com/rai-project/nvidia-smi"
 	"github.com/rai-project/tensorflow"
 	proto "github.com/rai-project/tensorflow"
@@ -135,31 +133,6 @@ func (p *ObjectDetectionPredictor) Load(ctx context.Context, model dlframework.M
 	}
 
 	return ip, nil
-}
-
-func (p *ObjectDetectionPredictor) GetPreprocessOptions(ctx context.Context) (common.PreprocessOptions, error) {
-	mean, err := p.GetMeanImage()
-	if err != nil {
-		return common.PreprocessOptions{}, err
-	}
-
-	scale, err := p.GetScale()
-	if err != nil {
-		return common.PreprocessOptions{}, err
-	}
-
-	imageDims, err := p.GetImageDimensions()
-	if err != nil {
-		return common.PreprocessOptions{}, err
-	}
-
-	return common.PreprocessOptions{
-		MeanImage: mean,
-		Scale:     scale,
-		Size:      []int{int(imageDims[1]), int(imageDims[2])},
-		ColorMode: p.GetColorMode(imageTypes.RGBMode),
-		Layout:    p.GetLayout(image.HWCLayout),
-	}, nil
 }
 
 func (p *ObjectDetectionPredictor) download(ctx context.Context) error {

@@ -35,6 +35,7 @@ inputs:
     # description of the first input
     description: the input image
     parameters: # type parameters
+      element_type: float32
       input_layer: 'data'
       layout: 'HWC'
       color_mode: 'BGR'
@@ -46,6 +47,7 @@ output:
   # a description of the output parameter
   description: the output label
   parameters: # type parameters
+    element_type: float32
     probabilities_layer: 'prob'
     features_url: http://data.dmlc.ml/mxnet/models/imagenet/synset.txt
     features_checksum: 4d234b5833aca44928065a180db3016a

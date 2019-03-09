@@ -19,12 +19,13 @@ inputs: # model inputs
   - type: image # first input modality
     description: the input image # description of the first input
     parameters:
+      element_type: uint8
       input_layer: 'image_tensor'
-      dimensions: [3, 227, 227]
 output:
   type: boundingbox
   description: the output bounding box # a description of the output parameter
   parameters:
+    element_type: float32
     boxes_layer: 'detection_boxes'
     probabilities_layer: 'detection_scores'
     classes_layer: 'detection_classes'
