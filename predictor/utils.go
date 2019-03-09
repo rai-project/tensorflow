@@ -37,33 +37,6 @@ func reshapeTensor(data [][]float32, shape []int64) (*tf.Tensor, error) {
 	return tf.NewTensor(tensor)
 }
 
-// func reshapeTensor(data [][]float32, shape [] int64) (*tf.Tensor, error) {
-//   buf :=
-//   return tf.ReadTensor(tf.Float, shape, buf)
-// }
-
-// func  makeTensorFromData(data [][]float32) (*tf.Tensor, error) {
-// 	imageDims, err := p.GetImageDimensions()
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	channels, height, width := int64(imageDims[0]), int64(imageDims[1]), int64(imageDims[2])
-// 	batchSize := int64(p.BatchSize())
-// 	if batchSize == 0 {
-// 		batchSize = 1
-// 	}
-
-// 	shapeLen := width * height * channels
-// 	dataLen := int64(len(data))
-// 	if batchSize > dataLen {
-// 		padding := make([]float32, (batchSize-dataLen)*shapeLen)
-// 		data = append(data, padding)
-// 	}
-
-// 	return NewTensor(data)
-// }
-
 func decodeJpegGraph() (graph *tf.Graph, input, output tf.Output, err error) {
 	s := op.NewScope()
 	input = op.Placeholder(s, tf.String)
