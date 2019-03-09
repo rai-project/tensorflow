@@ -375,18 +375,18 @@ func (p *ObjectDetectionPredictor) Predict(ctx context.Context, data interface{}
 		}
 		tensor, err = reshapeTensor(v, []int64{batchSize, height, width, channels})
 		if err != nil {
-			return errors.Wrap(err, "cannot make tensor from floats")
+			return err
 		}
 	case [][]uint8:
 		if options.BatchSize() != 1 {
-			return errors.New("batch size must be 1 for bytes input data")
+			return errors.Errorf("batch size must be 1 for bytes input data, got %v", options.BatchSize)
 		}
 		tensor, err = makeTensorFromBytes(v[0])
 		if err != nil {
 			return errors.Wrap(err, "cannot make tensor from bytes")
 		}
 	default:
-		return errors.New("input data is not [][]float32 or [][]byte")
+		return errors.Errorf("input data is not [][]float32 or [][]byte, but got %v", v)
 	}
 
 	fetches, err := session.Run(ctx,
