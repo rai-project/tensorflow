@@ -350,11 +350,11 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interfa
 
 	switch v := data.(type) {
 	case [][]float32:
-		imageDims, err := p.GetImageDimensions()
+		dims, err := p.GetImageDimensions()
 		if err != nil {
 			return err
 		}
-		channels, height, width := int64(imageDims[0]), int64(imageDims[1]), int64(imageDims[2])
+		channels, height, width := int64(dims[0]), int64(dims[1]), int64(dims[2])
 		batchSize := int64(options.BatchSize())
 		shapeLen := width * height * channels
 		dataLen := int64(len(v))

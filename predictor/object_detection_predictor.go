@@ -20,6 +20,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"reflect"
 	"runtime"
 	"strings"
 
@@ -379,7 +380,7 @@ func (p *ObjectDetectionPredictor) Predict(ctx context.Context, data interface{}
 		}
 	case [][]uint8:
 		if options.BatchSize() != 1 {
-			return errors.Errorf("batch size must be 1 for bytes input data, got %v", options.BatchSize)
+			return errors.Errorf("batch size must be 1 for bytes input data, got %v", reflect.TypeOf(data).String())
 		}
 		tensor, err = makeTensorFromBytes(v[0])
 		if err != nil {
