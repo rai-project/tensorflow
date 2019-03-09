@@ -47,9 +47,9 @@ func decodeJpegGraph() (graph *tf.Graph, input, output tf.Output, err error) {
 	return graph, input, output, err
 }
 
-func makeTensorFromBytes(b []byte) (*tf.Tensor, error) {
+func makeTensorFromBytes(b interface{}) (*tf.Tensor, error) {
 	// DecodeJpeg uses a scalar String-valued tensor as input.
-	tensor, err := tf.NewTensor(string(b))
+	tensor, err := tf.NewTensor(b)
 	if err != nil {
 		return nil, err
 	}
