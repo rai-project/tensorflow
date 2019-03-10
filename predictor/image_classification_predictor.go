@@ -354,6 +354,9 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interfa
 		if err != nil {
 			return err
 		}
+		if imageDims == nil {
+			return errors.New("image dims is nil")
+		}
 		channels, height, width := int64(imageDims[0]), int64(imageDims[1]), int64(imageDims[2])
 		batchSize := int64(options.BatchSize())
 		shapeLen := width * height * channels
@@ -366,7 +369,7 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interfa
 		if err != nil {
 			return err
 		}
-	case [][]uint8:
+	case [][]byte:
 		if options.BatchSize() != 1 {
 			return errors.Errorf("batch size must be 1 for bytes input data, got %v", options.BatchSize())
 		}

@@ -19,7 +19,7 @@ inputs: # model inputs
   - type: image # first input modality
     description: the input image # description of the first input
     parameters:
-      element_type: uint8
+      element_type: raw_image
       input_layer: 'image_tensor'
 output:
   type: boundingbox

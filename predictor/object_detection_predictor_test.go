@@ -36,7 +36,7 @@ func TestObjectDetectionInference(t *testing.T) {
 	defer predictor.Close()
 
 	imgDir, _ := filepath.Abs("./_fixtures")
-	imagePath := filepath.Join(imgDir, "platypus.jpg")
+	imagePath := filepath.Join(imgDir, "lane_control.jpg")
 	b, err := ioutil.ReadFile(imagePath)
 	if err != nil {
 		panic(err)
@@ -56,6 +56,6 @@ func TestObjectDetectionInference(t *testing.T) {
 		return
 	}
 
-	pp.Println(pred[0][1])
+	pp.Println(pred[0][:10])
 
 }

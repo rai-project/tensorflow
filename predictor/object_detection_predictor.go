@@ -366,6 +366,9 @@ func (p *ObjectDetectionPredictor) Predict(ctx context.Context, data interface{}
 		if err != nil {
 			return err
 		}
+		if imageDims == nil {
+			return errors.New("image dims is nil")
+		}
 		channels, height, width := int64(imageDims[0]), int64(imageDims[1]), int64(imageDims[2])
 		batchSize := int64(options.BatchSize())
 		shapeLen := width * height * channels
@@ -378,16 +381,16 @@ func (p *ObjectDetectionPredictor) Predict(ctx context.Context, data interface{}
 		if err != nil {
 			return err
 		}
-	case [][]uint8:
+	case [][]byte:
 		if options.BatchSize() != 1 {
-			return errors.Errorf("batch size must be 1 for bytes input data, got %v", reflect.TypeOf(data).String())
+			return errors.Errorf("batch size must be 1 for bytes input data, got %v", options.BatchSize())
 		}
 		tensor, err = makeTensorFromBytes(v[0])
 		if err != nil {
 			return errors.Wrap(err, "cannot make tensor from bytes")
 		}
 	default:
-		return errors.Errorf("input data is not [][]float32 or [][]byte, but got %v", v)
+		return errors.Errorf("input data is not [][]float32 or [][]byte, but got %v", reflect.TypeOf(data).String())
 	}
 
 	fetches, err := session.Run(ctx,
