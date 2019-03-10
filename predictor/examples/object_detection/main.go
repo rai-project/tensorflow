@@ -38,6 +38,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/k0kubun/pp"
+
 	"golang.org/x/image/colornames"
 
 	"golang.org/x/image/font"
@@ -207,6 +209,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// pp.Println(tensor.Value())
+
 	// Transform the decoded YCbCr JPG image into RGBA
 	b := i.Bounds()
 	img := image.NewRGBA(b)
@@ -241,6 +245,10 @@ func main() {
 	classes := output[2].Value().([][]float32)[0]
 	boxes := output[0].Value().([][][]float32)[0]
 
+	pp.Println(probabilities[:3])
+	pp.Println(classes[:3])
+	pp.Println(boxes[0][:3])
+	return
 	// Draw a box around the objects
 	curObj := 0
 
