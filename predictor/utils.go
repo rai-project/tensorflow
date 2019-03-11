@@ -1,6 +1,11 @@
 package predictor
 
 import (
+	"image"
+	"image/png"
+	"os"
+
+	imagetypes "github.com/rai-project/image/types"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 	"github.com/tensorflow/tensorflow/tensorflow/go/op"
 )
@@ -25,6 +30,26 @@ func reshapeTensor(data [][]float32, shape []int64) (*tf.Tensor, error) {
 		tn := make([][][]float32, H)
 		for h := int64(0); h < H; h++ {
 			th := make([][]float32, W)
+			for w := int64(0); w < W; w++ {
+				offset := C * (W*h + w)
+				tw := ndata[offset : offset+C]
+				th[w] = tw
+			}
+			tn[h] = th
+		}
+		tensor[n] = tn
+	}
+	return tf.NewTensor(tensor)
+}
+
+func reshapeTensor2(data [][]uint8, shape []int64) (*tf.Tensor, error) {
+	N, H, W, C := shape[0], shape[1], shape[2], shape[3]
+	tensor := make([][][][]uint8, N)
+	for n := int64(0); n < N; n++ {
+		ndata := data[n]
+		tn := make([][][]uint8, H)
+		for h := int64(0); h < H; h++ {
+			th := make([][]uint8, W)
 			for w := int64(0); w < W; w++ {
 				offset := C * (W*h + w)
 				tw := ndata[offset : offset+C]
@@ -72,4 +97,18 @@ func makeTensorFromBytes(b []byte) (*tf.Tensor, error) {
 		return nil, err
 	}
 	return normalized[0], nil
+}
+
+func toPng(filePath string, imgByte []byte, bounds image.Rectangle) {
+
+	img := imagetypes.NewRGBImage(bounds)
+	copy(img.Pix, imgByte)
+
+	out, _ := os.Create(filePath)
+	defer out.Close()
+
+	err := png.Encode(out, img.ToRGBAImage())
+	if err != nil {
+		log.Println(err)
+	}
 }

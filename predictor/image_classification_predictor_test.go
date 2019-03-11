@@ -4,14 +4,12 @@ import (
 	"context"
 	"fmt"
 	"image"
-	"os"
 	"path/filepath"
 	"testing"
 
 	"github.com/anthonynsimon/bild/imgio"
 	"github.com/anthonynsimon/bild/transform"
 	"github.com/k0kubun/pp"
-	"github.com/rai-project/config"
 	"github.com/rai-project/dlframework/framework/options"
 	nvidiasmi "github.com/rai-project/nvidia-smi"
 	tf "github.com/rai-project/tensorflow"
@@ -113,13 +111,4 @@ func TestImageClassification(t *testing.T) {
 
 	pp.Println(pred[0][0])
 
-}
-
-func TestMain(m *testing.M) {
-	config.Init(
-		config.AppName("carml"),
-		config.DebugMode(true),
-		config.VerboseMode(true),
-	)
-	os.Exit(m.Run())
 }

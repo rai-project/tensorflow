@@ -24,6 +24,13 @@ SOFTWARE.
 
 package main
 
+// #include <stdlib.h>
+// #cgo LDFLAGS: -ltensorflow
+// #cgo CFLAGS: -I${SRCDIR}/../../../../../tensorflow/tensorflow
+// #include "tensorflow/c/c_api.h"
+import "C"
+
+
 import (
 	"bufio"
 	"bytes"
@@ -33,10 +40,13 @@ import (
 	"image/color"
 	"image/draw"
 	"image/jpeg"
+	"image/png"
 	"io/ioutil"
 	"log"
 	"os"
-	"path/filepath"
+  "path/filepath"
+  "reflect"
+  "unsafe"
 
 	"github.com/k0kubun/pp"
 
@@ -46,6 +56,7 @@ import (
 	"golang.org/x/image/font/basicfont"
 	"golang.org/x/image/math/fixed"
 
+  imagetypes "github.com/rai-project/image/types"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 	"github.com/tensorflow/tensorflow/tensorflow/go/op"
 )
@@ -121,9 +132,11 @@ func makeTensorFromImage(filename string) (*tf.Tensor, image.Image, error) {
 
 func decodeJpegGraph() (graph *tf.Graph, input, output tf.Output, err error) {
 	s := op.NewScope()
-	input = op.Placeholder(s, tf.String)
+  input = op.Placeholder(s, tf.String)
+  dctMethod := op.DecodeJpegDctMethod("INTEGER_ACCURATE")
+  // dctMethod := op.DecodeJpegDctMethod("INTEGER_FAST")
 	output = op.ExpandDims(s,
-		op.DecodeJpeg(s, input, op.DecodeJpegChannels(3)),
+		op.DecodeJpeg(s, input, op.DecodeJpegChannels(3), dctMethod),
 		op.Const(s.SubScope("make_batch"), int32(0)))
 	graph, err = s.Finalize()
 	return graph, input, output, err
@@ -210,6 +223,7 @@ func main() {
 	}
 
 	// pp.Println(tensor.Value())
+	toPng("/tmp/object_detection.png", tensorData(tensorPtrC(tensor)), i.Bounds())
 
 	// Transform the decoded YCbCr JPG image into RGBA
 	b := i.Bounds()
@@ -246,8 +260,8 @@ func main() {
 	boxes := output[0].Value().([][][]float32)[0]
 
 	pp.Println(probabilities[:3])
-	pp.Println(classes[:3])
-	pp.Println(boxes[0][:3])
+	// pp.Println(classes[:3])
+	// pp.Println(boxes[0][:3])
 	return
 	// Draw a box around the objects
 	curObj := 0
@@ -279,4 +293,40 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func toPng(filePath string, imgByte []byte, bounds image.Rectangle) {
+
+  img := imagetypes.NewRGBImage(bounds)
+  copy(img.Pix, imgByte)
+
+
+	out, _ := os.Create(filePath)
+	defer out.Close()
+
+	err := png.Encode(out, img.ToRGBAImage())
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func tensorPtrC(t *tf.Tensor) *C.TF_Tensor {
+	fld := reflect.Indirect(reflect.ValueOf(t)).FieldByName("c")
+  if fld.CanInterface() {
+		return fld.Interface().(*C.TF_Tensor)
+  }
+
+  ptr := unsafe.Pointer(fld.UnsafeAddr())
+  e := (**C.TF_Tensor)(ptr)
+  return *e
+}
+func tensorData(c *C.TF_Tensor) []byte {
+	// See: https://github.com/golang/go/wiki/cgo#turning-c-arrays-into-go-slices
+	cbytes := C.TF_TensorData(c)
+	if cbytes == nil {
+		return nil
+	}
+	length := int(C.TF_TensorByteSize(c))
+	slice := (*[1 << 30]byte)(unsafe.Pointer(cbytes))[:length:length]
+	return slice
 }

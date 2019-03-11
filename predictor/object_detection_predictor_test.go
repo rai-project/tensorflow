@@ -40,7 +40,8 @@ func TestObjectDetectionInference(t *testing.T) {
 	b, err := ioutil.ReadFile(imagePath)
 	if err != nil {
 		panic(err)
-	}
+  }
+  image.Decode()
 	input := make([][]byte, batchSize)
 	input[0] = b
 

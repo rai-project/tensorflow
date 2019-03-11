@@ -60,6 +60,18 @@ func graphPtrC(g *Graph) *C.TF_Graph {
   return *e
 }
 
+func tensorData(c *C.TF_Tensor) []byte {
+	// See: https://github.com/golang/go/wiki/cgo#turning-c-arrays-into-go-slices
+	cbytes := C.TF_TensorData(c)
+	if cbytes == nil {
+		return nil
+	}
+	length := int(C.TF_TensorByteSize(c))
+	slice := (*[1 << 30]byte)(unsafe.Pointer(cbytes))[:length:length]
+	return slice
+}
+
+
 func init() {
 	const tfPackagePath = "github.com/tensorflow/tensorflow/tensorflow/go"
 	forceexport.GetFunc(&newTensorFromC, tfPackagePath+".newTensorFromC")
