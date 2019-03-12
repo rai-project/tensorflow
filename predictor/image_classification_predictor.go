@@ -20,7 +20,6 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
-	"reflect"
 	"runtime"
 	"strings"
 
@@ -38,6 +37,7 @@ import (
 	proto "github.com/rai-project/tensorflow"
 	"github.com/rai-project/tracer"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
+	gotensor "gorgonia.org/tensor"
 )
 
 type ImageClassificationPredictor struct {
@@ -341,45 +341,52 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interfa
 	if data == nil {
 		return errors.New("input data nil")
 	}
-	session := p.tfSession
-
-	graph := p.tfGraph
-	options := options.New(opts...)
-	var err error
-	var tensor *tf.Tensor
-
-	switch v := data.(type) {
-	case [][]float32:
-		imageDims, err := p.GetImageDimensions()
-		if err != nil {
-			return err
-		}
-		if imageDims == nil {
-			return errors.New("image dims is nil")
-		}
-		channels, height, width := int64(imageDims[0]), int64(imageDims[1]), int64(imageDims[2])
-		batchSize := int64(options.BatchSize())
-		shapeLen := width * height * channels
-		dataLen := int64(len(v))
-		if batchSize > dataLen {
-			padding := make([]float32, (batchSize-dataLen)*shapeLen)
-			v = append(v, padding)
-		}
-		tensor, err = reshapeTensor(v, []int64{batchSize, height, width, channels})
-		if err != nil {
-			return err
-		}
-	case [][]byte:
-		if options.BatchSize() != 1 {
-			return errors.Errorf("batch size must be 1 for bytes input data, got %v", options.BatchSize())
-		}
-		tensor, err = makeTensorFromBytes(v[0])
-		if err != nil {
-			return errors.Wrap(err, "cannot make tensor from bytes")
-		}
-	default:
-		return errors.Errorf("input data is not [][]float32 or [][]byte, but got %v", reflect.TypeOf(data).String())
+	input, ok := data.([]*gotensor.Dense)
+	if !ok {
+		return errors.New("input data is not slice of dense tensors")
 	}
+
+	session := p.tfSession
+	graph := p.tfGraph
+	// options := options.New(opts...)
+
+	tensor, err := makeTensorFromGoTensor(input)
+	if err != nil {
+		return err
+	}
+
+	// switch v := data.(type) {
+	// case [][]float32:
+	// 	imageDims, err := p.GetImageDimensions()
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	if imageDims == nil {
+	// 		return errors.New("image dims is nil")
+	// 	}
+	// 	channels, height, width := int64(imageDims[0]), int64(imageDims[1]), int64(imageDims[2])
+	// 	batchSize := int64(options.BatchSize())
+	// 	shapeLen := width * height * channels
+	// 	dataLen := int64(len(v))
+	// 	if batchSize > dataLen {
+	// 		padding := make([]float32, (batchSize-dataLen)*shapeLen)
+	// 		v = append(v, padding)
+	// 	}
+	// 	tensor, err = reshapeTensor(v, []int64{batchSize, height, width, channels})
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// case [][]byte:
+	// 	if options.BatchSize() != 1 {
+	// 		return errors.Errorf("batch size must be 1 for bytes input data, got %v", options.BatchSize())
+	// 	}
+	// 	tensor, err = makeTensorFromBytes(v[0])
+	// 	if err != nil {
+	// 		return errors.Wrap(err, "cannot make tensor from bytes")
+	// 	}
+	// default:
+	// 	return errors.Errorf("input data is not [][]float32 or [][]byte, but got %v", reflect.TypeOf(data).String())
+	// }
 
 	sessionSpan, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "c_predict")
 	fetches, err := session.Run(ctx,
