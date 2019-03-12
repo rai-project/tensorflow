@@ -437,6 +437,7 @@ func (p *ImageClassificationPredictor) Close() error {
 	if p.tfSession != nil {
 		p.tfSession.Close()
 	}
+	forceGC()
 	return nil
 }
 

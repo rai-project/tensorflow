@@ -4,6 +4,8 @@ import (
 	"image"
 	"image/png"
 	"os"
+	"runtime"
+	"runtime/debug"
 
 	"github.com/pkg/errors"
 	imagetypes "github.com/rai-project/image/types"
@@ -152,4 +154,9 @@ func zeros(height, width, channels int) [][][]float32 {
 		rows[ii] = columns
 	}
 	return rows
+}
+
+func forceGC() {
+	runtime.GC()
+	debug.FreeOSMemory()
 }
