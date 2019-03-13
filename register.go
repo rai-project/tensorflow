@@ -9,7 +9,7 @@ import (
 )
 
 var FrameworkManifest = dlframework.FrameworkManifest{
-	Name:    "Tensorflow",
+	Name:    "TensorFlow",
 	Version: "1.12",
 	Container: map[string]*dlframework.ContainerHardware{
 		"amd64": {

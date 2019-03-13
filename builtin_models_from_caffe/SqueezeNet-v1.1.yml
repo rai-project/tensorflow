@@ -1,8 +1,9 @@
-name: ResNet101 # name of your model
+
+name: SqueezeNet # name of your model
 framework:
-  name: Tensorflow # framework for the model
+  name: TensorFlow # framework for the model
   version: 1.12 # framework version contraint
-version: 1.0 # version information in semantic version format
+version: 1.1 # version information in semantic version format
 container: # containers used to perform model prediction
            # multiple platforms can be specified
   amd64:
@@ -12,16 +13,14 @@ container: # containers used to perform model prediction
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  A Residual learning framework to ease the training of networks that are substantially deeper than those used previously.
-  We explicitly reformulate the layers as learning residual functions with reference to the layer inputs, instead of learning unreferenced functions.
-  We provide comprehensive empirical evidence showing that these residual networks are easier to optimize, and can gain accuracy from considerably increased depth.
-  On the ImageNet dataset we evaluate residual nets with a depth of up to 152 layers---8x deeper than VGG nets but still having lower complexity.
-  An ensemble of these residual nets achieves 3.57% error on the ImageNet test set. This result won the 1st place on the ILSVRC 2015 classification task.
+  SqueezeNet v1.1 has 2.4x less computation than v1.0, without sacrificing accuracy.
 references: # references to papers / websites / etc.. describing the model
-  - https://github.com/KaimingHe/deep-residual-networks
-  - https://arxiv.org/abs/1512.03385
+  - https://github.com/DeepScale/SqueezeNet
+  - https://arxiv.org/abs/1602.07360
+  - https://github.com/dividiti/ck-caffe/tree/master/package/caffemodel-deepscale-squeezenet-1.1
+  - http://cknowledge.org/repo/web.php?template=cknowledge&&wcid=package:59414348b1bdedb5
 # license of the model
-license: unrestricted
+license: BAIR
 # inputs to the model
 inputs:
   # first input type for the model
@@ -32,8 +31,8 @@ inputs:
       layer_name: "data"
       layout: "HWC"
       color_mode: "BGR"
-      dimensions: [3, 224, 224]
-      mean: [123.68, 116.779, 103.939]
+      dimensions: [3, 227, 227]
+      mean: [128, 128, 128]
 output:
   # the type of the output
   type: feature
@@ -42,15 +41,15 @@ output:
   parameters:
     # type parameters
     layer_name: "prob"
-    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset.txt
+    features_url: http://data.dmlc.ml/mxnet/models/imagenet/synset.txt
     features_checksum: 4d234b5833aca44928065a180db3016a
 model: # specifies model graph and weights resources
   base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
-  graph_path: resnet101_1.0/frozen_model.pb
+  graph_path: squeezenet_1.1/frozen_model.pb
   is_archive: false # if set, then the base_url is a url to an archive
                     # the graph_path and weights_path then denote the
                     # file names of the graph and weights within the archive
-  graph_checksum: eca863d264a7680ae082fc155de3e75a
+  graph_checksum: f44e46cb474b5899d50134d1c62623c8
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: ImageNet # dataset used to for training

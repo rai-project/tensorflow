@@ -360,62 +360,13 @@ func (p *ObjectDetectionPredictor) Predict(ctx context.Context, data interface{}
 
 	session := p.tfSession
 	graph := p.tfGraph
-	// options := options.New(opts...)
 
 	tensor, err := makeTensorFromGoTensor(input)
 	if err != nil {
 		return err
 	}
 
-	// switch v := data.(type) {
-	// case [][]float32:
-	// 	imageDims, err := p.GetImageDimensions()
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// 	if imageDims == nil {
-	// 		return errors.New("image dims is nil")
-	// 	}
-	// 	channels, height, width := int64(imageDims[0]), int64(imageDims[1]), int64(imageDims[2])
-	// 	batchSize := int64(options.BatchSize())
-	// 	shapeLen := width * height * channels
-	// 	dataLen := int64(len(v))
-	// 	if batchSize > dataLen {
-	// 		padding := make([]float32, (batchSize-dataLen)*shapeLen)
-	// 		v = append(v, padding)
-	// 	}
-	// 	tensor, err = reshapeTensor(v, []int64{batchSize, height, width, channels})
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// case [][]uint8:
-	// 	imageDims, err := p.GetImageDimensions()
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// 	if imageDims == nil {
-	// 		return errors.New("image dims is nil")
-	// 	}
-	// 	channels, height, width := int64(imageDims[0]), int64(imageDims[1]), int64(imageDims[2])
-	// 	batchSize := int64(options.BatchSize())
-	// 	shapeLen := width * height * channels
-	// 	dataLen := int64(len(v))
-	// 	if batchSize > dataLen {
-	// 		padding := make([]uint8, (batchSize-dataLen)*shapeLen)
-	// 		v = append(v, padding)
-	// 	}
-	// 	tensor, err = reshapeTensor2(v, []int64{batchSize, height, width, channels})
-	// pp.Println(tensor.Value())
-
-	// toPng("/tmp/mlmodelscope_object_detection.png", tensorData(tensorPtrC(tensor)), image.Rect(0, 0, int(width), int(height)))
-
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// default:
-	// 	return errors.Errorf("input data is not [][]float32 or [][]byte, but got %v", reflect.TypeOf(data).String())
-	// }
-
+	sessionSpan, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "c_predict")
 	fetches, err := session.Run(ctx,
 		map[tf.Output]*tf.Tensor{
 			graph.Operation(p.inputLayer).Output(0): tensor,
@@ -428,6 +379,7 @@ func (p *ObjectDetectionPredictor) Predict(ctx context.Context, data interface{}
 		nil,
 		p.runOptions(),
 	)
+	sessionSpan.Finish()
 	if err != nil {
 		return errors.Wrapf(err, "failed to perform inference")
 	}

@@ -1,8 +1,8 @@
-name: SqueezeNet # name of your model
+name: InceptionBN-21K # name of your model
 framework:
-  name: Tensorflow # framework for the model
+  name: TensorFlow # framework for the model
   version: 1.12 # framework version contraint
-version: 1.0 # version information in semantic version format
+version: 2.0 # version information in semantic version format
 container: # containers used to perform model prediction
            # multiple platforms can be specified
   amd64:
@@ -12,15 +12,13 @@ container: # containers used to perform model prediction
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  Squeezenet achieves similar results to AlexNet, at 50x fewer parameters and 1/500th the size.
-  Small models are more feasible to deploy on hardware with limited memory, require less
-  communication during distributed training, and are easier to distribute to clients.
-  SqueezeNet achieves 57.5% and 80.3% top-1 and top-5 acuracty on ImageNet.
+  TODO
 references: # references to papers / websites / etc.. describing the model
-  - https://github.com/DeepScale/SqueezeNet
-  - https://arxiv.org/abs/1602.07360
+  - https://github.com/pertusa/InceptionBN-21K-for-Caffe
+  - https://github.com/BVLC/Caffe/wiki/Model-Zoo
+  - https://github.com/dmlc/mxnet-model-gallery/blob/master/imagenet-21k-inception.md
 # license of the model
-license: BAIR
+license: unrestricted
 # inputs to the model
 inputs:
   # first input type for the model
@@ -31,8 +29,8 @@ inputs:
       layer_name: "data"
       layout: "HWC"
       color_mode: "BGR"
-      dimensions: [3, 227, 227]
-      mean: [128, 128, 128]
+      dimensions: [3, 224, 224]
+      mean: [117, 117, 117]
 output:
   # the type of the output
   type: feature
@@ -40,16 +38,16 @@ output:
   description: the output label
   parameters:
     # type parameters
-    layer_name: "prob"
-    features_url: http://data.dmlc.ml/mxnet/models/imagenet/synset.txt
-    features_checksum: 4d234b5833aca44928065a180db3016a
+    layer_name: "softmax"
+    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset-21k.txt
+    features_checksum: 851bbe06499cf53fa6f8fb72ad61e906
 model: # specifies model graph and weights resources
   base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
-  graph_path: squeezenet_1.0/frozen_model.pb
+  graph_path: inceptionbn_21k_2.0/frozen_model.pb
   is_archive: false # if set, then the base_url is a url to an archive
                     # the graph_path and weights_path then denote the
                     # file names of the graph and weights within the archive
-  graph_checksum: 29190e48652d2a94cfcd1247d79d8e43
+  graph_checksum: 4f68f1a05561b56e4aa646c7613e164f
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: ImageNet # dataset used to for training

@@ -1,6 +1,6 @@
 name: Resnet152
 framework:
-  name: Tensorflow
+  name: TensorFlow
   version: 1.12
 version: 2.0
 container:

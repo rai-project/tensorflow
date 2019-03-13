@@ -1,6 +1,6 @@
 name: VGG16_SOS # name of your model
 framework:
-  name: Tensorflow # framework for the model
+  name: TensorFlow # framework for the model
   version: 1.12 # framework version contraint
 version: 1.0 # version information in semantic version format
 container: # containers used to perform model prediction
@@ -16,7 +16,7 @@ description: >
 references: # references to papers / websites / etc.. describing the model
   - https://gist.github.com/jimmie33/27c1c0a7736ba66c2395
   - http://cs-people.bu.edu/jmzhang/sos.html
-  - https://github.com/BVLC/Tensorflow/wiki/Model-Zoo
+  - https://github.com/BVLC/TensorFlow/wiki/Model-Zoo
   - https://arxiv.org/abs/1409.1556
 # license of the model
 license: CC BY-NC 4.0

@@ -1,6 +1,6 @@
 name: VGG16
 framework:
-  name: Tensorflow
+  name: TensorFlow
   version: 1.12
 version: 1.0
 container:

@@ -1,4 +1,4 @@
-name: SSD_MobileNet_v1_COCO # name of your model
+name: SSD_MobileNet_v2_Quantized_300x300_COCO # name of your model
 framework:
   name: TensorFlow # framework for the model
   version: 1.12.0 # framework version contraint
@@ -12,7 +12,7 @@ container: # containers used to perform model evaluation
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
   TensorFlow Object Detection model, which is trained on the COCO (Common Objects in Context) dataset.
-  ssd_mobilenet_v1_coco_2018_01_28 from TensorFlow detection model zoo.
+  ssd_mobilenet_v2_quantized_300x300_coco_2019_01_03 from TensorFlow detection model zoo.
 references: # references to papers / websites / etc.. describing the model
   - https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
 license: Apache License, Version 2.0 # license of the model
@@ -34,13 +34,14 @@ output:
     features_checksum: 4418c85d01e6c82ff6849b8239759438
 model: # specifies model graph and weights sources
   base_url:
-  graph_path: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/ssd_mobilenet_v1_coco_2018_01_28/frozen_inference_graph.pb
+  graph_path: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/ssd_mobilenet_v2_quantized_300x300_coco_2019_01_03/tflite_graph.pb
   is_archive:
     false # if set, then the base_url is a url to an archive
     # the graph_path and weights_path then denote the
     # file names of the graph and weights within the archive
-  graph_checksum: c9df908a779062ce00abe8f98e4a3eb1
+  graph_checksum: 0848844ef5afbc5328deebfb18d58509
 attributes: # extra model attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: COCO # dataset used to for training
   manifest_author: Cheng
+hidden: true

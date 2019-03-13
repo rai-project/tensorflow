@@ -2,15 +2,18 @@ package predictor
 
 import (
 	"context"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"testing"
 
 	"github.com/k0kubun/pp"
 	"github.com/rai-project/dlframework/framework/options"
+	"github.com/rai-project/image"
+	"github.com/rai-project/image/types"
 	nvidiasmi "github.com/rai-project/nvidia-smi"
 	tf "github.com/rai-project/tensorflow"
 	"github.com/stretchr/testify/assert"
+	gotensor "gorgonia.org/tensor"
 )
 
 func TestObjectDetectionInference(t *testing.T) {
@@ -36,14 +39,28 @@ func TestObjectDetectionInference(t *testing.T) {
 	defer predictor.Close()
 
 	imgDir, _ := filepath.Abs("./_fixtures")
-	imagePath := filepath.Join(imgDir, "lane_control.jpg")
-	b, err := ioutil.ReadFile(imagePath)
+	imgPath := filepath.Join(imgDir, "lane_control.jpg")
+	r, err := os.Open(imgPath)
 	if err != nil {
 		panic(err)
-  }
-  image.Decode()
-	input := make([][]byte, batchSize)
-	input[0] = b
+	}
+	img, err := image.Read(r)
+	if err != nil {
+		panic(err)
+	}
+
+	height := img.Bounds().Dy()
+	width := img.Bounds().Dx()
+	channels := 3
+	input := make([]*gotensor.Dense, batchSize)
+	imgBytes := img.(*types.RGBImage).Pix
+
+	for ii := 0; ii < batchSize; ii++ {
+		input[ii] = gotensor.New(
+			gotensor.WithShape(height, width, channels),
+			gotensor.WithBacking(imgBytes),
+		)
+	}
 
 	err = predictor.Predict(ctx, input)
 	assert.NoError(t, err)

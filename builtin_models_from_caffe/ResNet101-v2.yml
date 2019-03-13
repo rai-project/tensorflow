@@ -1,6 +1,6 @@
-name: Inception-ResNet # name of your model
+name: ResNet101 # name of your model
 framework:
-  name: Tensorflow # framework for the model
+  name: TensorFlow # framework for the model
   version: 1.12 # framework version contraint
 version: 2.0 # version information in semantic version format
 container: # containers used to perform model prediction
@@ -12,11 +12,15 @@ container: # containers used to perform model prediction
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  TODO
+  A Residual learning framework to ease the training of networks that are substantially deeper than those used previously.
+  We explicitly reformulate the layers as learning residual functions with reference to the layer inputs, instead of learning unreferenced functions.
+  We provide comprehensive empirical evidence showing that these residual networks are easier to optimize, and can gain accuracy from considerably increased depth.
+  On the ImageNet dataset we evaluate residual nets with a depth of up to 152 layers---8x deeper than VGG nets but still having lower complexity.
+  An ensemble of these residual nets achieves 3.57% error on the ImageNet test set. This result won the 1st place on the ILSVRC 2015 classification task.
 references: # references to papers / websites / etc.. describing the model
   - https://github.com/soeaver/Caffe-model/tree/master/cls
-  - https://arxiv.org/abs/1602.07261
-  - https://github.com/tensorflow/models/blob/master/research/slim/preprocessing/inception_preprocessing.py
+  - https://github.com/craftGBD/craftGBD
+  - https://arxiv.org/abs/1512.03385
 # license of the model
 license: unrestricted
 # inputs to the model
@@ -29,9 +33,8 @@ inputs:
       layer_name: "data"
       layout: "HWC"
       color_mode: "BGR"
-      dimensions: [3, 299, 299]
-      mean: [128, 128, 128]
-      scale: 128
+      dimensions: [3, 224, 224]
+      mean: [122.772, 115.947, 102.98]
 output:
   # the type of the output
   type: feature
@@ -44,11 +47,11 @@ output:
     features_checksum: 4d234b5833aca44928065a180db3016a
 model: # specifies model graph and weights resources
   base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
-  graph_path: inception_resnet_2.0/frozen_model.pb
+  graph_path: resnet101_2.0/frozen_model.pb
   is_archive: false # if set, then the base_url is a url to an archive
                     # the graph_path and weights_path then denote the
                     # file names of the graph and weights within the archive
-  graph_checksum: 3ed4412162e174c1acee2b852e5614a3
+  graph_checksum: 57934c91c721a88bba35eae08ae2534c
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: ImageNet # dataset used to for training

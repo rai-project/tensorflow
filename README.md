@@ -1,4 +1,4 @@
-# MLModelScope Tensorflow Agent
+# MLModelScope TensorFlow Agent
 
 [![Build Status](https://travis-ci.org/rai-project/tensorflow.svg?branch=master)](https://travis-ci.org/rai-project/tensorflow)
 [![Build Status](https://dev.azure.com/dakkak/rai/_apis/build/status/tensorflow)](https://dev.azure.com/dakkak/rai/_build/latest?definitionId=14)
@@ -13,7 +13,7 @@ Refer to [TensorFlow in Go](https://github.com/tensorflow/tensorflow/tree/master
 
 Refer to [Install TensorFlow with pip](https://www.tensorflow.org/install/pip).
 
-Note for python 3.7.x, see [Is python 3.7.x supported with Tensorflow](https://github.com/tensorflow/tensorflow/issues/17022).
+Note for python 3.7.x, see [Is python 3.7.x supported with TensorFlow](https://github.com/tensorflow/tensorflow/issues/17022).
 
 ## Install TensorFlow From Source
 

@@ -1,28 +1,24 @@
-name: VGG16_SOD # name of your model
+name: Network in Network # name of your model
 framework:
-  name: Tensorflow # framework for the model
+  name: TensorFlow # framework for the model
   version: 1.12 # framework version contraint
 version: 1.0 # version information in semantic version format
 container: # containers used to perform model prediction
            # multiple platforms can be specified
   amd64:
-    gpu: raiproject/carml-tensorflow:amd64-cpu
-    cpu: raiproject/carml-tensorflow:amd64-gpu
+    gpu: raiproject/carml-mxnet:amd64-cpu
+    cpu: raiproject/carml-mxnet:amd64-gpu
   ppc64le:
-    cpu: raiproject/carml-tensorflow:ppc64le-gpu
-    gpu: raiproject/carml-tensorflow:ppc64le-gpu
+    cpu: raiproject/carml-mxnet:ppc64le-gpu
+    gpu: raiproject/carml-mxnet:ppc64le-gpu
 description: >
-  The following model are finetuned on the Salient Object Subitizing dataset (~5000 images) with bounding box annotations.
-  CNN models for the following CVPR'16 paper- Unconstrained Salient Object Detection via Proposal Subset Optimization
-  J. Zhang, S. Sclaroff, Z. Lin, X. Shen, B. Price and R. Mech. CVPR, 2016.
+  This model is a pretrained model on ILSVRC2012[1] dataset.
+  It is able to achieve 58.8% Top-1 Accuracy and 81.3% Top-5 accuracy on ILSVRC2012-Validation Set.
 references: # references to papers / websites / etc.. describing the model
-  - https://gist.github.com/jimmie33/509111f8a00a9ece2c3d5dde6a750129
-  - https://github.com/jimmie33/SOD
-  - https://github.com/BVLC/Tensorflow/wiki/Model-Zoo
-  - http://cs-people.bu.edu/jmzhang/sod.html
-  - https://arxiv.org/abs/1409.1556
+  - https://gist.github.com/mavenlin/d802a5849de39225bcc6
+  - https://arxiv.org/abs/1312.4400
 # license of the model
-license: MIT
+license: non-commercial
 # inputs to the model
 inputs:
   # first input type for the model
@@ -34,7 +30,7 @@ inputs:
       layout: "HWC"
       color_mode: "BGR"
       dimensions: [3, 224, 224]
-      mean: [123.68, 116.779, 103.939]
+      mean: [123, 117, 104]
 output:
   # the type of the output
   type: feature
@@ -43,16 +39,16 @@ output:
   parameters:
     # type parameters
     layer_name: "prob"
-    features_url: http://s3.amazonaws.com/store.carml.org/models/caffe/vgg16_sod/center100.txt
-    features_checksum: 6ea7d1bd9a24ba3bcde6c067dbd6185f
+    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset.txt
+    features_checksum: 4d234b5833aca44928065a180db3016a
 model: # specifies model graph and weights resources
   base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
-  graph_path: vgg16_sod_1.0/frozen_model.pb
+  graph_path:
   is_archive: false # if set, then the base_url is a url to an archive
                     # the graph_path and weights_path then denote the
                     # file names of the graph and weights within the archive
-  graph_checksum: 0356fdac76d4482ccded0ff2e3b4cc09
+  graph_checksum:
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
-  training_dataset: The MSO dataset # dataset used to for training
+  training_dataset: ImageNet # dataset used to for training
   manifest_author: abduld

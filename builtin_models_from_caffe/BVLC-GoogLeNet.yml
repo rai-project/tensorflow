@@ -1,6 +1,6 @@
-name: BVLC-Reference-CaffeNet # name of your model
+name: BVLC-GoogLeNet # name of your model
 framework:
-  name: Tensorflow # framework for the model
+  name: TensorFlow # framework for the model
   version: 1.12 # framework version contraint
 version: 1.0 # version information in semantic version format
 container: # containers used to perform model prediction
@@ -12,17 +12,23 @@ container: # containers used to perform model prediction
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  This model is the result of following the Tensorflow ImageNet model training instructions. It is a replication of the model described in the AlexNet publication with some differences.
+  This model is a replication of the model described in the GoogleNet publication. We would like to thank Christian Szegedy for all his help in the replication of GoogleNet model.
   Differences:
   not training with the relighting data-augmentation;
-  the order of pooling and normalization layers is switched (in TensorflowNet, pooling is done before normalization).
-  This model is snapshot of iteration 310,000. The best validation performance during training was iteration 313,000 with validation accuracy 57.412% and loss 1.82328.
-  This model obtains a top-1 accuracy 57.4% and a top-5 accuracy 80.4% on the validation set, using just the center crop.
-  (Using the average of 10 crops, (4 + 1 center) * 2 mirror, should obtain a bit higher accuracy still.)
-  This model was trained by Jeff Donahue @jeffdonahue
+  not training with the scale or aspect-ratio data-augmentation;
+  uses "xavier" to initialize the weights instead of "gaussian";
+  quick_solver.prototxt uses a different learning rate decay policy than the original solver.prototxt, that allows a much faster training (60 epochs vs 250 epochs);
+  The bundled model is the iteration 2,400,000 snapshot (60 epochs) using quick_solver.prototxt
+  This bundled model obtains a top-1 accuracy 68.7% (31.3% error) and a top-5 accuracy 88.9% (11.1% error) on the validation set, using just the center crop.
+  (Using the average of 10 crops, (4 + 1 center) * 2 mirror, should obtain a bit higher accuracy.)
+  Timings for bvlc_googlenet with cuDNN using batch_size:128 on a K40c:
+  Average Forward pass: 562.841 ms.
+  Average Backward pass: 1123.84 ms.
+  Average Forward-Backward: 1688.8 ms.
+  This model was trained by Sergio Guadarrama @sguada
 references: # references to papers / websites / etc.. describing the model
-  - https://github.com/BVLC/caffe/tree/master/models/bvlc_reference_caffenet
-  - http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf
+  - https://github.com/BVLC/Caffe/tree/master/models/bvlc_googlenet
+  - https://arxiv.org/abs/1409.4842
 # license of the model
 license: unrestricted
 # inputs to the model
@@ -35,7 +41,7 @@ inputs:
       layer_name: "data"
       layout: "HWC"
       color_mode: "BGR"
-      dimensions: [3, 227, 227]
+      dimensions: [3, 224, 224]
       mean: [123, 117, 104]
 output:
   # the type of the output
@@ -49,12 +55,11 @@ output:
     features_checksum: 4d234b5833aca44928065a180db3016a
 model: # specifies model graph and weights resources
   base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
-  graph_path: bvlc_reference_caffenet_1.0/frozen_model.pb
-
+  graph_path: bvlc_googlenet_1.0/frozen_model.pb
   is_archive: false # if set, then the base_url is a url to an archive
                     # the graph_path and weights_path then denote the
                     # file names of the graph and weights within the archive
-  graph_checksum: b7a4d3d30e623768c0bbc2fc94d712ff
+  graph_checksum: 283087f6a9c25d851e581ea19944ff9d
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: ImageNet # dataset used to for training

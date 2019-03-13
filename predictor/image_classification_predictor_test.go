@@ -2,44 +2,54 @@ package predictor
 
 import (
 	"context"
-	"fmt"
-	"image"
+	"os"
 	"path/filepath"
 	"testing"
 
-	"github.com/anthonynsimon/bild/imgio"
-	"github.com/anthonynsimon/bild/transform"
 	"github.com/k0kubun/pp"
 	"github.com/rai-project/dlframework/framework/options"
+	"github.com/rai-project/image"
+	"github.com/rai-project/image/types"
 	nvidiasmi "github.com/rai-project/nvidia-smi"
 	tf "github.com/rai-project/tensorflow"
 	"github.com/stretchr/testify/assert"
+	gotensor "gorgonia.org/tensor"
 )
 
-// convert go Image to 1-dim array
-func cvtImageTo1DArray(src image.Image, mean []float32) ([]float32, error) {
-	if src == nil {
-		return nil, fmt.Errorf("src image nil")
-	}
-
-	b := src.Bounds()
-	h := b.Max.Y - b.Min.Y // image height
-	w := b.Max.X - b.Min.X // image width
-
-	res := make([]float32, 3*h*w)
-	for y := 0; y < h; y++ {
-		for x := 0; x < w; x++ {
-			r, g, b, _ := src.At(x+b.Min.X, y+b.Min.Y).RGBA()
-			res[3*(y*w+x)] = float32(b>>8) - mean[0]
-			res[3*(y*w+x)+1] = float32(g>>8) - mean[1]
-			res[3*(y*w+x)+2] = float32(r>>8) - mean[2]
+func normalizeImageHWC(in *types.RGBImage, mean []float32, scale float32) ([]float32, error) {
+	height := in.Bounds().Dy()
+	width := in.Bounds().Dx()
+	out := make([]float32, 3*height*width)
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			offset := y*in.Stride + x*3
+			rgb := in.Pix[offset : offset+3]
+			r, g, b := rgb[0], rgb[1], rgb[2]
+			out[offset+0] = (float32(r) - mean[0]) / scale
+			out[offset+1] = (float32(g) - mean[1]) / scale
+			out[offset+2] = (float32(b) - mean[2]) / scale
 		}
 	}
-
-	return res, nil
+	return out, nil
 }
 
-func XXXTestPredictorNew(t *testing.T) {
+func normalizeImageCHW(in *types.RGBImage, mean []float32, scale float32) ([]float32, error) {
+	height := in.Bounds().Dy()
+	width := in.Bounds().Dx()
+	out := make([]float32, 3*height*width)
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			offset := y*in.Stride + x*3
+			rgb := in.Pix[offset : offset+3]
+			r, g, b := rgb[0], rgb[1], rgb[2]
+			out[y*width+x] = (float32(r) - mean[0]) / scale
+			out[width*height+y*width+x] = (float32(g) - mean[1]) / scale
+			out[2*width*height+y*width+x] = (float32(b) - mean[2]) / scale
+		}
+	}
+	return out, nil
+}
+func TestPredictorNew(t *testing.T) {
 	tf.Register()
 	model, err := tf.FrameworkManifest.FindModel("bvlc-alexnet:1.0")
 	assert.NoError(t, err)
@@ -82,19 +92,36 @@ func TestImageClassification(t *testing.T) {
 	defer predictor.Close()
 
 	imgDir, _ := filepath.Abs("./_fixtures")
-	imagePath := filepath.Join(imgDir, "platypus.jpg")
-	img, err := imgio.Open(imagePath)
+	imgPath := filepath.Join(imgDir, "platypus.jpg")
+	r, err := os.Open(imgPath)
 	if err != nil {
 		panic(err)
 	}
-	input := make([][]float32, batchSize)
+	img, err := image.Read(r)
+	if err != nil {
+		panic(err)
+	}
+
+	height := 227
+	width := 227
+	channels := 3
+	resized, err := image.Resize(img, image.Resized(height, width))
+	if err != nil {
+		panic(err)
+	}
+
+	input := make([]*gotensor.Dense, batchSize)
+	// imgBytes := resized.(*types.RGBImage).Pix
+	imgFloats, err := normalizeImageHWC(resized.(*types.RGBImage), []float32{123, 117, 104}, 1.0)
+	if err != nil {
+		panic(err)
+	}
+
 	for ii := 0; ii < batchSize; ii++ {
-		resized := transform.Resize(img, 227, 227, transform.Linear)
-		res, err := cvtImageTo1DArray(resized, []float32{123, 117, 104})
-		if err != nil {
-			panic(err)
-		}
-		input[ii] = res
+		input[ii] = gotensor.New(
+			gotensor.WithShape(height, width, channels),
+			gotensor.WithBacking(imgFloats),
+		)
 	}
 
 	err = predictor.Predict(ctx, input)

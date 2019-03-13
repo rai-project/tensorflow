@@ -1,9 +1,8 @@
-
-name: SqueezeNet # name of your model
+name: Inception # name of your model
 framework:
-  name: Tensorflow # framework for the model
+  name: TensorFlow # framework for the model
   version: 1.12 # framework version contraint
-version: 1.1 # version information in semantic version format
+version: 3.0 # version information in semantic version format
 container: # containers used to perform model prediction
            # multiple platforms can be specified
   amd64:
@@ -13,14 +12,14 @@ container: # containers used to perform model prediction
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  SqueezeNet v1.1 has 2.4x less computation than v1.0, without sacrificing accuracy.
+  Inception-v3 is trained for the ImageNet Large Visual Recognition Challenge using the data from 2012.
+  This is a standard task in computer vision, where models try to classify entire images into 1000 classes, like "Zebra", "Dalmatian", and "Dishwasher".
 references: # references to papers / websites / etc.. describing the model
-  - https://github.com/DeepScale/SqueezeNet
-  - https://arxiv.org/abs/1602.07360
-  - https://github.com/dividiti/ck-caffe/tree/master/package/caffemodel-deepscale-squeezenet-1.1
-  - http://cknowledge.org/repo/web.php?template=cknowledge&&wcid=package:59414348b1bdedb5
+  - https://github.com/soeaver/Caffe-model/tree/master/cls
+  - https://github.com/dmlc/mxnet-model-gallery/blob/master/imagenet-1k-inception-v3.md
+  - https://github.com/tensorflow/models/blob/master/research/slim/preprocessing/inception_preprocessing.py
 # license of the model
-license: BAIR
+license: unrestricted
 # inputs to the model
 inputs:
   # first input type for the model
@@ -31,8 +30,9 @@ inputs:
       layer_name: "data"
       layout: "HWC"
       color_mode: "BGR"
-      dimensions: [3, 227, 227]
+      dimensions: [3, 299, 299]
       mean: [128, 128, 128]
+      scale: 128
 output:
   # the type of the output
   type: feature
@@ -41,15 +41,15 @@ output:
   parameters:
     # type parameters
     layer_name: "prob"
-    features_url: http://data.dmlc.ml/mxnet/models/imagenet/synset.txt
-    features_checksum: 4d234b5833aca44928065a180db3016a
+    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset1000.txt
+    features_checksum: 7315c2c8bffdb680cf8c5d2a7c45c363
 model: # specifies model graph and weights resources
   base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
-  graph_path: squeezenet_1.1/frozen_model.pb
+  graph_path: inception_3.0/frozen_model.pb
   is_archive: false # if set, then the base_url is a url to an archive
                     # the graph_path and weights_path then denote the
                     # file names of the graph and weights within the archive
-  graph_checksum: f44e46cb474b5899d50134d1c62623c8
+  graph_checksum: 5b1b0be97ac4358b4f5c164df2c51b9f
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: ImageNet # dataset used to for training
