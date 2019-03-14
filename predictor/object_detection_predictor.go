@@ -395,9 +395,9 @@ func (p *ObjectDetectionPredictor) ReadPredictedFeatures(ctx context.Context) ([
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "read_predicted_features")
 	defer span.Finish()
 
-	boxes := p.boxes.([][][]float32)[0]
-	probabilities := p.probabilities.([][]float32)[0]
-	classes := p.classes.([][]float32)[0]
+	boxes := p.boxes.([][][]float32)
+	probabilities := p.probabilities.([][]float32)
+	classes := p.classes.([][]float32)
 
 	return p.CreateBoundingBoxFeatures(ctx, probabilities, classes, boxes, p.labels)
 }

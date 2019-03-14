@@ -386,12 +386,7 @@ func (p *ImageClassificationPredictor) ReadPredictedFeatures(ctx context.Context
 		return nil, errors.New("output is not of type [][]float32")
 	}
 
-	output := []float32{}
-	for _, v := range e {
-		output = append(output, v...)
-	}
-
-	return p.CreateClassificationFeatures(ctx, output, p.labels)
+	return p.CreateClassificationFeatures(ctx, e, p.labels)
 }
 
 func (p *ImageClassificationPredictor) Reset(ctx context.Context) error {
