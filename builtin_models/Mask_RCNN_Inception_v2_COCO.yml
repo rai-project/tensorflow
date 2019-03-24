@@ -11,8 +11,8 @@ container: # containers used to perform model evaluation
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  TensorFlow Object Detection model, which is trained on the COCO (Common Objects in Context) dataset.
-  mask_rcnn_inception_v2_coco_2018_01_28 from TensorFlow detection model zoo.
+  TensorFlow Instance Segmentation model, which is trained on the COCO (Common Objects in Context) dataset.
+  Use mask_rcnn_inception_v2_coco_2018_01_28 from TensorFlow detection model zoo.
 references: # references to papers / websites / etc.. describing the model
   - https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
 license: Apache License, Version 2.0 # license of the model
@@ -23,7 +23,7 @@ inputs: # model inputs
       element_type: uint8
       input_layer: 'image_tensor'
 output:
-  type: boundingbox
+  type: instancesegment
   description: the output bounding box # a description of the output parameter
   parameters:
     element_type: float32

@@ -18,7 +18,7 @@ import (
 
 func TestInstanceSegmentationInference(t *testing.T) {
 	tf.Register()
-	model, err := tf.FrameworkManifest.FindModel("ssd_mobilenet_v1_coco:1.0")
+	model, err := tf.FrameworkManifest.FindModel("mask_rcnn_inception_v2_coco:1.0")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
 
@@ -74,5 +74,5 @@ func TestInstanceSegmentationInference(t *testing.T) {
 		return
 	}
 
-	pp.Println(pred[0][:3])
+	pp.Println(pred[0][:1])
 }

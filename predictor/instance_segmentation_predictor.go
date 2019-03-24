@@ -49,6 +49,7 @@ type InstanceSegmentationPredictor struct {
 	boxesLayer         string
 	probabilitiesLayer string
 	classesLayer       string
+	masksLayer         string
 	boxes              interface{}
 	probabilities      interface{}
 	classes            interface{}
@@ -404,7 +405,7 @@ func (p *InstanceSegmentationPredictor) ReadPredictedFeatures(ctx context.Contex
 	boxes := p.boxes.([][][]float32)
 	probabilities := p.probabilities.([][]float32)
 	classes := p.classes.([][]float32)
-	masks := p.classes.([][][][]float32)
+	masks := p.masks.([][][][]float32)
 
 	return p.CreateInstanceSegmentFeatures(ctx, probabilities, classes, boxes, masks, p.labels)
 }

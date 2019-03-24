@@ -12,7 +12,7 @@ container: # containers used to perform model evaluation
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
   TensorFlow Object Detection model, which is trained on the COCO (Common Objects in Context) dataset.
-  ssd_mobilenet_v2_quantized_300x300_coco_2019_01_03 from TensorFlow detection model zoo.
+  Use ssd_mobilenet_v2_quantized_300x300_coco_2019_01_03 from TensorFlow detection model zoo.
 references: # references to papers / websites / etc.. describing the model
   - https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
 license: Apache License, Version 2.0 # license of the model
