@@ -71,7 +71,7 @@ func TestPredictorNew(t *testing.T) {
 
 func TestImageClassification(t *testing.T) {
 	tf.Register()
-	model, err := tf.FrameworkManifest.FindModel("bvlc-alexnet:1.0")
+	model, err := tf.FrameworkManifest.FindModel("bvlc_alexnet_caffe:1.0")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
 

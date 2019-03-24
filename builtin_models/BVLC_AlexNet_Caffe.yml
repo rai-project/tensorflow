@@ -1,4 +1,4 @@
-name: BVLC_AlexNet # name of your model
+name: BVLC_AlexNet_Caffe # name of your model
 framework:
   name: TensorFlow # framework for the model
   version: 1.12.0 # framework version contraint
