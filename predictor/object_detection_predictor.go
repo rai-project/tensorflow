@@ -381,7 +381,7 @@ func (p *ObjectDetectionPredictor) Predict(ctx context.Context, data interface{}
 	)
 	sessionSpan.Finish()
 	if err != nil {
-		return errors.Wrapf(err, "failed to perform inference")
+		return errors.Wrapf(err, "failed to perform session.Run")
 	}
 
 	p.boxes = fetches[0].Value()

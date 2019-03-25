@@ -387,7 +387,7 @@ func (p *InstanceSegmentationPredictor) Predict(ctx context.Context, data interf
 	)
 	sessionSpan.Finish()
 	if err != nil {
-		return errors.Wrapf(err, "failed to perform inference")
+		return errors.Wrapf(err, "failed to perform session.Run")
 	}
 
 	p.boxes = fetches[0].Value()

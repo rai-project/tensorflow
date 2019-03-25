@@ -1,18 +1,5 @@
 package predictor
 
-// #cgo LDFLAGS: -ltensorflow
-// #cgo CFLAGS: -I${SRCDIR}/../../../tensorflow/tensorflow
-// #include "tensorflow/c/c_api.h"
-import "C"
-
-// #include "tensorflow/core/framework/graph.pb.h"
-// #include <stdlib.h>
-// #include <string.h>
-// void setDefaultDevice(const char * device, TF_Graph * graph_def) {
-//  tensorflow::GraphDef def;
-//  GetGraphDef(graph_def, &def);
-//  graph::SetDefaultDevice(device, def);
-// 	}
 import (
 	"bufio"
 	"bytes"
@@ -40,17 +27,17 @@ import (
 	gotensor "gorgonia.org/tensor"
 )
 
-type ImageClassificationPredictor struct {
+type SemanticSegmentationPredictor struct {
 	common.ImagePredictor
-	tfGraph            *tf.Graph
-	tfSession          *Session
-	labels             []string
-	inputLayer         string
-	probabilitiesLayer string
-	probabilities      interface{}
+	tfGraph    *tf.Graph
+	tfSession  *Session
+	labels     []string
+	inputLayer string
+	masksLayer string
+	masks      interface{}
 }
 
-func NewImageClassificationPredictor(model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
+func NewSemanticSegmentationPredictor(model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
 	ctx := context.Background()
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "new_predictor")
 	defer span.Finish()
@@ -64,13 +51,13 @@ func NewImageClassificationPredictor(model dlframework.ModelManifest, opts ...op
 		return nil, errors.New("input type not supported")
 	}
 
-	predictor := new(ImageClassificationPredictor)
+	predictor := new(SemanticSegmentationPredictor)
 
 	return predictor.Load(context.Background(), model, opts...)
 }
 
 // Download ...
-func (p *ImageClassificationPredictor) Download(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) error {
+func (p *SemanticSegmentationPredictor) Download(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) error {
 	framework, err := model.ResolveFramework()
 	if err != nil {
 		return err
@@ -81,7 +68,7 @@ func (p *ImageClassificationPredictor) Download(ctx context.Context, model dlfra
 		return err
 	}
 
-	ip := &ImageClassificationPredictor{
+	ip := &SemanticSegmentationPredictor{
 		ImagePredictor: common.ImagePredictor{
 			Base: common.Base{
 				Framework: framework,
@@ -99,7 +86,7 @@ func (p *ImageClassificationPredictor) Download(ctx context.Context, model dlfra
 	return nil
 }
 
-func (p *ImageClassificationPredictor) Load(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
+func (p *SemanticSegmentationPredictor) Load(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
 	framework, err := model.ResolveFramework()
 	if err != nil {
 		return nil, err
@@ -110,7 +97,7 @@ func (p *ImageClassificationPredictor) Load(ctx context.Context, model dlframewo
 		return nil, err
 	}
 
-	ip := &ImageClassificationPredictor{
+	ip := &SemanticSegmentationPredictor{
 		ImagePredictor: common.ImagePredictor{
 			Base: common.Base{
 				Framework: framework,
@@ -132,7 +119,7 @@ func (p *ImageClassificationPredictor) Load(ctx context.Context, model dlframewo
 	return ip, nil
 }
 
-func (p *ImageClassificationPredictor) download(ctx context.Context) error {
+func (p *SemanticSegmentationPredictor) download(ctx context.Context) error {
 	span, ctx := opentracing.StartSpanFromContext(
 		ctx,
 		"download",
@@ -187,7 +174,7 @@ func (p *ImageClassificationPredictor) download(ctx context.Context) error {
 	return nil
 }
 
-func (p *ImageClassificationPredictor) loadPredictor(ctx context.Context) error {
+func (p *SemanticSegmentationPredictor) loadPredictor(ctx context.Context) error {
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "load_predictor")
 	defer span.Finish()
 
@@ -229,13 +216,12 @@ func (p *ImageClassificationPredictor) loadPredictor(ctx context.Context) error 
 	modelReader := bytes.NewReader(model)
 	p.inputLayer, err = p.GetInputLayerName(modelReader, "input_layer")
 	if err != nil {
-		return errors.Wrap(err, "failed to get the input layer name")
+		return errors.Wrap(err, "failed to get input layer name")
 	}
-	p.probabilitiesLayer, err = p.GetOutputLayerName(modelReader, "probabilities_layer")
+	p.masksLayer, err = p.GetOutputLayerName(modelReader, "masks_layer")
 	if err != nil {
-		return errors.Wrap(err, "failed to get the probabilities layer name")
+		return errors.Wrap(err, "failed to get the masks layer name")
 	}
-
 	// Create a session for inference over graph.
 	var sessionConfig tensorflow.ConfigProto
 	if p.Options.UsesGPU() {
@@ -276,7 +262,7 @@ func (p *ImageClassificationPredictor) loadPredictor(ctx context.Context) error 
 	return nil
 }
 
-func (p ImageClassificationPredictor) GetInputLayerName(reader io.Reader, layer string) (string, error) {
+func (p SemanticSegmentationPredictor) GetInputLayerName(reader io.Reader, layer string) (string, error) {
 	model := p.Model
 	modelInputs := model.GetInputs()
 	typeParameters := modelInputs[0].GetParameters()
@@ -301,7 +287,7 @@ func (p ImageClassificationPredictor) GetInputLayerName(reader io.Reader, layer 
 	return name, nil
 }
 
-func (p ImageClassificationPredictor) GetOutputLayerName(reader io.Reader, layer string) (string, error) {
+func (p SemanticSegmentationPredictor) GetOutputLayerName(reader io.Reader, layer string) (string, error) {
 	model := p.Model
 	modelOutput := model.GetOutput()
 	typeParameters := modelOutput.GetParameters()
@@ -324,7 +310,7 @@ func (p ImageClassificationPredictor) GetOutputLayerName(reader io.Reader, layer
 	return name, nil
 }
 
-func (p *ImageClassificationPredictor) runOptions() *proto.RunOptions {
+func (p *SemanticSegmentationPredictor) runOptions() *proto.RunOptions {
 	if p.TraceLevel() >= tracer.FRAMEWORK_TRACE {
 		return &proto.RunOptions{
 			TraceLevel: proto.RunOptions_SOFTWARE_TRACE,
@@ -334,7 +320,7 @@ func (p *ImageClassificationPredictor) runOptions() *proto.RunOptions {
 }
 
 // Predict ...
-func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interface{}, opts ...options.Option) error {
+func (p *SemanticSegmentationPredictor) Predict(ctx context.Context, data interface{}, opts ...options.Option) error {
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "predict")
 	defer span.Finish()
 
@@ -360,41 +346,36 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interfa
 			graph.Operation(p.inputLayer).Output(0): tensor,
 		},
 		[]tf.Output{
-			graph.Operation(p.probabilitiesLayer).Output(0),
+			graph.Operation(p.masksLayer).Output(0),
 		},
 		nil,
 		p.runOptions(),
 	)
 	sessionSpan.Finish()
-
 	if err != nil {
 		return errors.Wrapf(err, "failed to perform session.Run")
 	}
 
-	p.probabilities = fetches[0].Value()
-
+	p.masks = fetches[0].Value()
 	return nil
 }
 
 // ReadPredictedFeatures ...
-func (p *ImageClassificationPredictor) ReadPredictedFeatures(ctx context.Context) ([]dlframework.Features, error) {
+func (p *SemanticSegmentationPredictor) ReadPredictedFeatures(ctx context.Context) ([]dlframework.Features, error) {
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "read_predicted_features")
 	defer span.Finish()
 
-	e, ok := p.probabilities.([][]float32)
-	if !ok {
-		return nil, errors.New("output is not of type [][]float32")
-	}
+	masks := p.masks.([][][]int64)
 
-	return p.CreateClassificationFeatures(ctx, e, p.labels)
+	return p.CreateSemanticSegmentFeatures(ctx, masks, p.labels)
 }
 
-func (p *ImageClassificationPredictor) Reset(ctx context.Context) error {
+func (p *SemanticSegmentationPredictor) Reset(ctx context.Context) error {
 
 	return nil
 }
 
-func (p *ImageClassificationPredictor) Close() error {
+func (p *SemanticSegmentationPredictor) Close() error {
 	if p.tfSession != nil {
 		p.tfSession.Close()
 	}
@@ -402,14 +383,14 @@ func (p *ImageClassificationPredictor) Close() error {
 	return nil
 }
 
-func (p ImageClassificationPredictor) Modality() (dlframework.Modality, error) {
-	return dlframework.ImageClassificationModality, nil
+func (p SemanticSegmentationPredictor) Modality() (dlframework.Modality, error) {
+	return dlframework.ImageSemanticSegmentationModality, nil
 }
 
 func init() {
 	config.AfterInit(func() {
 		framework := tensorflow.FrameworkManifest
-		agent.AddPredictor(framework, &ImageClassificationPredictor{
+		agent.AddPredictor(framework, &SemanticSegmentationPredictor{
 			ImagePredictor: common.ImagePredictor{
 				Base: common.Base{
 					Framework: framework,
