@@ -47,8 +47,6 @@ export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/opt/tensorflow/lib
 
 You can test the installed TensorFlow C library using an [examle C program](https://www.tensorflow.org/install/lang_c#build).
 
-### Setting `LD_LIBRARY_PATH`
-
 To build the TensorFlow C library from source, refer to [TensorFlow in Go](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/go#building-the-tensorflow-c-library-from-source) .
 
 ### Go packages
@@ -63,7 +61,7 @@ go get -u -v ./...
 Or use [Dep](https://github.com/golang/dep).
 
 ```
-dep ensure
+dep ensure -v
 ```
 
 This installs the dependency in `vendor/`.
@@ -75,7 +73,7 @@ cd $GOPATH/src/github.com/rai-project/tensorflow
 go run tensorflow-agent/main.go -l -d -v
 ```
 
-## Notes on installing TensorFlow From Source
+## Notes on installing TensorFlow from source
 
 ### Install Bazel
 

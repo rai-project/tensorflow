@@ -38,6 +38,6 @@ clean-proto:
 
 clean: clean-models
 
-travis: install-deps glide-install generate
+travis: install-deps generate
 	echo "building..."
 	go build
