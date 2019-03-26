@@ -54,7 +54,7 @@ func TestImageEnhancementInference(t *testing.T) {
 	}
 
 	input := make([]*gotensor.Dense, batchSize)
-	imgFloats, err := normalizeImageHWC(img.(*types.RGBImage), []float32{127.5, 127.5, 127.5}, 0.5)
+	imgFloats, err := normalizeImageHWC(img.(*types.RGBImage), []float32{127.5, 127.5, 127.5}, 127.5)
 	if err != nil {
 		panic(err)
 	}

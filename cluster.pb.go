@@ -14,6 +14,12 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
+
 // Defines a single job in a TensorFlow cluster.
 type JobDef struct {
 	// The name of this job.
@@ -26,10 +32,38 @@ type JobDef struct {
 	Tasks map[int32]string `protobuf:"bytes,2,rep,name=tasks" json:"tasks,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 }
 
-func (m *JobDef) Reset()                    { *m = JobDef{} }
-func (m *JobDef) String() string            { return proto.CompactTextString(m) }
-func (*JobDef) ProtoMessage()               {}
-func (*JobDef) Descriptor() ([]byte, []int) { return fileDescriptorCluster, []int{0} }
+func (m *JobDef) Reset()         { *m = JobDef{} }
+func (m *JobDef) String() string { return proto.CompactTextString(m) }
+func (*JobDef) ProtoMessage()    {}
+func (*JobDef) Descriptor() ([]byte, []int) {
+	return fileDescriptor_cluster_f2f5fe1494bf3784, []int{0}
+}
+func (m *JobDef) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *JobDef) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_JobDef.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *JobDef) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_JobDef.Merge(dst, src)
+}
+func (m *JobDef) XXX_Size() int {
+	return m.Size()
+}
+func (m *JobDef) XXX_DiscardUnknown() {
+	xxx_messageInfo_JobDef.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_JobDef proto.InternalMessageInfo
 
 func (m *JobDef) GetName() string {
 	if m != nil {
@@ -51,10 +85,38 @@ type ClusterDef struct {
 	Job []*JobDef `protobuf:"bytes,1,rep,name=job" json:"job,omitempty"`
 }
 
-func (m *ClusterDef) Reset()                    { *m = ClusterDef{} }
-func (m *ClusterDef) String() string            { return proto.CompactTextString(m) }
-func (*ClusterDef) ProtoMessage()               {}
-func (*ClusterDef) Descriptor() ([]byte, []int) { return fileDescriptorCluster, []int{1} }
+func (m *ClusterDef) Reset()         { *m = ClusterDef{} }
+func (m *ClusterDef) String() string { return proto.CompactTextString(m) }
+func (*ClusterDef) ProtoMessage()    {}
+func (*ClusterDef) Descriptor() ([]byte, []int) {
+	return fileDescriptor_cluster_f2f5fe1494bf3784, []int{1}
+}
+func (m *ClusterDef) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ClusterDef) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ClusterDef.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *ClusterDef) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ClusterDef.Merge(dst, src)
+}
+func (m *ClusterDef) XXX_Size() int {
+	return m.Size()
+}
+func (m *ClusterDef) XXX_DiscardUnknown() {
+	xxx_messageInfo_ClusterDef.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ClusterDef proto.InternalMessageInfo
 
 func (m *ClusterDef) GetJob() []*JobDef {
 	if m != nil {
@@ -65,6 +127,7 @@ func (m *ClusterDef) GetJob() []*JobDef {
 
 func init() {
 	proto.RegisterType((*JobDef)(nil), "tensorflow.JobDef")
+	proto.RegisterMapType((map[int32]string)(nil), "tensorflow.JobDef.TasksEntry")
 	proto.RegisterType((*ClusterDef)(nil), "tensorflow.ClusterDef")
 }
 func (m *JobDef) Marshal() (dAtA []byte, err error) {
@@ -147,6 +210,9 @@ func encodeVarintCluster(dAtA []byte, offset int, v uint64) int {
 	return offset + 1
 }
 func (m *JobDef) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Name)
@@ -165,6 +231,9 @@ func (m *JobDef) Size() (n int) {
 }
 
 func (m *ClusterDef) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.Job) > 0 {
@@ -561,10 +630,10 @@ var (
 	ErrIntOverflowCluster   = fmt.Errorf("proto: integer overflow")
 )
 
-func init() { proto.RegisterFile("cluster.proto", fileDescriptorCluster) }
+func init() { proto.RegisterFile("cluster.proto", fileDescriptor_cluster_f2f5fe1494bf3784) }
 
-var fileDescriptorCluster = []byte{
-	// 233 bytes of a gzipped FileDescriptorProto
+var fileDescriptor_cluster_f2f5fe1494bf3784 = []byte{
+	// 242 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4d, 0xce, 0x29, 0x2d,
 	0x2e, 0x49, 0x2d, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x2a, 0x49, 0xcd, 0x2b, 0xce,
 	0x2f, 0x4a, 0xcb, 0xc9, 0x2f, 0x57, 0xea, 0x66, 0xe4, 0x62, 0xf3, 0xca, 0x4f, 0x72, 0x49, 0x4d,
@@ -575,9 +644,10 @@ var fileDescriptorCluster = []byte{
 	0x4a, 0xb0, 0xa9, 0xac, 0x41, 0x20, 0xa6, 0x90, 0x08, 0x17, 0x6b, 0x59, 0x62, 0x4e, 0x69, 0xaa,
 	0x04, 0x13, 0xd8, 0x26, 0x08, 0xc7, 0x8a, 0xc9, 0x82, 0x51, 0xc9, 0x88, 0x8b, 0xcb, 0x19, 0xe2,
 	0x54, 0x90, 0x83, 0x54, 0xb8, 0x98, 0xb3, 0xf2, 0x93, 0x24, 0x18, 0xc1, 0x56, 0x0b, 0x61, 0x5a,
-	0x1d, 0x04, 0x92, 0x76, 0x72, 0x38, 0xf1, 0x48, 0x8e, 0xf1, 0xc2, 0x23, 0x39, 0xc6, 0x07, 0x8f,
-	0xe4, 0x18, 0x27, 0x3c, 0x96, 0x63, 0xe0, 0x92, 0xca, 0x2f, 0x4a, 0x47, 0x56, 0x9d, 0x92, 0x59,
-	0x5c, 0x52, 0x54, 0x9a, 0x57, 0x92, 0x99, 0x9b, 0xea, 0xc4, 0x0b, 0x35, 0x3f, 0x00, 0x14, 0x12,
-	0xc5, 0x01, 0x8c, 0x3f, 0x18, 0x19, 0x93, 0xd8, 0xc0, 0xc1, 0x62, 0x0c, 0x08, 0x00, 0x00, 0xff,
-	0xff, 0xc1, 0x46, 0x99, 0x70, 0x27, 0x01, 0x00, 0x00,
+	0x1d, 0x04, 0x92, 0x76, 0xf2, 0x38, 0xf1, 0x48, 0x8e, 0xf1, 0xc2, 0x23, 0x39, 0xc6, 0x07, 0x8f,
+	0xe4, 0x18, 0x27, 0x3c, 0x96, 0x63, 0xb8, 0xf0, 0x58, 0x8e, 0xe1, 0xc6, 0x63, 0x39, 0x06, 0x2e,
+	0xa9, 0xfc, 0xa2, 0x74, 0x64, 0x5d, 0x29, 0x99, 0xc5, 0x25, 0x45, 0xa5, 0x79, 0x25, 0x99, 0xb9,
+	0xa9, 0x4e, 0xbc, 0x50, 0x7b, 0x02, 0x40, 0x21, 0x52, 0x1c, 0xc0, 0xf8, 0x83, 0x91, 0x31, 0x89,
+	0x0d, 0x1c, 0x3c, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x7f, 0x22, 0xf3, 0x39, 0x2f, 0x01,
+	0x00, 0x00,
 }

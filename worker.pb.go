@@ -6,9 +6,9 @@ package tensorflow
 import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import google_protobuf "github.com/gogo/protobuf/types"
+import types "github.com/gogo/protobuf/types"
 
-import binary "encoding/binary"
+import encoding_binary "encoding/binary"
 
 import io "io"
 
@@ -17,22 +17,84 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
+
 type GetStatusRequest struct {
 }
 
-func (m *GetStatusRequest) Reset()                    { *m = GetStatusRequest{} }
-func (m *GetStatusRequest) String() string            { return proto.CompactTextString(m) }
-func (*GetStatusRequest) ProtoMessage()               {}
-func (*GetStatusRequest) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{0} }
+func (m *GetStatusRequest) Reset()         { *m = GetStatusRequest{} }
+func (m *GetStatusRequest) String() string { return proto.CompactTextString(m) }
+func (*GetStatusRequest) ProtoMessage()    {}
+func (*GetStatusRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{0}
+}
+func (m *GetStatusRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetStatusRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetStatusRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *GetStatusRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetStatusRequest.Merge(dst, src)
+}
+func (m *GetStatusRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetStatusRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetStatusRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetStatusRequest proto.InternalMessageInfo
 
 type GetStatusResponse struct {
 	DeviceAttributes []*DeviceAttributes `protobuf:"bytes,1,rep,name=device_attributes,json=deviceAttributes" json:"device_attributes,omitempty"`
 }
 
-func (m *GetStatusResponse) Reset()                    { *m = GetStatusResponse{} }
-func (m *GetStatusResponse) String() string            { return proto.CompactTextString(m) }
-func (*GetStatusResponse) ProtoMessage()               {}
-func (*GetStatusResponse) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{1} }
+func (m *GetStatusResponse) Reset()         { *m = GetStatusResponse{} }
+func (m *GetStatusResponse) String() string { return proto.CompactTextString(m) }
+func (*GetStatusResponse) ProtoMessage()    {}
+func (*GetStatusResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{1}
+}
+func (m *GetStatusResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetStatusResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetStatusResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *GetStatusResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetStatusResponse.Merge(dst, src)
+}
+func (m *GetStatusResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetStatusResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetStatusResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetStatusResponse proto.InternalMessageInfo
 
 func (m *GetStatusResponse) GetDeviceAttributes() []*DeviceAttributes {
 	if m != nil {
@@ -48,10 +110,38 @@ type CreateWorkerSessionRequest struct {
 	ServerDef *ServerDef `protobuf:"bytes,2,opt,name=server_def,json=serverDef" json:"server_def,omitempty"`
 }
 
-func (m *CreateWorkerSessionRequest) Reset()                    { *m = CreateWorkerSessionRequest{} }
-func (m *CreateWorkerSessionRequest) String() string            { return proto.CompactTextString(m) }
-func (*CreateWorkerSessionRequest) ProtoMessage()               {}
-func (*CreateWorkerSessionRequest) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{2} }
+func (m *CreateWorkerSessionRequest) Reset()         { *m = CreateWorkerSessionRequest{} }
+func (m *CreateWorkerSessionRequest) String() string { return proto.CompactTextString(m) }
+func (*CreateWorkerSessionRequest) ProtoMessage()    {}
+func (*CreateWorkerSessionRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{2}
+}
+func (m *CreateWorkerSessionRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CreateWorkerSessionRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CreateWorkerSessionRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *CreateWorkerSessionRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateWorkerSessionRequest.Merge(dst, src)
+}
+func (m *CreateWorkerSessionRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *CreateWorkerSessionRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateWorkerSessionRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateWorkerSessionRequest proto.InternalMessageInfo
 
 func (m *CreateWorkerSessionRequest) GetSessionHandle() string {
 	if m != nil {
@@ -74,8 +164,34 @@ func (m *CreateWorkerSessionResponse) Reset()         { *m = CreateWorkerSession
 func (m *CreateWorkerSessionResponse) String() string { return proto.CompactTextString(m) }
 func (*CreateWorkerSessionResponse) ProtoMessage()    {}
 func (*CreateWorkerSessionResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptorWorker, []int{3}
+	return fileDescriptor_worker_edda5e1505487b5c, []int{3}
 }
+func (m *CreateWorkerSessionResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CreateWorkerSessionResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CreateWorkerSessionResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *CreateWorkerSessionResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateWorkerSessionResponse.Merge(dst, src)
+}
+func (m *CreateWorkerSessionResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *CreateWorkerSessionResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateWorkerSessionResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateWorkerSessionResponse proto.InternalMessageInfo
 
 type RegisterGraphRequest struct {
 	// Subgraphs are scoped within one session.
@@ -86,17 +202,45 @@ type RegisterGraphRequest struct {
 	// True iff the graph (before partitioning) contains control flow nodes.
 	//
 	// As of 01/11/2015, this is no longer set by clients.
-	HasControlFlow bool `protobuf:"varint,3,opt,name=has_control_flow,json=hasControlFlow,proto3" json:"has_control_flow,omitempty"`
+	HasControlFlow bool `protobuf:"varint,3,opt,name=has_control_flow,json=hasControlFlow,proto3" json:"has_control_flow,omitempty"` // Deprecated: Do not use.
 	// Configuration options for the session in which this graph was created.
 	GraphOptions *GraphOptions `protobuf:"bytes,4,opt,name=graph_options,json=graphOptions" json:"graph_options,omitempty"`
 	// Field(s) used by TensorFlow Debugger (tfdbg).
 	DebugOptions *DebugOptions `protobuf:"bytes,5,opt,name=debug_options,json=debugOptions" json:"debug_options,omitempty"`
 }
 
-func (m *RegisterGraphRequest) Reset()                    { *m = RegisterGraphRequest{} }
-func (m *RegisterGraphRequest) String() string            { return proto.CompactTextString(m) }
-func (*RegisterGraphRequest) ProtoMessage()               {}
-func (*RegisterGraphRequest) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{4} }
+func (m *RegisterGraphRequest) Reset()         { *m = RegisterGraphRequest{} }
+func (m *RegisterGraphRequest) String() string { return proto.CompactTextString(m) }
+func (*RegisterGraphRequest) ProtoMessage()    {}
+func (*RegisterGraphRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{4}
+}
+func (m *RegisterGraphRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *RegisterGraphRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_RegisterGraphRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *RegisterGraphRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RegisterGraphRequest.Merge(dst, src)
+}
+func (m *RegisterGraphRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *RegisterGraphRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_RegisterGraphRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RegisterGraphRequest proto.InternalMessageInfo
 
 func (m *RegisterGraphRequest) GetSessionHandle() string {
 	if m != nil {
@@ -112,6 +256,7 @@ func (m *RegisterGraphRequest) GetGraphDef() *GraphDef {
 	return nil
 }
 
+// Deprecated: Do not use.
 func (m *RegisterGraphRequest) GetHasControlFlow() bool {
 	if m != nil {
 		return m.HasControlFlow
@@ -140,10 +285,38 @@ type RegisterGraphResponse struct {
 	GraphHandle string `protobuf:"bytes,1,opt,name=graph_handle,json=graphHandle,proto3" json:"graph_handle,omitempty"`
 }
 
-func (m *RegisterGraphResponse) Reset()                    { *m = RegisterGraphResponse{} }
-func (m *RegisterGraphResponse) String() string            { return proto.CompactTextString(m) }
-func (*RegisterGraphResponse) ProtoMessage()               {}
-func (*RegisterGraphResponse) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{5} }
+func (m *RegisterGraphResponse) Reset()         { *m = RegisterGraphResponse{} }
+func (m *RegisterGraphResponse) String() string { return proto.CompactTextString(m) }
+func (*RegisterGraphResponse) ProtoMessage()    {}
+func (*RegisterGraphResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{5}
+}
+func (m *RegisterGraphResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *RegisterGraphResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_RegisterGraphResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *RegisterGraphResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RegisterGraphResponse.Merge(dst, src)
+}
+func (m *RegisterGraphResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *RegisterGraphResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_RegisterGraphResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RegisterGraphResponse proto.InternalMessageInfo
 
 func (m *RegisterGraphResponse) GetGraphHandle() string {
 	if m != nil {
@@ -161,10 +334,38 @@ type DeregisterGraphRequest struct {
 	GraphHandle string `protobuf:"bytes,1,opt,name=graph_handle,json=graphHandle,proto3" json:"graph_handle,omitempty"`
 }
 
-func (m *DeregisterGraphRequest) Reset()                    { *m = DeregisterGraphRequest{} }
-func (m *DeregisterGraphRequest) String() string            { return proto.CompactTextString(m) }
-func (*DeregisterGraphRequest) ProtoMessage()               {}
-func (*DeregisterGraphRequest) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{6} }
+func (m *DeregisterGraphRequest) Reset()         { *m = DeregisterGraphRequest{} }
+func (m *DeregisterGraphRequest) String() string { return proto.CompactTextString(m) }
+func (*DeregisterGraphRequest) ProtoMessage()    {}
+func (*DeregisterGraphRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{6}
+}
+func (m *DeregisterGraphRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *DeregisterGraphRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_DeregisterGraphRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *DeregisterGraphRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeregisterGraphRequest.Merge(dst, src)
+}
+func (m *DeregisterGraphRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *DeregisterGraphRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeregisterGraphRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeregisterGraphRequest proto.InternalMessageInfo
 
 func (m *DeregisterGraphRequest) GetSessionHandle() string {
 	if m != nil {
@@ -183,10 +384,38 @@ func (m *DeregisterGraphRequest) GetGraphHandle() string {
 type DeregisterGraphResponse struct {
 }
 
-func (m *DeregisterGraphResponse) Reset()                    { *m = DeregisterGraphResponse{} }
-func (m *DeregisterGraphResponse) String() string            { return proto.CompactTextString(m) }
-func (*DeregisterGraphResponse) ProtoMessage()               {}
-func (*DeregisterGraphResponse) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{7} }
+func (m *DeregisterGraphResponse) Reset()         { *m = DeregisterGraphResponse{} }
+func (m *DeregisterGraphResponse) String() string { return proto.CompactTextString(m) }
+func (*DeregisterGraphResponse) ProtoMessage()    {}
+func (*DeregisterGraphResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{7}
+}
+func (m *DeregisterGraphResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *DeregisterGraphResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_DeregisterGraphResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *DeregisterGraphResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeregisterGraphResponse.Merge(dst, src)
+}
+func (m *DeregisterGraphResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *DeregisterGraphResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeregisterGraphResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeregisterGraphResponse proto.InternalMessageInfo
 
 type CleanupAllRequest struct {
 	// A list of container names.
@@ -199,10 +428,38 @@ type CleanupAllRequest struct {
 	Container []string `protobuf:"bytes,1,rep,name=container" json:"container,omitempty"`
 }
 
-func (m *CleanupAllRequest) Reset()                    { *m = CleanupAllRequest{} }
-func (m *CleanupAllRequest) String() string            { return proto.CompactTextString(m) }
-func (*CleanupAllRequest) ProtoMessage()               {}
-func (*CleanupAllRequest) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{8} }
+func (m *CleanupAllRequest) Reset()         { *m = CleanupAllRequest{} }
+func (m *CleanupAllRequest) String() string { return proto.CompactTextString(m) }
+func (*CleanupAllRequest) ProtoMessage()    {}
+func (*CleanupAllRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{8}
+}
+func (m *CleanupAllRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CleanupAllRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CleanupAllRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *CleanupAllRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CleanupAllRequest.Merge(dst, src)
+}
+func (m *CleanupAllRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *CleanupAllRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CleanupAllRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CleanupAllRequest proto.InternalMessageInfo
 
 func (m *CleanupAllRequest) GetContainer() []string {
 	if m != nil {
@@ -214,10 +471,38 @@ func (m *CleanupAllRequest) GetContainer() []string {
 type CleanupAllResponse struct {
 }
 
-func (m *CleanupAllResponse) Reset()                    { *m = CleanupAllResponse{} }
-func (m *CleanupAllResponse) String() string            { return proto.CompactTextString(m) }
-func (*CleanupAllResponse) ProtoMessage()               {}
-func (*CleanupAllResponse) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{9} }
+func (m *CleanupAllResponse) Reset()         { *m = CleanupAllResponse{} }
+func (m *CleanupAllResponse) String() string { return proto.CompactTextString(m) }
+func (*CleanupAllResponse) ProtoMessage()    {}
+func (*CleanupAllResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{9}
+}
+func (m *CleanupAllResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CleanupAllResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CleanupAllResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *CleanupAllResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CleanupAllResponse.Merge(dst, src)
+}
+func (m *CleanupAllResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *CleanupAllResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_CleanupAllResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CleanupAllResponse proto.InternalMessageInfo
 
 // Options specific to the execution of a single step.
 type ExecutorOpts struct {
@@ -225,10 +510,38 @@ type ExecutorOpts struct {
 	RecordTimeline bool `protobuf:"varint,3,opt,name=record_timeline,json=recordTimeline,proto3" json:"record_timeline,omitempty"`
 }
 
-func (m *ExecutorOpts) Reset()                    { *m = ExecutorOpts{} }
-func (m *ExecutorOpts) String() string            { return proto.CompactTextString(m) }
-func (*ExecutorOpts) ProtoMessage()               {}
-func (*ExecutorOpts) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{10} }
+func (m *ExecutorOpts) Reset()         { *m = ExecutorOpts{} }
+func (m *ExecutorOpts) String() string { return proto.CompactTextString(m) }
+func (*ExecutorOpts) ProtoMessage()    {}
+func (*ExecutorOpts) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{10}
+}
+func (m *ExecutorOpts) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ExecutorOpts) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ExecutorOpts.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *ExecutorOpts) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ExecutorOpts.Merge(dst, src)
+}
+func (m *ExecutorOpts) XXX_Size() int {
+	return m.Size()
+}
+func (m *ExecutorOpts) XXX_DiscardUnknown() {
+	xxx_messageInfo_ExecutorOpts.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ExecutorOpts proto.InternalMessageInfo
 
 func (m *ExecutorOpts) GetRecordCosts() bool {
 	if m != nil {
@@ -274,10 +587,38 @@ type RunGraphRequest struct {
 	IsLastPartialRun bool `protobuf:"varint,7,opt,name=is_last_partial_run,json=isLastPartialRun,proto3" json:"is_last_partial_run,omitempty"`
 }
 
-func (m *RunGraphRequest) Reset()                    { *m = RunGraphRequest{} }
-func (m *RunGraphRequest) String() string            { return proto.CompactTextString(m) }
-func (*RunGraphRequest) ProtoMessage()               {}
-func (*RunGraphRequest) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{11} }
+func (m *RunGraphRequest) Reset()         { *m = RunGraphRequest{} }
+func (m *RunGraphRequest) String() string { return proto.CompactTextString(m) }
+func (*RunGraphRequest) ProtoMessage()    {}
+func (*RunGraphRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{11}
+}
+func (m *RunGraphRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *RunGraphRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_RunGraphRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *RunGraphRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RunGraphRequest.Merge(dst, src)
+}
+func (m *RunGraphRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *RunGraphRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_RunGraphRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RunGraphRequest proto.InternalMessageInfo
 
 func (m *RunGraphRequest) GetSessionHandle() string {
 	if m != nil {
@@ -345,10 +686,38 @@ type RunGraphResponse struct {
 	CostGraph *CostGraphDef `protobuf:"bytes,3,opt,name=cost_graph,json=costGraph" json:"cost_graph,omitempty"`
 }
 
-func (m *RunGraphResponse) Reset()                    { *m = RunGraphResponse{} }
-func (m *RunGraphResponse) String() string            { return proto.CompactTextString(m) }
-func (*RunGraphResponse) ProtoMessage()               {}
-func (*RunGraphResponse) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{12} }
+func (m *RunGraphResponse) Reset()         { *m = RunGraphResponse{} }
+func (m *RunGraphResponse) String() string { return proto.CompactTextString(m) }
+func (*RunGraphResponse) ProtoMessage()    {}
+func (*RunGraphResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{12}
+}
+func (m *RunGraphResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *RunGraphResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_RunGraphResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *RunGraphResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RunGraphResponse.Merge(dst, src)
+}
+func (m *RunGraphResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *RunGraphResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_RunGraphResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RunGraphResponse proto.InternalMessageInfo
 
 func (m *RunGraphResponse) GetRecv() []*NamedTensorProto {
 	if m != nil {
@@ -375,10 +744,38 @@ type CleanupGraphRequest struct {
 	StepId int64 `protobuf:"varint,1,opt,name=step_id,json=stepId,proto3" json:"step_id,omitempty"`
 }
 
-func (m *CleanupGraphRequest) Reset()                    { *m = CleanupGraphRequest{} }
-func (m *CleanupGraphRequest) String() string            { return proto.CompactTextString(m) }
-func (*CleanupGraphRequest) ProtoMessage()               {}
-func (*CleanupGraphRequest) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{13} }
+func (m *CleanupGraphRequest) Reset()         { *m = CleanupGraphRequest{} }
+func (m *CleanupGraphRequest) String() string { return proto.CompactTextString(m) }
+func (*CleanupGraphRequest) ProtoMessage()    {}
+func (*CleanupGraphRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{13}
+}
+func (m *CleanupGraphRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CleanupGraphRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CleanupGraphRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *CleanupGraphRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CleanupGraphRequest.Merge(dst, src)
+}
+func (m *CleanupGraphRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *CleanupGraphRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CleanupGraphRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CleanupGraphRequest proto.InternalMessageInfo
 
 func (m *CleanupGraphRequest) GetStepId() int64 {
 	if m != nil {
@@ -390,10 +787,38 @@ func (m *CleanupGraphRequest) GetStepId() int64 {
 type CleanupGraphResponse struct {
 }
 
-func (m *CleanupGraphResponse) Reset()                    { *m = CleanupGraphResponse{} }
-func (m *CleanupGraphResponse) String() string            { return proto.CompactTextString(m) }
-func (*CleanupGraphResponse) ProtoMessage()               {}
-func (*CleanupGraphResponse) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{14} }
+func (m *CleanupGraphResponse) Reset()         { *m = CleanupGraphResponse{} }
+func (m *CleanupGraphResponse) String() string { return proto.CompactTextString(m) }
+func (*CleanupGraphResponse) ProtoMessage()    {}
+func (*CleanupGraphResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{14}
+}
+func (m *CleanupGraphResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CleanupGraphResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CleanupGraphResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *CleanupGraphResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CleanupGraphResponse.Merge(dst, src)
+}
+func (m *CleanupGraphResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *CleanupGraphResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_CleanupGraphResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CleanupGraphResponse proto.InternalMessageInfo
 
 type RecvTensorRequest struct {
 	// The step in which the tensor will be produced.
@@ -411,13 +836,41 @@ type RecvTensorRequest struct {
 	// Optional information on server-side device locality.
 	ServerLocality *DeviceLocality `protobuf:"bytes,5,opt,name=server_locality,json=serverLocality" json:"server_locality,omitempty"`
 	// Optional information needed by the RPC subsystem.
-	TransportOptions *google_protobuf.Any `protobuf:"bytes,6,opt,name=transport_options,json=transportOptions" json:"transport_options,omitempty"`
+	TransportOptions *types.Any `protobuf:"bytes,6,opt,name=transport_options,json=transportOptions" json:"transport_options,omitempty"`
 }
 
-func (m *RecvTensorRequest) Reset()                    { *m = RecvTensorRequest{} }
-func (m *RecvTensorRequest) String() string            { return proto.CompactTextString(m) }
-func (*RecvTensorRequest) ProtoMessage()               {}
-func (*RecvTensorRequest) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{15} }
+func (m *RecvTensorRequest) Reset()         { *m = RecvTensorRequest{} }
+func (m *RecvTensorRequest) String() string { return proto.CompactTextString(m) }
+func (*RecvTensorRequest) ProtoMessage()    {}
+func (*RecvTensorRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{15}
+}
+func (m *RecvTensorRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *RecvTensorRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_RecvTensorRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *RecvTensorRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RecvTensorRequest.Merge(dst, src)
+}
+func (m *RecvTensorRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *RecvTensorRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_RecvTensorRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RecvTensorRequest proto.InternalMessageInfo
 
 func (m *RecvTensorRequest) GetStepId() int64 {
 	if m != nil {
@@ -454,7 +907,7 @@ func (m *RecvTensorRequest) GetServerLocality() *DeviceLocality {
 	return nil
 }
 
-func (m *RecvTensorRequest) GetTransportOptions() *google_protobuf.Any {
+func (m *RecvTensorRequest) GetTransportOptions() *types.Any {
 	if m != nil {
 		return m.TransportOptions
 	}
@@ -471,13 +924,41 @@ type RecvTensorResponse struct {
 	SendStartMicros int64 `protobuf:"varint,3,opt,name=send_start_micros,json=sendStartMicros,proto3" json:"send_start_micros,omitempty"`
 	// Optional additional information about how to receive the tensor,
 	// e.g. in the event that `RecvTensorRequest.dma_ok` was true.
-	TransportOptions *google_protobuf.Any `protobuf:"bytes,4,opt,name=transport_options,json=transportOptions" json:"transport_options,omitempty"`
+	TransportOptions *types.Any `protobuf:"bytes,4,opt,name=transport_options,json=transportOptions" json:"transport_options,omitempty"`
 }
 
-func (m *RecvTensorResponse) Reset()                    { *m = RecvTensorResponse{} }
-func (m *RecvTensorResponse) String() string            { return proto.CompactTextString(m) }
-func (*RecvTensorResponse) ProtoMessage()               {}
-func (*RecvTensorResponse) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{16} }
+func (m *RecvTensorResponse) Reset()         { *m = RecvTensorResponse{} }
+func (m *RecvTensorResponse) String() string { return proto.CompactTextString(m) }
+func (*RecvTensorResponse) ProtoMessage()    {}
+func (*RecvTensorResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{16}
+}
+func (m *RecvTensorResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *RecvTensorResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_RecvTensorResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *RecvTensorResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RecvTensorResponse.Merge(dst, src)
+}
+func (m *RecvTensorResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *RecvTensorResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_RecvTensorResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RecvTensorResponse proto.InternalMessageInfo
 
 func (m *RecvTensorResponse) GetTensor() *TensorProto {
 	if m != nil {
@@ -500,7 +981,7 @@ func (m *RecvTensorResponse) GetSendStartMicros() int64 {
 	return 0
 }
 
-func (m *RecvTensorResponse) GetTransportOptions() *google_protobuf.Any {
+func (m *RecvTensorResponse) GetTransportOptions() *types.Any {
 	if m != nil {
 		return m.TransportOptions
 	}
@@ -520,10 +1001,38 @@ type LoggingRequest struct {
 	FetchStepId []int64 `protobuf:"varint,3,rep,packed,name=fetch_step_id,json=fetchStepId" json:"fetch_step_id,omitempty"`
 }
 
-func (m *LoggingRequest) Reset()                    { *m = LoggingRequest{} }
-func (m *LoggingRequest) String() string            { return proto.CompactTextString(m) }
-func (*LoggingRequest) ProtoMessage()               {}
-func (*LoggingRequest) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{17} }
+func (m *LoggingRequest) Reset()         { *m = LoggingRequest{} }
+func (m *LoggingRequest) String() string { return proto.CompactTextString(m) }
+func (*LoggingRequest) ProtoMessage()    {}
+func (*LoggingRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{17}
+}
+func (m *LoggingRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *LoggingRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_LoggingRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *LoggingRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LoggingRequest.Merge(dst, src)
+}
+func (m *LoggingRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *LoggingRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_LoggingRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_LoggingRequest proto.InternalMessageInfo
 
 func (m *LoggingRequest) GetRpcLogging() bool {
 	if m != nil {
@@ -551,10 +1060,38 @@ type LabeledStepStats struct {
 	StepStats *StepStats `protobuf:"bytes,2,opt,name=step_stats,json=stepStats" json:"step_stats,omitempty"`
 }
 
-func (m *LabeledStepStats) Reset()                    { *m = LabeledStepStats{} }
-func (m *LabeledStepStats) String() string            { return proto.CompactTextString(m) }
-func (*LabeledStepStats) ProtoMessage()               {}
-func (*LabeledStepStats) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{18} }
+func (m *LabeledStepStats) Reset()         { *m = LabeledStepStats{} }
+func (m *LabeledStepStats) String() string { return proto.CompactTextString(m) }
+func (*LabeledStepStats) ProtoMessage()    {}
+func (*LabeledStepStats) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{18}
+}
+func (m *LabeledStepStats) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *LabeledStepStats) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_LabeledStepStats.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *LabeledStepStats) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LabeledStepStats.Merge(dst, src)
+}
+func (m *LabeledStepStats) XXX_Size() int {
+	return m.Size()
+}
+func (m *LabeledStepStats) XXX_DiscardUnknown() {
+	xxx_messageInfo_LabeledStepStats.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_LabeledStepStats proto.InternalMessageInfo
 
 func (m *LabeledStepStats) GetStepId() int64 {
 	if m != nil {
@@ -574,10 +1111,38 @@ type LoggingResponse struct {
 	Step []*LabeledStepStats `protobuf:"bytes,1,rep,name=step" json:"step,omitempty"`
 }
 
-func (m *LoggingResponse) Reset()                    { *m = LoggingResponse{} }
-func (m *LoggingResponse) String() string            { return proto.CompactTextString(m) }
-func (*LoggingResponse) ProtoMessage()               {}
-func (*LoggingResponse) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{19} }
+func (m *LoggingResponse) Reset()         { *m = LoggingResponse{} }
+func (m *LoggingResponse) String() string { return proto.CompactTextString(m) }
+func (*LoggingResponse) ProtoMessage()    {}
+func (*LoggingResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{19}
+}
+func (m *LoggingResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *LoggingResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_LoggingResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *LoggingResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LoggingResponse.Merge(dst, src)
+}
+func (m *LoggingResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *LoggingResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_LoggingResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_LoggingResponse proto.InternalMessageInfo
 
 func (m *LoggingResponse) GetStep() []*LabeledStepStats {
 	if m != nil {
@@ -603,10 +1168,38 @@ type TraceOpts struct {
 	UseSampleProfiler bool `protobuf:"varint,6,opt,name=use_sample_profiler,json=useSampleProfiler,proto3" json:"use_sample_profiler,omitempty"`
 }
 
-func (m *TraceOpts) Reset()                    { *m = TraceOpts{} }
-func (m *TraceOpts) String() string            { return proto.CompactTextString(m) }
-func (*TraceOpts) ProtoMessage()               {}
-func (*TraceOpts) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{20} }
+func (m *TraceOpts) Reset()         { *m = TraceOpts{} }
+func (m *TraceOpts) String() string { return proto.CompactTextString(m) }
+func (*TraceOpts) ProtoMessage()    {}
+func (*TraceOpts) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{20}
+}
+func (m *TraceOpts) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *TraceOpts) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_TraceOpts.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *TraceOpts) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TraceOpts.Merge(dst, src)
+}
+func (m *TraceOpts) XXX_Size() int {
+	return m.Size()
+}
+func (m *TraceOpts) XXX_DiscardUnknown() {
+	xxx_messageInfo_TraceOpts.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TraceOpts proto.InternalMessageInfo
 
 func (m *TraceOpts) GetDuration() float64 {
 	if m != nil {
@@ -655,10 +1248,38 @@ type TracingRequest struct {
 	Options *TraceOpts `protobuf:"bytes,1,opt,name=options" json:"options,omitempty"`
 }
 
-func (m *TracingRequest) Reset()                    { *m = TracingRequest{} }
-func (m *TracingRequest) String() string            { return proto.CompactTextString(m) }
-func (*TracingRequest) ProtoMessage()               {}
-func (*TracingRequest) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{21} }
+func (m *TracingRequest) Reset()         { *m = TracingRequest{} }
+func (m *TracingRequest) String() string { return proto.CompactTextString(m) }
+func (*TracingRequest) ProtoMessage()    {}
+func (*TracingRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{21}
+}
+func (m *TracingRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *TracingRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_TracingRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *TracingRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TracingRequest.Merge(dst, src)
+}
+func (m *TracingRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *TracingRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_TracingRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TracingRequest proto.InternalMessageInfo
 
 func (m *TracingRequest) GetOptions() *TraceOpts {
 	if m != nil {
@@ -670,10 +1291,38 @@ func (m *TracingRequest) GetOptions() *TraceOpts {
 type TracingResponse struct {
 }
 
-func (m *TracingResponse) Reset()                    { *m = TracingResponse{} }
-func (m *TracingResponse) String() string            { return proto.CompactTextString(m) }
-func (*TracingResponse) ProtoMessage()               {}
-func (*TracingResponse) Descriptor() ([]byte, []int) { return fileDescriptorWorker, []int{22} }
+func (m *TracingResponse) Reset()         { *m = TracingResponse{} }
+func (m *TracingResponse) String() string { return proto.CompactTextString(m) }
+func (*TracingResponse) ProtoMessage()    {}
+func (*TracingResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_worker_edda5e1505487b5c, []int{22}
+}
+func (m *TracingResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *TracingResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_TracingResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *TracingResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TracingResponse.Merge(dst, src)
+}
+func (m *TracingResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *TracingResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_TracingResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TracingResponse proto.InternalMessageInfo
 
 func init() {
 	proto.RegisterType((*GetStatusRequest)(nil), "tensorflow.GetStatusRequest")
@@ -1467,7 +2116,7 @@ func (m *TraceOpts) MarshalTo(dAtA []byte) (int, error) {
 	if m.Duration != 0 {
 		dAtA[i] = 0x9
 		i++
-		binary.LittleEndian.PutUint64(dAtA[i:], uint64(math.Float64bits(float64(m.Duration))))
+		encoding_binary.LittleEndian.PutUint64(dAtA[i:], uint64(math.Float64bits(float64(m.Duration))))
 		i += 8
 	}
 	if m.UseStepProfiler {
@@ -1579,12 +2228,18 @@ func encodeVarintWorker(dAtA []byte, offset int, v uint64) int {
 	return offset + 1
 }
 func (m *GetStatusRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	return n
 }
 
 func (m *GetStatusResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.DeviceAttributes) > 0 {
@@ -1597,6 +2252,9 @@ func (m *GetStatusResponse) Size() (n int) {
 }
 
 func (m *CreateWorkerSessionRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.SessionHandle)
@@ -1611,12 +2269,18 @@ func (m *CreateWorkerSessionRequest) Size() (n int) {
 }
 
 func (m *CreateWorkerSessionResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	return n
 }
 
 func (m *RegisterGraphRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.SessionHandle)
@@ -1642,6 +2306,9 @@ func (m *RegisterGraphRequest) Size() (n int) {
 }
 
 func (m *RegisterGraphResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.GraphHandle)
@@ -1652,6 +2319,9 @@ func (m *RegisterGraphResponse) Size() (n int) {
 }
 
 func (m *DeregisterGraphRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.GraphHandle)
@@ -1666,12 +2336,18 @@ func (m *DeregisterGraphRequest) Size() (n int) {
 }
 
 func (m *DeregisterGraphResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	return n
 }
 
 func (m *CleanupAllRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.Container) > 0 {
@@ -1684,12 +2360,18 @@ func (m *CleanupAllRequest) Size() (n int) {
 }
 
 func (m *CleanupAllResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	return n
 }
 
 func (m *ExecutorOpts) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.RecordCosts {
@@ -1702,6 +2384,9 @@ func (m *ExecutorOpts) Size() (n int) {
 }
 
 func (m *RunGraphRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.GraphHandle)
@@ -1741,6 +2426,9 @@ func (m *RunGraphRequest) Size() (n int) {
 }
 
 func (m *RunGraphResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.Recv) > 0 {
@@ -1761,6 +2449,9 @@ func (m *RunGraphResponse) Size() (n int) {
 }
 
 func (m *CleanupGraphRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.StepId != 0 {
@@ -1770,12 +2461,18 @@ func (m *CleanupGraphRequest) Size() (n int) {
 }
 
 func (m *CleanupGraphResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	return n
 }
 
 func (m *RecvTensorRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.StepId != 0 {
@@ -1804,6 +2501,9 @@ func (m *RecvTensorRequest) Size() (n int) {
 }
 
 func (m *RecvTensorResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.Tensor != nil {
@@ -1824,6 +2524,9 @@ func (m *RecvTensorResponse) Size() (n int) {
 }
 
 func (m *LoggingRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.RpcLogging {
@@ -1843,6 +2546,9 @@ func (m *LoggingRequest) Size() (n int) {
 }
 
 func (m *LabeledStepStats) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.StepId != 0 {
@@ -1856,6 +2562,9 @@ func (m *LabeledStepStats) Size() (n int) {
 }
 
 func (m *LoggingResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.Step) > 0 {
@@ -1868,6 +2577,9 @@ func (m *LoggingResponse) Size() (n int) {
 }
 
 func (m *TraceOpts) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.Duration != 0 {
@@ -1892,6 +2604,9 @@ func (m *TraceOpts) Size() (n int) {
 }
 
 func (m *TracingRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.Options != nil {
@@ -1902,6 +2617,9 @@ func (m *TracingRequest) Size() (n int) {
 }
 
 func (m *TracingResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	return n
@@ -3583,7 +4301,7 @@ func (m *RecvTensorRequest) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if m.TransportOptions == nil {
-				m.TransportOptions = &google_protobuf.Any{}
+				m.TransportOptions = &types.Any{}
 			}
 			if err := m.TransportOptions.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
@@ -3738,7 +4456,7 @@ func (m *RecvTensorResponse) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if m.TransportOptions == nil {
-				m.TransportOptions = &google_protobuf.Any{}
+				m.TransportOptions = &types.Any{}
 			}
 			if err := m.TransportOptions.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
@@ -3874,6 +4592,17 @@ func (m *LoggingRequest) Unmarshal(dAtA []byte) error {
 				postIndex := iNdEx + packedLen
 				if postIndex > l {
 					return io.ErrUnexpectedEOF
+				}
+				var elementCount int
+				var count int
+				for _, integer := range dAtA {
+					if integer < 128 {
+						count++
+					}
+				}
+				elementCount = count
+				if elementCount != 0 && len(m.FetchStepId) == 0 {
+					m.FetchStepId = make([]int64, 0, elementCount)
 				}
 				for iNdEx < postIndex {
 					var v int64
@@ -4137,7 +4866,7 @@ func (m *TraceOpts) Unmarshal(dAtA []byte) error {
 			if (iNdEx + 8) > l {
 				return io.ErrUnexpectedEOF
 			}
-			v = uint64(binary.LittleEndian.Uint64(dAtA[iNdEx:]))
+			v = uint64(encoding_binary.LittleEndian.Uint64(dAtA[iNdEx:]))
 			iNdEx += 8
 			m.Duration = float64(math.Float64frombits(v))
 		case 2:
@@ -4499,84 +5228,85 @@ var (
 	ErrIntOverflowWorker   = fmt.Errorf("proto: integer overflow")
 )
 
-func init() { proto.RegisterFile("worker.proto", fileDescriptorWorker) }
+func init() { proto.RegisterFile("worker.proto", fileDescriptor_worker_edda5e1505487b5c) }
 
-var fileDescriptorWorker = []byte{
-	// 1208 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x56, 0x5f, 0x6f, 0x1b, 0x45,
-	0x10, 0xe7, 0x9c, 0xc4, 0xb1, 0xc7, 0x69, 0x6c, 0x5f, 0x93, 0xc6, 0x35, 0x6d, 0x08, 0x27, 0x21,
-	0x22, 0x04, 0x4e, 0x1b, 0x40, 0x48, 0x48, 0x08, 0xa5, 0x4e, 0x29, 0x55, 0x03, 0x8d, 0xd6, 0x95,
-	0x90, 0x78, 0xe0, 0xb4, 0xbe, 0x1b, 0x5f, 0x4e, 0x3e, 0xdf, 0x1e, 0xbb, 0x7b, 0x69, 0xcd, 0xa7,
-	0x80, 0x77, 0xbe, 0x05, 0x0f, 0x7c, 0x03, 0xc4, 0x0b, 0x12, 0x1f, 0x01, 0x95, 0x2f, 0xc1, 0x23,
-	0xda, 0x3f, 0x77, 0xbe, 0xc4, 0x46, 0x55, 0x79, 0xf3, 0xcc, 0xfe, 0x66, 0x76, 0xf6, 0x37, 0xbf,
-	0x99, 0x33, 0x6c, 0x3d, 0x67, 0x7c, 0x8a, 0x7c, 0x90, 0x71, 0x26, 0x99, 0x0b, 0x12, 0x53, 0xc1,
-	0xf8, 0x24, 0x61, 0xcf, 0xfb, 0xb7, 0x23, 0xc6, 0xa2, 0x04, 0x8f, 0xf4, 0xc9, 0x38, 0x9f, 0x1c,
-	0xd1, 0x74, 0x6e, 0x60, 0xfd, 0x4e, 0xc0, 0x84, 0xf4, 0x23, 0x4e, 0xb3, 0x8b, 0xc2, 0x23, 0x24,
-	0x66, 0xbe, 0x90, 0x54, 0x0a, 0xeb, 0xd9, 0x0b, 0xf1, 0x32, 0x0e, 0xd0, 0xa7, 0x52, 0xf2, 0x78,
-	0x9c, 0x4b, 0x2c, 0x0e, 0x5a, 0xd5, 0xb8, 0x2d, 0x73, 0x61, 0x61, 0x05, 0x2c, 0x9d, 0xc4, 0x51,
-	0x01, 0x0c, 0x71, 0x9c, 0x17, 0x86, 0x9b, 0xd2, 0x19, 0x86, 0xfe, 0x15, 0xf8, 0xde, 0xa2, 0x5a,
-	0x5f, 0x20, 0xbf, 0x2c, 0x9e, 0xe1, 0xb9, 0xd0, 0x79, 0x84, 0x72, 0x24, 0xa9, 0xcc, 0x05, 0xc1,
-	0xef, 0x73, 0x14, 0xd2, 0xfb, 0x0e, 0xba, 0x15, 0x9f, 0xc8, 0x58, 0x2a, 0xd0, 0x7d, 0x0c, 0xdd,
-	0xa5, 0x32, 0x7b, 0xce, 0xc1, 0xda, 0x61, 0xeb, 0xf8, 0xce, 0x60, 0x91, 0x7d, 0x70, 0xaa, 0x41,
-	0x27, 0x25, 0x86, 0x74, 0xc2, 0x6b, 0x1e, 0x6f, 0x0e, 0xfd, 0x21, 0x47, 0x2a, 0xf1, 0x1b, 0x4d,
-	0xe8, 0x08, 0x85, 0x88, 0x59, 0x6a, 0x6f, 0x77, 0xdf, 0x81, 0x6d, 0x61, 0x3c, 0xfe, 0x05, 0x4d,
-	0xc3, 0x04, 0x7b, 0xce, 0x81, 0x73, 0xd8, 0x24, 0x37, 0xac, 0xf7, 0x4b, 0xed, 0x74, 0x3f, 0x02,
-	0x30, 0x0f, 0xf1, 0x43, 0x9c, 0xf4, 0x6a, 0x07, 0xce, 0x61, 0xeb, 0x78, 0xb7, 0x5a, 0xc8, 0x48,
-	0x9f, 0x9e, 0xe2, 0x84, 0x34, 0x45, 0xf1, 0xd3, 0xbb, 0x0b, 0x6f, 0xae, 0xbc, 0xda, 0x3c, 0xd2,
-	0xfb, 0xb9, 0x06, 0x3b, 0x04, 0xa3, 0x58, 0x48, 0xe4, 0x8f, 0x14, 0xf7, 0xaf, 0x59, 0xd4, 0x7d,
-	0x68, 0xea, 0x96, 0x55, 0x6a, 0xda, 0xa9, 0xd6, 0xa4, 0x73, 0xaa, 0x92, 0x1a, 0x91, 0xfd, 0xe5,
-	0xbe, 0x0f, 0x9d, 0x0b, 0x2a, 0xfc, 0x80, 0xa5, 0x92, 0xb3, 0xc4, 0x57, 0xb0, 0xde, 0xda, 0x81,
-	0x73, 0xd8, 0x78, 0x50, 0xeb, 0x39, 0x64, 0xfb, 0x82, 0x8a, 0xa1, 0x39, 0xfa, 0x22, 0x61, 0xcf,
-	0xdd, 0xcf, 0xe0, 0x86, 0xb9, 0x80, 0x65, 0x32, 0x66, 0xa9, 0xe8, 0xad, 0xeb, 0x4b, 0x7a, 0x4b,
-	0x97, 0x3c, 0x35, 0xe7, 0x64, 0x2b, 0xaa, 0x58, 0x2a, 0x5c, 0x2b, 0xa5, 0x0c, 0xdf, 0x58, 0x0e,
-	0x3f, 0x55, 0x80, 0x32, 0x3c, 0xac, 0x58, 0xde, 0xa7, 0xb0, 0x7b, 0x8d, 0x1d, 0x2b, 0x8e, 0xb7,
-	0xc1, 0xdc, 0x73, 0x95, 0x1c, 0x23, 0x5f, 0x43, 0x8d, 0x37, 0x86, 0x5b, 0xa7, 0xc8, 0x57, 0x71,
-	0xfb, 0xea, 0xe0, 0x15, 0xf4, 0xd7, 0x56, 0xd0, 0xef, 0xdd, 0x86, 0xbd, 0xa5, 0x3b, 0x6c, 0x67,
-	0xef, 0x43, 0x77, 0x98, 0x20, 0x4d, 0xf3, 0xec, 0x24, 0x49, 0x8a, 0x9b, 0xef, 0x40, 0x53, 0xf1,
-	0x4e, 0xe3, 0x14, 0xb9, 0xd6, 0x72, 0x93, 0x2c, 0x1c, 0xde, 0x0e, 0xb8, 0xd5, 0x10, 0x9b, 0xe8,
-	0x5b, 0xd8, 0x7a, 0xf8, 0x02, 0x83, 0x5c, 0x32, 0xfe, 0x34, 0x93, 0x42, 0x55, 0xcf, 0x31, 0x60,
-	0x3c, 0xf4, 0xd5, 0xa4, 0x0b, 0x5d, 0x7d, 0x83, 0xb4, 0x8c, 0x6f, 0xa8, 0x5c, 0xee, 0xbb, 0xd0,
-	0xb6, 0x10, 0x19, 0xcf, 0x30, 0x89, 0x53, 0x34, 0x1d, 0x26, 0xdb, 0xc6, 0xfd, 0xcc, 0x7a, 0xbd,
-	0xdf, 0x6a, 0xd0, 0x26, 0x79, 0xfa, 0xba, 0xec, 0xec, 0xc1, 0xa6, 0xde, 0x29, 0x71, 0xa8, 0x69,
-	0x59, 0x23, 0x75, 0x65, 0x3e, 0x0e, 0xdd, 0x7b, 0xb0, 0x2e, 0x30, 0x0d, 0x7b, 0x6b, 0xcb, 0x63,
-	0xfa, 0xb5, 0xda, 0x11, 0xcf, 0xb4, 0x7d, 0xae, 0x16, 0x01, 0xd1, 0x48, 0xf7, 0x36, 0x34, 0x38,
-	0x06, 0x97, 0xfe, 0x14, 0xe7, 0xbd, 0x75, 0x4d, 0xc8, 0xa6, 0xb2, 0x9f, 0xe0, 0xdc, 0xfd, 0x18,
-	0x9a, 0xf8, 0x02, 0x03, 0x25, 0x9d, 0x95, 0xba, 0xa9, 0xb2, 0x42, 0x1a, 0x0a, 0xaa, 0xf9, 0xb9,
-	0x0b, 0x10, 0x0b, 0x3f, 0xa3, 0x5c, 0xc6, 0x34, 0xe9, 0xd5, 0xf5, 0xbb, 0x9b, 0xb1, 0x38, 0x37,
-	0x0e, 0xf7, 0x03, 0xb8, 0x19, 0x0b, 0x3f, 0xa1, 0x42, 0x16, 0x18, 0x9f, 0xe7, 0x69, 0x6f, 0x53,
-	0xe3, 0x3a, 0xb1, 0x38, 0xa3, 0x42, 0x5a, 0x2c, 0xc9, 0xd3, 0x15, 0x42, 0x68, 0xac, 0x12, 0xc2,
-	0x2f, 0x0e, 0x74, 0x16, 0x44, 0x5a, 0x91, 0xde, 0x83, 0x75, 0xf5, 0x96, 0x55, 0x4b, 0x6b, 0x99,
-	0x0d, 0x85, 0xd4, 0x3b, 0xa6, 0x5c, 0xd6, 0x2b, 0x77, 0x8c, 0xc4, 0x4c, 0xed, 0x49, 0x41, 0x9a,
-	0xa2, 0xf8, 0xe9, 0x7e, 0x02, 0xb0, 0x58, 0xfa, 0xba, 0xd3, 0xd7, 0x98, 0x52, 0xaa, 0x28, 0x37,
-	0x41, 0x33, 0x28, 0x2c, 0x6f, 0x00, 0x37, 0xad, 0xe0, 0xae, 0x28, 0xa0, 0xd2, 0x5e, 0xa7, 0xda,
-	0x5e, 0xef, 0x16, 0xec, 0x5c, 0xc5, 0x5b, 0x89, 0xfe, 0x5a, 0x83, 0x2e, 0xc1, 0xe0, 0xd2, 0x3c,
-	0xe8, 0x55, 0x69, 0x14, 0xa7, 0x1c, 0xd3, 0x10, 0x7f, 0xb8, 0x64, 0xb9, 0xd0, 0x9d, 0xb7, 0xc3,
-	0xb5, 0xf0, 0xaa, 0xfe, 0xef, 0x42, 0x3d, 0x9c, 0x51, 0x9f, 0x4d, 0xad, 0x78, 0x37, 0xc2, 0x19,
-	0x7d, 0x3a, 0x75, 0x87, 0xd0, 0x0e, 0x92, 0x18, 0x53, 0xe9, 0x27, 0x2c, 0xa0, 0x49, 0x2c, 0xe7,
-	0x76, 0x27, 0xf5, 0x97, 0xbf, 0x0a, 0x67, 0x16, 0x41, 0xb6, 0x4d, 0x48, 0x61, 0xab, 0x24, 0x76,
-	0x99, 0x97, 0x49, 0x36, 0x5e, 0x9d, 0xc4, 0x84, 0x94, 0x49, 0x4e, 0xa0, 0x2b, 0x39, 0x4d, 0x45,
-	0xc6, 0xb8, 0x2c, 0x17, 0x5c, 0xdd, 0x2e, 0x61, 0xf3, 0x85, 0x1e, 0x14, 0x5f, 0xe8, 0xc1, 0x49,
-	0x3a, 0x27, 0x9d, 0x12, 0x5e, 0x2c, 0xb8, 0x3f, 0x1c, 0x70, 0xab, 0xcc, 0x59, 0xe5, 0x1c, 0x41,
-	0xdd, 0x94, 0xa1, 0x99, 0x6b, 0x1d, 0xef, 0x55, 0xab, 0xaa, 0xca, 0xc6, 0xc2, 0x14, 0xd7, 0xb1,
-	0xf0, 0x43, 0xa4, 0x66, 0x22, 0x1b, 0xa4, 0x1e, 0x8b, 0x53, 0xa4, 0xa1, 0xfb, 0x1e, 0x74, 0xd5,
-	0x9c, 0x29, 0x45, 0x71, 0xe9, 0xcf, 0xe2, 0x80, 0x33, 0xa1, 0xf9, 0x5c, 0x23, 0x6d, 0x75, 0x30,
-	0x52, 0xfe, 0xaf, 0xb4, 0x7b, 0xf5, 0x7b, 0xd6, 0x5f, 0xeb, 0x3d, 0x53, 0xd8, 0x3e, 0x63, 0x51,
-	0x14, 0xa7, 0x51, 0xa1, 0x82, 0xb7, 0xa0, 0xc5, 0xb3, 0xc0, 0x4f, 0x8c, 0xd7, 0x6e, 0x2b, 0xe0,
-	0x59, 0x60, 0x71, 0xee, 0x0e, 0x6c, 0x04, 0x09, 0x52, 0x6e, 0x0b, 0x37, 0x86, 0xeb, 0xc1, 0x8d,
-	0x09, 0xca, 0xe0, 0xc2, 0x2f, 0x24, 0xa4, 0x56, 0xca, 0x1a, 0x69, 0x69, 0xe7, 0xc8, 0xc8, 0x91,
-	0x42, 0xe7, 0x8c, 0x8e, 0x31, 0xc1, 0xb0, 0x1c, 0x8b, 0xff, 0x16, 0xdd, 0xff, 0x1a, 0x2d, 0x6f,
-	0x08, 0xed, 0xf2, 0x3d, 0x8b, 0xa9, 0x56, 0xe7, 0xab, 0xa6, 0xfa, 0x7a, 0x35, 0x44, 0x23, 0xbd,
-	0x9f, 0x6a, 0xd0, 0x7c, 0xc6, 0x69, 0x80, 0x7a, 0x3f, 0xf5, 0xa1, 0x11, 0xe6, 0x9c, 0x2a, 0xbe,
-	0x74, 0x89, 0x0e, 0x29, 0x6d, 0xd5, 0xad, 0x5c, 0xa0, 0x79, 0x73, 0xc6, 0xd9, 0x24, 0x4e, 0xb0,
-	0xe0, 0xa5, 0x9d, 0x0b, 0x54, 0x89, 0xcf, 0xad, 0xdb, 0x1d, 0xc0, 0x4d, 0x85, 0x9d, 0x22, 0x4f,
-	0x31, 0x59, 0xa0, 0xcd, 0xac, 0xa8, 0x34, 0x4f, 0xf4, 0x49, 0x89, 0x3f, 0x86, 0x5d, 0x85, 0xc7,
-	0x17, 0x52, 0x4d, 0x59, 0xb8, 0x88, 0x58, 0xd7, 0x11, 0x2a, 0xd9, 0x43, 0x7b, 0x56, 0xc6, 0x1c,
-	0x42, 0x47, 0xc5, 0x44, 0x59, 0xbe, 0x80, 0x6f, 0x98, 0x2f, 0x49, 0x2e, 0xf0, 0x51, 0x96, 0x5f,
-	0xaf, 0x46, 0xd0, 0x59, 0x96, 0xe0, 0x02, 0x5c, 0x2f, 0xab, 0x19, 0xe9, 0x93, 0x02, 0xef, 0x9d,
-	0xc0, 0xb6, 0xa2, 0xa4, 0x22, 0x94, 0x23, 0xd8, 0x2c, 0x34, 0xe7, 0x2c, 0x77, 0xa7, 0xe4, 0x8f,
-	0x14, 0x28, 0xaf, 0x0b, 0xed, 0x32, 0x85, 0xe9, 0xcd, 0x83, 0xcf, 0x7f, 0x7f, 0xb9, 0xef, 0xfc,
-	0xf9, 0x72, 0xdf, 0xf9, 0xeb, 0xe5, 0xbe, 0xf3, 0xe3, 0xdf, 0xfb, 0x6f, 0x40, 0x9f, 0xf1, 0xa8,
-	0x9a, 0x27, 0x8c, 0x85, 0xe4, 0x79, 0xaa, 0xbe, 0x8b, 0x0f, 0xb6, 0xcc, 0x7f, 0x32, 0x3d, 0x49,
-	0xe2, 0xdc, 0xf9, 0xc7, 0x71, 0xc6, 0x75, 0xad, 0xef, 0x0f, 0xff, 0x0d, 0x00, 0x00, 0xff, 0xff,
-	0xa8, 0x78, 0x20, 0xfb, 0x7b, 0x0b, 0x00, 0x00,
+var fileDescriptor_worker_edda5e1505487b5c = []byte{
+	// 1220 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x56, 0xdf, 0x6e, 0x1b, 0xc5,
+	0x17, 0xee, 0x3a, 0x89, 0x63, 0x1f, 0xa7, 0xb1, 0xbd, 0x4d, 0x1a, 0x37, 0xbf, 0x36, 0xbf, 0xb0,
+	0x12, 0x22, 0x42, 0xe0, 0xb4, 0x01, 0x84, 0x84, 0xc4, 0x45, 0xea, 0x94, 0x50, 0x35, 0xd0, 0x68,
+	0x5c, 0x09, 0x89, 0x0b, 0x56, 0xe3, 0xdd, 0xe3, 0xcd, 0xca, 0xeb, 0x9d, 0x65, 0x66, 0x36, 0xad,
+	0x79, 0x0a, 0xb8, 0xe7, 0x2d, 0xb8, 0xe0, 0x0d, 0x10, 0x37, 0x48, 0xbd, 0xe4, 0x12, 0xb5, 0x2f,
+	0xc1, 0x25, 0x9a, 0x3f, 0xbb, 0xde, 0xc4, 0x46, 0x55, 0xb9, 0xf3, 0x39, 0xf3, 0x9d, 0x33, 0x67,
+	0xbe, 0xf3, 0x9d, 0xb3, 0x86, 0x8d, 0xe7, 0x8c, 0x4f, 0x90, 0xf7, 0x33, 0xce, 0x24, 0x73, 0x41,
+	0x62, 0x2a, 0x18, 0x1f, 0x27, 0xec, 0xf9, 0xee, 0x9d, 0x88, 0xb1, 0x28, 0xc1, 0x43, 0x7d, 0x32,
+	0xca, 0xc7, 0x87, 0x34, 0x9d, 0x19, 0xd8, 0x6e, 0x27, 0x60, 0x42, 0xfa, 0x11, 0xa7, 0xd9, 0x45,
+	0xe1, 0x11, 0x12, 0x33, 0x5f, 0x48, 0x2a, 0x85, 0xf5, 0xec, 0x84, 0x78, 0x19, 0x07, 0xe8, 0x53,
+	0x29, 0x79, 0x3c, 0xca, 0x25, 0x16, 0x07, 0xad, 0x6a, 0xdc, 0x86, 0xb9, 0xb0, 0xb0, 0x02, 0x96,
+	0x8e, 0xe3, 0xa8, 0x00, 0x86, 0x38, 0xca, 0x0b, 0xc3, 0x4d, 0xe9, 0x14, 0x43, 0xff, 0x0a, 0x7c,
+	0x67, 0x5e, 0xad, 0x2f, 0x90, 0x5f, 0x16, 0xcf, 0xf0, 0x5c, 0xe8, 0x9c, 0xa2, 0x1c, 0x4a, 0x2a,
+	0x73, 0x41, 0xf0, 0xfb, 0x1c, 0x85, 0xf4, 0xbe, 0x83, 0x6e, 0xc5, 0x27, 0x32, 0x96, 0x0a, 0x74,
+	0x1f, 0x43, 0x77, 0xa1, 0xcc, 0x9e, 0xb3, 0xbf, 0x72, 0xd0, 0x3a, 0xba, 0xdb, 0x9f, 0x67, 0xef,
+	0x9f, 0x68, 0xd0, 0x71, 0x89, 0x21, 0x9d, 0xf0, 0x9a, 0xc7, 0x9b, 0xc1, 0xee, 0x80, 0x23, 0x95,
+	0xf8, 0x8d, 0x26, 0x74, 0x88, 0x42, 0xc4, 0x2c, 0xb5, 0xb7, 0xbb, 0xef, 0xc2, 0xa6, 0x30, 0x1e,
+	0xff, 0x82, 0xa6, 0x61, 0x82, 0x3d, 0x67, 0xdf, 0x39, 0x68, 0x92, 0x9b, 0xd6, 0xfb, 0xa5, 0x76,
+	0xba, 0x1f, 0x03, 0x98, 0x87, 0xf8, 0x21, 0x8e, 0x7b, 0xb5, 0x7d, 0xe7, 0xa0, 0x75, 0xb4, 0x5d,
+	0x2d, 0x64, 0xa8, 0x4f, 0x4f, 0x70, 0x4c, 0x9a, 0xa2, 0xf8, 0xe9, 0xdd, 0x83, 0xff, 0x2d, 0xbd,
+	0xda, 0x3c, 0xd2, 0xfb, 0xb9, 0x06, 0x5b, 0x04, 0xa3, 0x58, 0x48, 0xe4, 0xa7, 0x8a, 0xfb, 0xb7,
+	0x2c, 0xea, 0x01, 0x34, 0x75, 0xcb, 0x2a, 0x35, 0x6d, 0x55, 0x6b, 0xd2, 0x39, 0x55, 0x49, 0x8d,
+	0xc8, 0xfe, 0x72, 0x3f, 0x80, 0xce, 0x05, 0x15, 0x7e, 0xc0, 0x52, 0xc9, 0x59, 0xe2, 0x2b, 0x58,
+	0x6f, 0x65, 0xdf, 0x39, 0x68, 0x3c, 0xac, 0xf5, 0x1c, 0xb2, 0x79, 0x41, 0xc5, 0xc0, 0x1c, 0x7d,
+	0x91, 0xb0, 0xe7, 0xee, 0xe7, 0x70, 0xd3, 0x5c, 0xc0, 0x32, 0x19, 0xb3, 0x54, 0xf4, 0x56, 0xf5,
+	0x25, 0xbd, 0x85, 0x4b, 0x9e, 0x9a, 0x73, 0xb2, 0x11, 0x55, 0x2c, 0x15, 0xae, 0x95, 0x52, 0x86,
+	0xaf, 0x2d, 0x86, 0x9f, 0x28, 0x40, 0x19, 0x1e, 0x56, 0x2c, 0xef, 0x33, 0xd8, 0xbe, 0xc6, 0x8e,
+	0x15, 0xc7, 0x3b, 0x60, 0xee, 0xb9, 0x4a, 0x8e, 0x91, 0xaf, 0xa1, 0xc6, 0x1b, 0xc1, 0xed, 0x13,
+	0xe4, 0xcb, 0xb8, 0x7d, 0x73, 0xf0, 0x12, 0xfa, 0x6b, 0x4b, 0xe8, 0xf7, 0xee, 0xc0, 0xce, 0xc2,
+	0x1d, 0xb6, 0xb3, 0x0f, 0xa0, 0x3b, 0x48, 0x90, 0xa6, 0x79, 0x76, 0x9c, 0x24, 0xc5, 0xcd, 0x77,
+	0xa1, 0xa9, 0x78, 0xa7, 0x71, 0x8a, 0x5c, 0x6b, 0xb9, 0x49, 0xe6, 0x0e, 0x6f, 0x0b, 0xdc, 0x6a,
+	0x88, 0x4d, 0xf4, 0x2d, 0x6c, 0x3c, 0x7a, 0x81, 0x41, 0x2e, 0x19, 0x7f, 0x9a, 0x49, 0xa1, 0xaa,
+	0xe7, 0x18, 0x30, 0x1e, 0xfa, 0x6a, 0xd2, 0x85, 0xae, 0xbe, 0x41, 0x5a, 0xc6, 0x37, 0x50, 0x2e,
+	0xf7, 0x3d, 0x68, 0x5b, 0x88, 0x8c, 0xa7, 0x98, 0xc4, 0x29, 0x9a, 0x0e, 0x93, 0x4d, 0xe3, 0x7e,
+	0x66, 0xbd, 0xde, 0x6f, 0x35, 0x68, 0x93, 0x3c, 0x7d, 0x5b, 0x76, 0x76, 0x60, 0x5d, 0xef, 0x94,
+	0x38, 0xd4, 0xb4, 0xac, 0x90, 0xba, 0x32, 0x1f, 0x87, 0xee, 0x7d, 0x58, 0x15, 0x98, 0x86, 0xbd,
+	0x95, 0xc5, 0x31, 0xfd, 0x5a, 0xed, 0x88, 0x67, 0xda, 0x3e, 0x57, 0x8b, 0x80, 0x68, 0xa4, 0x7b,
+	0x07, 0x1a, 0x1c, 0x83, 0x4b, 0x7f, 0x82, 0xb3, 0xde, 0xaa, 0x26, 0x64, 0x5d, 0xd9, 0x4f, 0x70,
+	0xe6, 0x7e, 0x02, 0x4d, 0x7c, 0x81, 0x81, 0x92, 0xce, 0x52, 0xdd, 0x54, 0x59, 0x21, 0x0d, 0x05,
+	0xd5, 0xfc, 0xdc, 0x03, 0x88, 0x85, 0x9f, 0x51, 0x2e, 0x63, 0x9a, 0xf4, 0xea, 0xfa, 0xdd, 0xcd,
+	0x58, 0x9c, 0x1b, 0x87, 0xfb, 0x21, 0xdc, 0x8a, 0x85, 0x9f, 0x50, 0x21, 0x0b, 0x8c, 0xcf, 0xf3,
+	0xb4, 0xb7, 0xae, 0x71, 0x9d, 0x58, 0x9c, 0x51, 0x21, 0x2d, 0x96, 0xe4, 0xe9, 0x12, 0x21, 0x34,
+	0x96, 0x09, 0xe1, 0x17, 0x07, 0x3a, 0x73, 0x22, 0xad, 0x48, 0xef, 0xc3, 0xaa, 0x7a, 0xcb, 0xb2,
+	0xa5, 0xb5, 0xc8, 0x86, 0x42, 0xea, 0x1d, 0x53, 0x2e, 0xeb, 0xa5, 0x3b, 0x46, 0x62, 0xa6, 0xf6,
+	0xa4, 0x20, 0x4d, 0x51, 0xfc, 0x74, 0x3f, 0x05, 0x98, 0x2f, 0x7d, 0xdd, 0xe9, 0x6b, 0x4c, 0x29,
+	0x55, 0x94, 0x9b, 0xa0, 0x19, 0x14, 0x96, 0xd7, 0x87, 0x5b, 0x56, 0x70, 0x57, 0x14, 0x50, 0x69,
+	0xaf, 0x53, 0x6d, 0xaf, 0x77, 0x1b, 0xb6, 0xae, 0xe2, 0xad, 0x44, 0x7f, 0xad, 0x41, 0x97, 0x60,
+	0x70, 0x69, 0x1e, 0xf4, 0xa6, 0x34, 0x8a, 0x53, 0x8e, 0x69, 0x88, 0x3f, 0x5c, 0xb2, 0x5c, 0xe8,
+	0xce, 0xdb, 0xe1, 0x9a, 0x7b, 0x55, 0xff, 0xb7, 0xa1, 0x1e, 0x4e, 0xa9, 0xcf, 0x26, 0x56, 0xbc,
+	0x6b, 0xe1, 0x94, 0x3e, 0x9d, 0xb8, 0x03, 0x68, 0x07, 0x49, 0x8c, 0xa9, 0xf4, 0x13, 0x16, 0xd0,
+	0x24, 0x96, 0x33, 0xbb, 0x93, 0x76, 0x17, 0xbf, 0x0a, 0x67, 0x16, 0x41, 0x36, 0x4d, 0x48, 0x61,
+	0xab, 0x24, 0x76, 0x99, 0x97, 0x49, 0xd6, 0xde, 0x9c, 0xc4, 0x84, 0x94, 0x49, 0x8e, 0xa1, 0x2b,
+	0x39, 0x4d, 0x45, 0xc6, 0xb8, 0x2c, 0x17, 0x5c, 0xdd, 0x2e, 0x61, 0xf3, 0x85, 0xee, 0x17, 0x5f,
+	0xe8, 0xfe, 0x71, 0x3a, 0x23, 0x9d, 0x12, 0x5e, 0x2c, 0xb8, 0x3f, 0x1c, 0x70, 0xab, 0xcc, 0x59,
+	0xe5, 0x1c, 0x42, 0xdd, 0x94, 0xa1, 0x99, 0x6b, 0x1d, 0xed, 0x54, 0xab, 0xaa, 0xca, 0xc6, 0xc2,
+	0x14, 0xd7, 0xb1, 0xf0, 0x43, 0xa4, 0x66, 0x22, 0x1b, 0xa4, 0x1e, 0x8b, 0x13, 0xa4, 0xa1, 0xfb,
+	0x3e, 0x74, 0xd5, 0x9c, 0x29, 0x45, 0x71, 0xe9, 0x4f, 0xe3, 0x80, 0x33, 0xa1, 0xf9, 0x5c, 0x21,
+	0x6d, 0x75, 0x30, 0x54, 0xfe, 0xaf, 0xb4, 0x7b, 0xf9, 0x7b, 0x56, 0xdf, 0xea, 0x3d, 0x13, 0xd8,
+	0x3c, 0x63, 0x51, 0x14, 0xa7, 0x51, 0xa1, 0x82, 0xff, 0x43, 0x8b, 0x67, 0x81, 0x9f, 0x18, 0xaf,
+	0xdd, 0x56, 0xc0, 0xb3, 0xc0, 0xe2, 0xdc, 0x2d, 0x58, 0x0b, 0x12, 0xa4, 0xdc, 0x16, 0x6e, 0x0c,
+	0xd7, 0x83, 0x9b, 0x63, 0x94, 0xc1, 0x85, 0x5f, 0x48, 0x48, 0xad, 0x94, 0x15, 0xd2, 0xd2, 0xce,
+	0xa1, 0x91, 0x23, 0x85, 0xce, 0x19, 0x1d, 0x61, 0x82, 0x61, 0x39, 0x16, 0xff, 0x2e, 0xba, 0xff,
+	0x34, 0x5a, 0xde, 0x00, 0xda, 0xe5, 0x7b, 0xe6, 0x53, 0xad, 0xce, 0x97, 0x4d, 0xf5, 0xf5, 0x6a,
+	0x88, 0x46, 0x7a, 0x3f, 0xd5, 0xa0, 0xf9, 0x8c, 0xd3, 0x00, 0xf5, 0x7e, 0xda, 0x85, 0x46, 0x98,
+	0x73, 0xaa, 0xf8, 0xd2, 0x25, 0x3a, 0xa4, 0xb4, 0x55, 0xb7, 0x72, 0x81, 0xe6, 0xcd, 0x19, 0x67,
+	0xe3, 0x38, 0xc1, 0x82, 0x97, 0x76, 0x2e, 0x50, 0x25, 0x3e, 0xb7, 0x6e, 0xb7, 0x0f, 0xb7, 0x14,
+	0x76, 0x82, 0x3c, 0xc5, 0x64, 0x8e, 0x36, 0xb3, 0xa2, 0xd2, 0x3c, 0xd1, 0x27, 0x25, 0xfe, 0x08,
+	0xb6, 0x15, 0x1e, 0x5f, 0x48, 0x35, 0x65, 0xe1, 0x3c, 0x62, 0x55, 0x47, 0xa8, 0x64, 0x8f, 0xec,
+	0x59, 0x19, 0x73, 0x00, 0x1d, 0x15, 0x13, 0x65, 0xf9, 0x1c, 0xbe, 0x66, 0xbe, 0x24, 0xb9, 0xc0,
+	0xd3, 0x2c, 0xbf, 0x5e, 0x8d, 0xa0, 0xd3, 0x2c, 0xc1, 0x39, 0xb8, 0x5e, 0x56, 0x33, 0xd4, 0x27,
+	0x05, 0xde, 0x3b, 0x86, 0x4d, 0x45, 0x49, 0x45, 0x28, 0x87, 0xb0, 0x5e, 0x68, 0xce, 0x59, 0xec,
+	0x4e, 0xc9, 0x1f, 0x29, 0x50, 0x5e, 0x17, 0xda, 0x65, 0x0a, 0xd3, 0x9b, 0x87, 0xa7, 0xbf, 0xbf,
+	0xda, 0x73, 0x5e, 0xbe, 0xda, 0x73, 0xfe, 0x7a, 0xb5, 0xe7, 0xfc, 0xf8, 0x7a, 0xef, 0xc6, 0xcb,
+	0xd7, 0x7b, 0x37, 0xfe, 0x7c, 0xbd, 0x77, 0x03, 0x76, 0x19, 0x8f, 0xaa, 0xf9, 0xc2, 0x58, 0x48,
+	0x9e, 0xa7, 0xea, 0xfb, 0xf8, 0x70, 0xc3, 0xfc, 0x37, 0xd3, 0x13, 0x25, 0xce, 0x9d, 0xbf, 0x1d,
+	0x67, 0x54, 0xd7, 0x3a, 0xff, 0xe8, 0x9f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x43, 0xc9, 0xaf, 0x30,
+	0x83, 0x0b, 0x00, 0x00,
 }

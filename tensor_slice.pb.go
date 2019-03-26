@@ -14,6 +14,12 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
+
 // Can only be interpreted if you know the corresponding TensorShape.
 type TensorSliceProto struct {
 	// Extent of the slice in all tensor dimensions.
@@ -24,10 +30,38 @@ type TensorSliceProto struct {
 	Extent []*TensorSliceProto_Extent `protobuf:"bytes,1,rep,name=extent" json:"extent,omitempty"`
 }
 
-func (m *TensorSliceProto) Reset()                    { *m = TensorSliceProto{} }
-func (m *TensorSliceProto) String() string            { return proto.CompactTextString(m) }
-func (*TensorSliceProto) ProtoMessage()               {}
-func (*TensorSliceProto) Descriptor() ([]byte, []int) { return fileDescriptorTensorSlice, []int{0} }
+func (m *TensorSliceProto) Reset()         { *m = TensorSliceProto{} }
+func (m *TensorSliceProto) String() string { return proto.CompactTextString(m) }
+func (*TensorSliceProto) ProtoMessage()    {}
+func (*TensorSliceProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_tensor_slice_86d952f7131b0214, []int{0}
+}
+func (m *TensorSliceProto) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *TensorSliceProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_TensorSliceProto.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *TensorSliceProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TensorSliceProto.Merge(dst, src)
+}
+func (m *TensorSliceProto) XXX_Size() int {
+	return m.Size()
+}
+func (m *TensorSliceProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_TensorSliceProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TensorSliceProto proto.InternalMessageInfo
 
 func (m *TensorSliceProto) GetExtent() []*TensorSliceProto_Extent {
 	if m != nil {
@@ -55,8 +89,34 @@ func (m *TensorSliceProto_Extent) Reset()         { *m = TensorSliceProto_Extent
 func (m *TensorSliceProto_Extent) String() string { return proto.CompactTextString(m) }
 func (*TensorSliceProto_Extent) ProtoMessage()    {}
 func (*TensorSliceProto_Extent) Descriptor() ([]byte, []int) {
-	return fileDescriptorTensorSlice, []int{0, 0}
+	return fileDescriptor_tensor_slice_86d952f7131b0214, []int{0, 0}
 }
+func (m *TensorSliceProto_Extent) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *TensorSliceProto_Extent) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_TensorSliceProto_Extent.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *TensorSliceProto_Extent) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TensorSliceProto_Extent.Merge(dst, src)
+}
+func (m *TensorSliceProto_Extent) XXX_Size() int {
+	return m.Size()
+}
+func (m *TensorSliceProto_Extent) XXX_DiscardUnknown() {
+	xxx_messageInfo_TensorSliceProto_Extent.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TensorSliceProto_Extent proto.InternalMessageInfo
 
 type isTensorSliceProto_Extent_HasLength interface {
 	isTensorSliceProto_Extent_HasLength()
@@ -132,7 +192,7 @@ func _TensorSliceProto_Extent_OneofSizer(msg proto.Message) (n int) {
 	// has_length
 	switch x := m.HasLength.(type) {
 	case *TensorSliceProto_Extent_Length:
-		n += proto.SizeVarint(2<<3 | proto.WireVarint)
+		n += 1 // tag and wire
 		n += proto.SizeVarint(uint64(x.Length))
 	case nil:
 	default:
@@ -222,6 +282,9 @@ func encodeVarintTensorSlice(dAtA []byte, offset int, v uint64) int {
 	return offset + 1
 }
 func (m *TensorSliceProto) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.Extent) > 0 {
@@ -234,6 +297,9 @@ func (m *TensorSliceProto) Size() (n int) {
 }
 
 func (m *TensorSliceProto_Extent) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.Start != 0 {
@@ -246,6 +312,9 @@ func (m *TensorSliceProto_Extent) Size() (n int) {
 }
 
 func (m *TensorSliceProto_Extent_Length) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	n += 1 + sovTensorSlice(uint64(m.Length))
@@ -540,10 +609,10 @@ var (
 	ErrIntOverflowTensorSlice   = fmt.Errorf("proto: integer overflow")
 )
 
-func init() { proto.RegisterFile("tensor_slice.proto", fileDescriptorTensorSlice) }
+func init() { proto.RegisterFile("tensor_slice.proto", fileDescriptor_tensor_slice_86d952f7131b0214) }
 
-var fileDescriptorTensorSlice = []byte{
-	// 196 bytes of a gzipped FileDescriptorProto
+var fileDescriptor_tensor_slice_86d952f7131b0214 = []byte{
+	// 205 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2a, 0x49, 0xcd, 0x2b,
 	0xce, 0x2f, 0x8a, 0x2f, 0xce, 0xc9, 0x4c, 0x4e, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2,
 	0x82, 0x88, 0xa5, 0xe5, 0xe4, 0x97, 0x2b, 0x4d, 0x67, 0xe4, 0x12, 0x08, 0x01, 0x73, 0x83, 0x41,
@@ -552,9 +621,9 @@ var fileDescriptorTensorSlice = []byte{
 	0x41, 0xb5, 0x48, 0xb9, 0x71, 0xb1, 0x41, 0x44, 0x84, 0x44, 0xb8, 0x58, 0x8b, 0x4b, 0x12, 0x8b,
 	0x40, 0xa6, 0x30, 0x6a, 0x30, 0x07, 0x41, 0x38, 0x42, 0x12, 0x5c, 0x6c, 0x39, 0xa9, 0x79, 0xe9,
 	0x25, 0x19, 0x12, 0x4c, 0x20, 0x61, 0x0f, 0x86, 0x20, 0x28, 0xdf, 0x89, 0x87, 0x8b, 0x2b, 0x23,
-	0xb1, 0x38, 0x1e, 0xca, 0x73, 0x3a, 0xf1, 0x48, 0x8e, 0xf1, 0xc2, 0x23, 0x39, 0xc6, 0x07, 0x8f,
-	0xe4, 0x18, 0x27, 0x3c, 0x96, 0x63, 0xe0, 0x92, 0xc8, 0x2f, 0x4a, 0x47, 0x76, 0x49, 0x5a, 0x51,
-	0x62, 0x6e, 0x6a, 0x79, 0x7e, 0x51, 0xb6, 0x93, 0x20, 0xba, 0xa3, 0x8a, 0x03, 0x18, 0x7f, 0x30,
-	0x32, 0x26, 0xb1, 0x81, 0x3d, 0x6c, 0x0c, 0x08, 0x00, 0x00, 0xff, 0xff, 0xe2, 0x7f, 0x32, 0x80,
-	0x06, 0x01, 0x00, 0x00,
+	0xb1, 0x38, 0x1e, 0xca, 0xf3, 0x3a, 0xf1, 0x48, 0x8e, 0xf1, 0xc2, 0x23, 0x39, 0xc6, 0x07, 0x8f,
+	0xe4, 0x18, 0x27, 0x3c, 0x96, 0x63, 0xb8, 0xf0, 0x58, 0x8e, 0xe1, 0xc6, 0x63, 0x39, 0x06, 0x2e,
+	0x89, 0xfc, 0xa2, 0x74, 0x64, 0x17, 0xa5, 0x15, 0x25, 0xe6, 0xa6, 0x96, 0xe7, 0x17, 0x65, 0x3b,
+	0x09, 0xa2, 0x3b, 0xae, 0x38, 0x80, 0xf1, 0x07, 0x23, 0x63, 0x12, 0x1b, 0xd8, 0xe3, 0xc6, 0x80,
+	0x00, 0x00, 0x00, 0xff, 0xff, 0xa6, 0x76, 0x76, 0xd7, 0x0e, 0x01, 0x00, 0x00,
 }

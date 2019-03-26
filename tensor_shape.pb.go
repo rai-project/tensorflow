@@ -14,6 +14,12 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
+
 // Dimensions of a tensor.
 type TensorShapeProto struct {
 	// Dimensions of the tensor, such as {"input", 30}, {"output", 40}
@@ -36,10 +42,38 @@ type TensorShapeProto struct {
 	UnknownRank bool `protobuf:"varint,3,opt,name=unknown_rank,json=unknownRank,proto3" json:"unknown_rank,omitempty"`
 }
 
-func (m *TensorShapeProto) Reset()                    { *m = TensorShapeProto{} }
-func (m *TensorShapeProto) String() string            { return proto.CompactTextString(m) }
-func (*TensorShapeProto) ProtoMessage()               {}
-func (*TensorShapeProto) Descriptor() ([]byte, []int) { return fileDescriptorTensorShape, []int{0} }
+func (m *TensorShapeProto) Reset()         { *m = TensorShapeProto{} }
+func (m *TensorShapeProto) String() string { return proto.CompactTextString(m) }
+func (*TensorShapeProto) ProtoMessage()    {}
+func (*TensorShapeProto) Descriptor() ([]byte, []int) {
+	return fileDescriptor_tensor_shape_76341386ffa9f8b0, []int{0}
+}
+func (m *TensorShapeProto) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *TensorShapeProto) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_TensorShapeProto.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *TensorShapeProto) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TensorShapeProto.Merge(dst, src)
+}
+func (m *TensorShapeProto) XXX_Size() int {
+	return m.Size()
+}
+func (m *TensorShapeProto) XXX_DiscardUnknown() {
+	xxx_messageInfo_TensorShapeProto.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TensorShapeProto proto.InternalMessageInfo
 
 func (m *TensorShapeProto) GetDim() []*TensorShapeProto_Dim {
 	if m != nil {
@@ -71,8 +105,34 @@ func (m *TensorShapeProto_Dim) Reset()         { *m = TensorShapeProto_Dim{} }
 func (m *TensorShapeProto_Dim) String() string { return proto.CompactTextString(m) }
 func (*TensorShapeProto_Dim) ProtoMessage()    {}
 func (*TensorShapeProto_Dim) Descriptor() ([]byte, []int) {
-	return fileDescriptorTensorShape, []int{0, 0}
+	return fileDescriptor_tensor_shape_76341386ffa9f8b0, []int{0, 0}
 }
+func (m *TensorShapeProto_Dim) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *TensorShapeProto_Dim) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_TensorShapeProto_Dim.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *TensorShapeProto_Dim) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TensorShapeProto_Dim.Merge(dst, src)
+}
+func (m *TensorShapeProto_Dim) XXX_Size() int {
+	return m.Size()
+}
+func (m *TensorShapeProto_Dim) XXX_DiscardUnknown() {
+	xxx_messageInfo_TensorShapeProto_Dim.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TensorShapeProto_Dim proto.InternalMessageInfo
 
 func (m *TensorShapeProto_Dim) GetSize_() int64 {
 	if m != nil {
@@ -171,6 +231,9 @@ func encodeVarintTensorShape(dAtA []byte, offset int, v uint64) int {
 	return offset + 1
 }
 func (m *TensorShapeProto) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.Dim) > 0 {
@@ -186,6 +249,9 @@ func (m *TensorShapeProto) Size() (n int) {
 }
 
 func (m *TensorShapeProto_Dim) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.Size_ != 0 {
@@ -515,10 +581,10 @@ var (
 	ErrIntOverflowTensorShape   = fmt.Errorf("proto: integer overflow")
 )
 
-func init() { proto.RegisterFile("tensor_shape.proto", fileDescriptorTensorShape) }
+func init() { proto.RegisterFile("tensor_shape.proto", fileDescriptor_tensor_shape_76341386ffa9f8b0) }
 
-var fileDescriptorTensorShape = []byte{
-	// 212 bytes of a gzipped FileDescriptorProto
+var fileDescriptor_tensor_shape_76341386ffa9f8b0 = []byte{
+	// 221 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2a, 0x49, 0xcd, 0x2b,
 	0xce, 0x2f, 0x8a, 0x2f, 0xce, 0x48, 0x2c, 0x48, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2,
 	0x82, 0x88, 0xa5, 0xe5, 0xe4, 0x97, 0x2b, 0xcd, 0x60, 0xe4, 0x12, 0x08, 0x01, 0x73, 0x83, 0x41,
@@ -528,9 +594,9 @@ var fileDescriptorTensorShape = []byte{
 	0x30, 0x2b, 0x30, 0x6a, 0x70, 0x04, 0x71, 0x43, 0xc5, 0x82, 0x12, 0xf3, 0xb2, 0xa5, 0x74, 0xb9,
 	0x98, 0x5d, 0x32, 0x73, 0x85, 0x84, 0xb8, 0x58, 0x8a, 0x33, 0xab, 0x52, 0x25, 0x18, 0x15, 0x18,
 	0x35, 0x98, 0x83, 0xc0, 0x6c, 0x90, 0x58, 0x5e, 0x62, 0x6e, 0xaa, 0x04, 0x93, 0x02, 0xa3, 0x06,
-	0x67, 0x10, 0x98, 0xed, 0xe4, 0x74, 0xe2, 0x91, 0x1c, 0xe3, 0x85, 0x47, 0x72, 0x8c, 0x0f, 0x1e,
-	0xc9, 0x31, 0x4e, 0x78, 0x2c, 0xc7, 0xc0, 0x25, 0x91, 0x5f, 0x94, 0x8e, 0xec, 0x9a, 0xb4, 0xa2,
-	0xc4, 0xdc, 0xd4, 0xf2, 0xfc, 0xa2, 0x6c, 0x27, 0x41, 0x74, 0x87, 0x15, 0x07, 0x30, 0xfe, 0x60,
-	0x64, 0x4c, 0x62, 0x03, 0xfb, 0xd8, 0x18, 0x10, 0x00, 0x00, 0xff, 0xff, 0x73, 0xab, 0x2b, 0x75,
-	0x07, 0x01, 0x00, 0x00,
+	0x67, 0x10, 0x98, 0xed, 0xe4, 0x75, 0xe2, 0x91, 0x1c, 0xe3, 0x85, 0x47, 0x72, 0x8c, 0x0f, 0x1e,
+	0xc9, 0x31, 0x4e, 0x78, 0x2c, 0xc7, 0x70, 0xe1, 0xb1, 0x1c, 0xc3, 0x8d, 0xc7, 0x72, 0x0c, 0x5c,
+	0x12, 0xf9, 0x45, 0xe9, 0xc8, 0xae, 0x4a, 0x2b, 0x4a, 0xcc, 0x4d, 0x2d, 0xcf, 0x2f, 0xca, 0x76,
+	0x12, 0x44, 0x77, 0x60, 0x71, 0x00, 0xe3, 0x0f, 0x46, 0xc6, 0x24, 0x36, 0xb0, 0xcf, 0x8d, 0x01,
+	0x01, 0x00, 0x00, 0xff, 0xff, 0x51, 0x25, 0x11, 0x66, 0x0f, 0x01, 0x00, 0x00,
 }

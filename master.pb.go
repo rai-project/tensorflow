@@ -14,6 +14,12 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
+
 type CreateSessionRequest struct {
 	// The initial graph definition.
 	GraphDef *GraphDef `protobuf:"bytes,1,opt,name=graph_def,json=graphDef" json:"graph_def,omitempty"`
@@ -23,10 +29,38 @@ type CreateSessionRequest struct {
 	Target string `protobuf:"bytes,3,opt,name=target,proto3" json:"target,omitempty"`
 }
 
-func (m *CreateSessionRequest) Reset()                    { *m = CreateSessionRequest{} }
-func (m *CreateSessionRequest) String() string            { return proto.CompactTextString(m) }
-func (*CreateSessionRequest) ProtoMessage()               {}
-func (*CreateSessionRequest) Descriptor() ([]byte, []int) { return fileDescriptorMaster, []int{0} }
+func (m *CreateSessionRequest) Reset()         { *m = CreateSessionRequest{} }
+func (m *CreateSessionRequest) String() string { return proto.CompactTextString(m) }
+func (*CreateSessionRequest) ProtoMessage()    {}
+func (*CreateSessionRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_master_e6a2346712e7d9cc, []int{0}
+}
+func (m *CreateSessionRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CreateSessionRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CreateSessionRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *CreateSessionRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateSessionRequest.Merge(dst, src)
+}
+func (m *CreateSessionRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *CreateSessionRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateSessionRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateSessionRequest proto.InternalMessageInfo
 
 func (m *CreateSessionRequest) GetGraphDef() *GraphDef {
 	if m != nil {
@@ -60,10 +94,38 @@ type CreateSessionResponse struct {
 	GraphVersion int64 `protobuf:"varint,2,opt,name=graph_version,json=graphVersion,proto3" json:"graph_version,omitempty"`
 }
 
-func (m *CreateSessionResponse) Reset()                    { *m = CreateSessionResponse{} }
-func (m *CreateSessionResponse) String() string            { return proto.CompactTextString(m) }
-func (*CreateSessionResponse) ProtoMessage()               {}
-func (*CreateSessionResponse) Descriptor() ([]byte, []int) { return fileDescriptorMaster, []int{1} }
+func (m *CreateSessionResponse) Reset()         { *m = CreateSessionResponse{} }
+func (m *CreateSessionResponse) String() string { return proto.CompactTextString(m) }
+func (*CreateSessionResponse) ProtoMessage()    {}
+func (*CreateSessionResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_master_e6a2346712e7d9cc, []int{1}
+}
+func (m *CreateSessionResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CreateSessionResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CreateSessionResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *CreateSessionResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateSessionResponse.Merge(dst, src)
+}
+func (m *CreateSessionResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *CreateSessionResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateSessionResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateSessionResponse proto.InternalMessageInfo
 
 func (m *CreateSessionResponse) GetSessionHandle() string {
 	if m != nil {
@@ -93,10 +155,38 @@ type ExtendSessionRequest struct {
 	CurrentGraphVersion int64 `protobuf:"varint,3,opt,name=current_graph_version,json=currentGraphVersion,proto3" json:"current_graph_version,omitempty"`
 }
 
-func (m *ExtendSessionRequest) Reset()                    { *m = ExtendSessionRequest{} }
-func (m *ExtendSessionRequest) String() string            { return proto.CompactTextString(m) }
-func (*ExtendSessionRequest) ProtoMessage()               {}
-func (*ExtendSessionRequest) Descriptor() ([]byte, []int) { return fileDescriptorMaster, []int{2} }
+func (m *ExtendSessionRequest) Reset()         { *m = ExtendSessionRequest{} }
+func (m *ExtendSessionRequest) String() string { return proto.CompactTextString(m) }
+func (*ExtendSessionRequest) ProtoMessage()    {}
+func (*ExtendSessionRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_master_e6a2346712e7d9cc, []int{2}
+}
+func (m *ExtendSessionRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ExtendSessionRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ExtendSessionRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *ExtendSessionRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ExtendSessionRequest.Merge(dst, src)
+}
+func (m *ExtendSessionRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *ExtendSessionRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ExtendSessionRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ExtendSessionRequest proto.InternalMessageInfo
 
 func (m *ExtendSessionRequest) GetSessionHandle() string {
 	if m != nil {
@@ -125,10 +215,38 @@ type ExtendSessionResponse struct {
 	NewGraphVersion int64 `protobuf:"varint,4,opt,name=new_graph_version,json=newGraphVersion,proto3" json:"new_graph_version,omitempty"`
 }
 
-func (m *ExtendSessionResponse) Reset()                    { *m = ExtendSessionResponse{} }
-func (m *ExtendSessionResponse) String() string            { return proto.CompactTextString(m) }
-func (*ExtendSessionResponse) ProtoMessage()               {}
-func (*ExtendSessionResponse) Descriptor() ([]byte, []int) { return fileDescriptorMaster, []int{3} }
+func (m *ExtendSessionResponse) Reset()         { *m = ExtendSessionResponse{} }
+func (m *ExtendSessionResponse) String() string { return proto.CompactTextString(m) }
+func (*ExtendSessionResponse) ProtoMessage()    {}
+func (*ExtendSessionResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_master_e6a2346712e7d9cc, []int{3}
+}
+func (m *ExtendSessionResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ExtendSessionResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ExtendSessionResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *ExtendSessionResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ExtendSessionResponse.Merge(dst, src)
+}
+func (m *ExtendSessionResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *ExtendSessionResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ExtendSessionResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ExtendSessionResponse proto.InternalMessageInfo
 
 func (m *ExtendSessionResponse) GetNewGraphVersion() int64 {
 	if m != nil {
@@ -157,10 +275,38 @@ type RunStepRequest struct {
 	PartialRunHandle string `protobuf:"bytes,6,opt,name=partial_run_handle,json=partialRunHandle,proto3" json:"partial_run_handle,omitempty"`
 }
 
-func (m *RunStepRequest) Reset()                    { *m = RunStepRequest{} }
-func (m *RunStepRequest) String() string            { return proto.CompactTextString(m) }
-func (*RunStepRequest) ProtoMessage()               {}
-func (*RunStepRequest) Descriptor() ([]byte, []int) { return fileDescriptorMaster, []int{4} }
+func (m *RunStepRequest) Reset()         { *m = RunStepRequest{} }
+func (m *RunStepRequest) String() string { return proto.CompactTextString(m) }
+func (*RunStepRequest) ProtoMessage()    {}
+func (*RunStepRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_master_e6a2346712e7d9cc, []int{4}
+}
+func (m *RunStepRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *RunStepRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_RunStepRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *RunStepRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RunStepRequest.Merge(dst, src)
+}
+func (m *RunStepRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *RunStepRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_RunStepRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RunStepRequest proto.InternalMessageInfo
 
 func (m *RunStepRequest) GetSessionHandle() string {
 	if m != nil {
@@ -212,10 +358,38 @@ type RunStepResponse struct {
 	Metadata *RunMetadata `protobuf:"bytes,2,opt,name=metadata" json:"metadata,omitempty"`
 }
 
-func (m *RunStepResponse) Reset()                    { *m = RunStepResponse{} }
-func (m *RunStepResponse) String() string            { return proto.CompactTextString(m) }
-func (*RunStepResponse) ProtoMessage()               {}
-func (*RunStepResponse) Descriptor() ([]byte, []int) { return fileDescriptorMaster, []int{5} }
+func (m *RunStepResponse) Reset()         { *m = RunStepResponse{} }
+func (m *RunStepResponse) String() string { return proto.CompactTextString(m) }
+func (*RunStepResponse) ProtoMessage()    {}
+func (*RunStepResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_master_e6a2346712e7d9cc, []int{5}
+}
+func (m *RunStepResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *RunStepResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_RunStepResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *RunStepResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RunStepResponse.Merge(dst, src)
+}
+func (m *RunStepResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *RunStepResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_RunStepResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RunStepResponse proto.InternalMessageInfo
 
 func (m *RunStepResponse) GetTensor() []*NamedTensorProto {
 	if m != nil {
@@ -247,10 +421,38 @@ type PartialRunSetupRequest struct {
 	Target []string `protobuf:"bytes,4,rep,name=target" json:"target,omitempty"`
 }
 
-func (m *PartialRunSetupRequest) Reset()                    { *m = PartialRunSetupRequest{} }
-func (m *PartialRunSetupRequest) String() string            { return proto.CompactTextString(m) }
-func (*PartialRunSetupRequest) ProtoMessage()               {}
-func (*PartialRunSetupRequest) Descriptor() ([]byte, []int) { return fileDescriptorMaster, []int{6} }
+func (m *PartialRunSetupRequest) Reset()         { *m = PartialRunSetupRequest{} }
+func (m *PartialRunSetupRequest) String() string { return proto.CompactTextString(m) }
+func (*PartialRunSetupRequest) ProtoMessage()    {}
+func (*PartialRunSetupRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_master_e6a2346712e7d9cc, []int{6}
+}
+func (m *PartialRunSetupRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *PartialRunSetupRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_PartialRunSetupRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *PartialRunSetupRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PartialRunSetupRequest.Merge(dst, src)
+}
+func (m *PartialRunSetupRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *PartialRunSetupRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_PartialRunSetupRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PartialRunSetupRequest proto.InternalMessageInfo
 
 func (m *PartialRunSetupRequest) GetSessionHandle() string {
 	if m != nil {
@@ -287,10 +489,38 @@ type PartialRunSetupResponse struct {
 	PartialRunHandle string `protobuf:"bytes,1,opt,name=partial_run_handle,json=partialRunHandle,proto3" json:"partial_run_handle,omitempty"`
 }
 
-func (m *PartialRunSetupResponse) Reset()                    { *m = PartialRunSetupResponse{} }
-func (m *PartialRunSetupResponse) String() string            { return proto.CompactTextString(m) }
-func (*PartialRunSetupResponse) ProtoMessage()               {}
-func (*PartialRunSetupResponse) Descriptor() ([]byte, []int) { return fileDescriptorMaster, []int{7} }
+func (m *PartialRunSetupResponse) Reset()         { *m = PartialRunSetupResponse{} }
+func (m *PartialRunSetupResponse) String() string { return proto.CompactTextString(m) }
+func (*PartialRunSetupResponse) ProtoMessage()    {}
+func (*PartialRunSetupResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_master_e6a2346712e7d9cc, []int{7}
+}
+func (m *PartialRunSetupResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *PartialRunSetupResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_PartialRunSetupResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *PartialRunSetupResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PartialRunSetupResponse.Merge(dst, src)
+}
+func (m *PartialRunSetupResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *PartialRunSetupResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_PartialRunSetupResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PartialRunSetupResponse proto.InternalMessageInfo
 
 func (m *PartialRunSetupResponse) GetPartialRunHandle() string {
 	if m != nil {
@@ -305,10 +535,38 @@ type CloseSessionRequest struct {
 	SessionHandle string `protobuf:"bytes,1,opt,name=session_handle,json=sessionHandle,proto3" json:"session_handle,omitempty"`
 }
 
-func (m *CloseSessionRequest) Reset()                    { *m = CloseSessionRequest{} }
-func (m *CloseSessionRequest) String() string            { return proto.CompactTextString(m) }
-func (*CloseSessionRequest) ProtoMessage()               {}
-func (*CloseSessionRequest) Descriptor() ([]byte, []int) { return fileDescriptorMaster, []int{8} }
+func (m *CloseSessionRequest) Reset()         { *m = CloseSessionRequest{} }
+func (m *CloseSessionRequest) String() string { return proto.CompactTextString(m) }
+func (*CloseSessionRequest) ProtoMessage()    {}
+func (*CloseSessionRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_master_e6a2346712e7d9cc, []int{8}
+}
+func (m *CloseSessionRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CloseSessionRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CloseSessionRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *CloseSessionRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CloseSessionRequest.Merge(dst, src)
+}
+func (m *CloseSessionRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *CloseSessionRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CloseSessionRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CloseSessionRequest proto.InternalMessageInfo
 
 func (m *CloseSessionRequest) GetSessionHandle() string {
 	if m != nil {
@@ -320,10 +578,38 @@ func (m *CloseSessionRequest) GetSessionHandle() string {
 type CloseSessionResponse struct {
 }
 
-func (m *CloseSessionResponse) Reset()                    { *m = CloseSessionResponse{} }
-func (m *CloseSessionResponse) String() string            { return proto.CompactTextString(m) }
-func (*CloseSessionResponse) ProtoMessage()               {}
-func (*CloseSessionResponse) Descriptor() ([]byte, []int) { return fileDescriptorMaster, []int{9} }
+func (m *CloseSessionResponse) Reset()         { *m = CloseSessionResponse{} }
+func (m *CloseSessionResponse) String() string { return proto.CompactTextString(m) }
+func (*CloseSessionResponse) ProtoMessage()    {}
+func (*CloseSessionResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_master_e6a2346712e7d9cc, []int{9}
+}
+func (m *CloseSessionResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CloseSessionResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CloseSessionResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *CloseSessionResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CloseSessionResponse.Merge(dst, src)
+}
+func (m *CloseSessionResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *CloseSessionResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_CloseSessionResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CloseSessionResponse proto.InternalMessageInfo
 
 // Reset() allows misbehaving or slow sessions to be aborted and closed, and
 // causes their resources eventually to be released.  Reset() does not wait
@@ -354,10 +640,38 @@ type ResetRequest struct {
 	DeviceFilters []string `protobuf:"bytes,2,rep,name=device_filters,json=deviceFilters" json:"device_filters,omitempty"`
 }
 
-func (m *ResetRequest) Reset()                    { *m = ResetRequest{} }
-func (m *ResetRequest) String() string            { return proto.CompactTextString(m) }
-func (*ResetRequest) ProtoMessage()               {}
-func (*ResetRequest) Descriptor() ([]byte, []int) { return fileDescriptorMaster, []int{10} }
+func (m *ResetRequest) Reset()         { *m = ResetRequest{} }
+func (m *ResetRequest) String() string { return proto.CompactTextString(m) }
+func (*ResetRequest) ProtoMessage()    {}
+func (*ResetRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_master_e6a2346712e7d9cc, []int{10}
+}
+func (m *ResetRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ResetRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ResetRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *ResetRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ResetRequest.Merge(dst, src)
+}
+func (m *ResetRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *ResetRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ResetRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ResetRequest proto.InternalMessageInfo
 
 func (m *ResetRequest) GetContainer() []string {
 	if m != nil {
@@ -376,28 +690,112 @@ func (m *ResetRequest) GetDeviceFilters() []string {
 type ResetResponse struct {
 }
 
-func (m *ResetResponse) Reset()                    { *m = ResetResponse{} }
-func (m *ResetResponse) String() string            { return proto.CompactTextString(m) }
-func (*ResetResponse) ProtoMessage()               {}
-func (*ResetResponse) Descriptor() ([]byte, []int) { return fileDescriptorMaster, []int{11} }
+func (m *ResetResponse) Reset()         { *m = ResetResponse{} }
+func (m *ResetResponse) String() string { return proto.CompactTextString(m) }
+func (*ResetResponse) ProtoMessage()    {}
+func (*ResetResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_master_e6a2346712e7d9cc, []int{11}
+}
+func (m *ResetResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ResetResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ResetResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *ResetResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ResetResponse.Merge(dst, src)
+}
+func (m *ResetResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *ResetResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ResetResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ResetResponse proto.InternalMessageInfo
 
 type ListDevicesRequest struct {
 }
 
-func (m *ListDevicesRequest) Reset()                    { *m = ListDevicesRequest{} }
-func (m *ListDevicesRequest) String() string            { return proto.CompactTextString(m) }
-func (*ListDevicesRequest) ProtoMessage()               {}
-func (*ListDevicesRequest) Descriptor() ([]byte, []int) { return fileDescriptorMaster, []int{12} }
+func (m *ListDevicesRequest) Reset()         { *m = ListDevicesRequest{} }
+func (m *ListDevicesRequest) String() string { return proto.CompactTextString(m) }
+func (*ListDevicesRequest) ProtoMessage()    {}
+func (*ListDevicesRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_master_e6a2346712e7d9cc, []int{12}
+}
+func (m *ListDevicesRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ListDevicesRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ListDevicesRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *ListDevicesRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListDevicesRequest.Merge(dst, src)
+}
+func (m *ListDevicesRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *ListDevicesRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListDevicesRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListDevicesRequest proto.InternalMessageInfo
 
 type ListDevicesResponse struct {
 	LocalDevice  []*DeviceAttributes `protobuf:"bytes,1,rep,name=local_device,json=localDevice" json:"local_device,omitempty"`
 	RemoteDevice []*DeviceAttributes `protobuf:"bytes,2,rep,name=remote_device,json=remoteDevice" json:"remote_device,omitempty"`
 }
 
-func (m *ListDevicesResponse) Reset()                    { *m = ListDevicesResponse{} }
-func (m *ListDevicesResponse) String() string            { return proto.CompactTextString(m) }
-func (*ListDevicesResponse) ProtoMessage()               {}
-func (*ListDevicesResponse) Descriptor() ([]byte, []int) { return fileDescriptorMaster, []int{13} }
+func (m *ListDevicesResponse) Reset()         { *m = ListDevicesResponse{} }
+func (m *ListDevicesResponse) String() string { return proto.CompactTextString(m) }
+func (*ListDevicesResponse) ProtoMessage()    {}
+func (*ListDevicesResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_master_e6a2346712e7d9cc, []int{13}
+}
+func (m *ListDevicesResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ListDevicesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ListDevicesResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *ListDevicesResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListDevicesResponse.Merge(dst, src)
+}
+func (m *ListDevicesResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *ListDevicesResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListDevicesResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListDevicesResponse proto.InternalMessageInfo
 
 func (m *ListDevicesResponse) GetLocalDevice() []*DeviceAttributes {
 	if m != nil {
@@ -957,6 +1355,9 @@ func encodeVarintMaster(dAtA []byte, offset int, v uint64) int {
 	return offset + 1
 }
 func (m *CreateSessionRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.GraphDef != nil {
@@ -975,6 +1376,9 @@ func (m *CreateSessionRequest) Size() (n int) {
 }
 
 func (m *CreateSessionResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.SessionHandle)
@@ -988,6 +1392,9 @@ func (m *CreateSessionResponse) Size() (n int) {
 }
 
 func (m *ExtendSessionRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.SessionHandle)
@@ -1005,6 +1412,9 @@ func (m *ExtendSessionRequest) Size() (n int) {
 }
 
 func (m *ExtendSessionResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.NewGraphVersion != 0 {
@@ -1014,6 +1424,9 @@ func (m *ExtendSessionResponse) Size() (n int) {
 }
 
 func (m *RunStepRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.SessionHandle)
@@ -1050,6 +1463,9 @@ func (m *RunStepRequest) Size() (n int) {
 }
 
 func (m *RunStepResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.Tensor) > 0 {
@@ -1066,6 +1482,9 @@ func (m *RunStepResponse) Size() (n int) {
 }
 
 func (m *PartialRunSetupRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.SessionHandle)
@@ -1094,6 +1513,9 @@ func (m *PartialRunSetupRequest) Size() (n int) {
 }
 
 func (m *PartialRunSetupResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.PartialRunHandle)
@@ -1104,6 +1526,9 @@ func (m *PartialRunSetupResponse) Size() (n int) {
 }
 
 func (m *CloseSessionRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.SessionHandle)
@@ -1114,12 +1539,18 @@ func (m *CloseSessionRequest) Size() (n int) {
 }
 
 func (m *CloseSessionResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	return n
 }
 
 func (m *ResetRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.Container) > 0 {
@@ -1138,18 +1569,27 @@ func (m *ResetRequest) Size() (n int) {
 }
 
 func (m *ResetResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	return n
 }
 
 func (m *ListDevicesRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	return n
 }
 
 func (m *ListDevicesResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.LocalDevice) > 0 {
@@ -2766,50 +3206,51 @@ var (
 	ErrIntOverflowMaster   = fmt.Errorf("proto: integer overflow")
 )
 
-func init() { proto.RegisterFile("master.proto", fileDescriptorMaster) }
+func init() { proto.RegisterFile("master.proto", fileDescriptor_master_e6a2346712e7d9cc) }
 
-var fileDescriptorMaster = []byte{
-	// 668 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x54, 0xcd, 0x6e, 0x13, 0x3d,
-	0x14, 0xfd, 0x9c, 0xb4, 0xf9, 0x9a, 0x9b, 0xa4, 0xfd, 0x3e, 0x37, 0x4d, 0x47, 0x55, 0x15, 0x45,
-	0x83, 0x90, 0x22, 0x84, 0x4a, 0x69, 0x59, 0x22, 0xa1, 0x36, 0x85, 0x22, 0xf1, 0x57, 0x39, 0x88,
-	0x6d, 0xe4, 0x66, 0xee, 0xa4, 0x23, 0x4d, 0xec, 0x60, 0x7b, 0x5a, 0x16, 0x6c, 0x78, 0x03, 0xc4,
-	0x8e, 0x3d, 0x0f, 0xc3, 0x92, 0x47, 0x40, 0xe5, 0x21, 0x60, 0x89, 0x62, 0xbb, 0xe9, 0x24, 0x14,
-	0x29, 0xed, 0x2e, 0xf7, 0xdc, 0xe3, 0x73, 0xcf, 0x3d, 0xe3, 0x18, 0xaa, 0x43, 0xae, 0x0d, 0xaa,
-	0xad, 0x91, 0x92, 0x46, 0x52, 0x30, 0x28, 0xb4, 0x54, 0x71, 0x2a, 0xcf, 0x36, 0xd6, 0x23, 0x3c,
-	0x4d, 0xfa, 0xd8, 0xe3, 0xc6, 0xa8, 0xe4, 0x38, 0x33, 0xa8, 0x1d, 0x69, 0xa3, 0x32, 0x50, 0x7c,
-	0x74, 0xe2, 0x8b, 0x6a, 0x5f, 0x8a, 0x38, 0x19, 0xf8, 0x8a, 0x0a, 0x3e, 0xc4, 0xa8, 0xe7, 0x54,
-	0x1c, 0x16, 0x7e, 0x22, 0x50, 0xef, 0x28, 0xe4, 0x06, 0xbb, 0xa8, 0x75, 0x22, 0x05, 0xc3, 0xb7,
-	0x19, 0x6a, 0x43, 0xef, 0x43, 0xd9, 0x2a, 0xf5, 0x22, 0x8c, 0x03, 0xd2, 0x22, 0xed, 0xca, 0x4e,
-	0x7d, 0xeb, 0xd2, 0xc0, 0xd6, 0xe1, 0xb8, 0x79, 0x80, 0x31, 0x5b, 0x1a, 0xf8, 0x5f, 0xf4, 0x1e,
-	0x94, 0xdc, 0xbc, 0xa0, 0x60, 0xf9, 0xeb, 0x79, 0x7e, 0xc7, 0x76, 0x8e, 0xc6, 0x43, 0x99, 0xa7,
-	0xd1, 0x06, 0x94, 0x0c, 0x57, 0x03, 0x34, 0x41, 0xb1, 0x45, 0xda, 0x65, 0xe6, 0xab, 0xb0, 0x0f,
-	0x6b, 0x33, 0x9e, 0xf4, 0x48, 0x0a, 0x8d, 0xf4, 0x36, 0x2c, 0x6b, 0x07, 0xf5, 0x4e, 0xb8, 0x88,
-	0x52, 0xb4, 0xce, 0xca, 0xac, 0xe6, 0xd1, 0xa7, 0x16, 0xa4, 0xb7, 0xa0, 0xe6, 0xbc, 0x9f, 0xa2,
-	0x1a, 0xc3, 0xd6, 0x4f, 0x91, 0x55, 0x2d, 0xf8, 0xc6, 0x61, 0xe1, 0x17, 0x02, 0xf5, 0xc7, 0xef,
-	0x0c, 0x8a, 0x68, 0x66, 0xf3, 0x39, 0x87, 0x4c, 0x05, 0x54, 0x98, 0x2b, 0xa0, 0x1d, 0x58, 0xeb,
-	0x67, 0x4a, 0xa1, 0x30, 0xbd, 0x69, 0x7f, 0x45, 0xeb, 0x6f, 0xd5, 0x37, 0x0f, 0xf3, 0x36, 0x3b,
-	0xb0, 0x36, 0xe3, 0xd2, 0x67, 0x71, 0x07, 0xfe, 0x17, 0x78, 0x36, 0x23, 0xb4, 0x60, 0x85, 0x56,
-	0x04, 0x9e, 0x4d, 0x89, 0xfc, 0x24, 0xb0, 0xcc, 0x32, 0xd1, 0x35, 0x38, 0xba, 0xe6, 0x96, 0xdb,
-	0xb0, 0x10, 0x23, 0x46, 0x41, 0xa1, 0x55, 0x6c, 0x57, 0x76, 0x36, 0xf3, 0x0b, 0xbe, 0x1c, 0xdf,
-	0xa6, 0xd7, 0xb6, 0x76, 0x9f, 0xd5, 0x32, 0x69, 0x1d, 0x16, 0x63, 0x34, 0xfd, 0x93, 0xa0, 0xd8,
-	0x2a, 0xb6, 0xcb, 0xcc, 0x15, 0xb9, 0x4f, 0xbd, 0x60, 0x61, 0x5f, 0xd1, 0x6d, 0xf8, 0x57, 0x8e,
-	0x4c, 0x22, 0x85, 0x0e, 0x16, 0x6d, 0x86, 0x8d, 0xfc, 0x08, 0x96, 0x89, 0x57, 0xae, 0xcb, 0x2e,
-	0x68, 0xf4, 0x2e, 0xd0, 0x11, 0x57, 0x26, 0xe1, 0x69, 0x4f, 0x65, 0x13, 0xf3, 0x25, 0x6b, 0xfe,
-	0x3f, 0xdf, 0x61, 0x99, 0xf7, 0x1f, 0xbe, 0x87, 0x95, 0xc9, 0xe2, 0x3e, 0xb8, 0x07, 0x50, 0x72,
-	0x23, 0x02, 0x32, 0xc7, 0x52, 0x9e, 0x4b, 0x77, 0x61, 0x69, 0x88, 0x86, 0x47, 0xdc, 0xf0, 0xab,
-	0xae, 0x37, 0xcb, 0xc4, 0x0b, 0xdf, 0x66, 0x13, 0x62, 0xf8, 0x81, 0x40, 0xe3, 0x68, 0x62, 0xa9,
-	0x8b, 0x26, 0xbb, 0x6e, 0xfe, 0x34, 0x97, 0x7f, 0xf9, 0x26, 0x09, 0x87, 0x87, 0xb0, 0xfe, 0x87,
-	0x05, 0x9f, 0xc4, 0xd5, 0x51, 0x92, 0xbf, 0x44, 0xf9, 0x10, 0x56, 0x3b, 0xa9, 0xd4, 0x78, 0xa3,
-	0xbf, 0x4b, 0xd8, 0x80, 0xfa, 0xf4, 0x69, 0xe7, 0x21, 0xec, 0x42, 0x95, 0xa1, 0x46, 0x73, 0x21,
-	0xb7, 0x09, 0xe5, 0xbe, 0x14, 0x86, 0x27, 0x02, 0xdd, 0x07, 0x2a, 0xb3, 0x4b, 0x60, 0x3c, 0xcc,
-	0x3f, 0x7c, 0x71, 0x92, 0x1a, 0x54, 0xda, 0x07, 0x53, 0x73, 0xe8, 0x13, 0x07, 0x86, 0x2b, 0x50,
-	0xf3, 0xa2, 0x7e, 0x4a, 0x1d, 0xe8, 0xf3, 0x44, 0x9b, 0x03, 0xcb, 0xd2, 0x7e, 0x56, 0xf8, 0x99,
-	0xc0, 0xea, 0x14, 0xec, 0x73, 0x79, 0x04, 0xd5, 0x54, 0xf6, 0x79, 0xda, 0x73, 0xaa, 0x57, 0xdd,
-	0x13, 0x77, 0x64, 0x6f, 0xf2, 0xfa, 0xb2, 0x8a, 0x3d, 0xe1, 0x60, 0xba, 0x07, 0x35, 0x85, 0x43,
-	0x69, 0xf0, 0x42, 0xa1, 0x30, 0x87, 0x42, 0xd5, 0x1d, 0x71, 0xf8, 0xfe, 0xb3, 0xaf, 0xe7, 0x4d,
-	0xf2, 0xed, 0xbc, 0x49, 0xbe, 0x9f, 0x37, 0xc9, 0xc7, 0x1f, 0xcd, 0x7f, 0x60, 0x43, 0xaa, 0x41,
-	0x5e, 0x20, 0x4a, 0xb4, 0x51, 0x99, 0x30, 0xc9, 0x10, 0xf7, 0x83, 0x83, 0x71, 0x61, 0x85, 0x22,
-	0xe6, 0x30, 0x7b, 0x7d, 0xf5, 0x11, 0xf9, 0x45, 0xc8, 0x71, 0xc9, 0x3e, 0xf6, 0xbb, 0xbf, 0x03,
-	0x00, 0x00, 0xff, 0xff, 0xcd, 0xb7, 0x68, 0x36, 0x50, 0x06, 0x00, 0x00,
+var fileDescriptor_master_e6a2346712e7d9cc = []byte{
+	// 675 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x54, 0x4f, 0x4f, 0x53, 0x4f,
+	0x14, 0x65, 0x5a, 0xe8, 0x8f, 0xde, 0xb6, 0xf0, 0x73, 0x28, 0xe5, 0x85, 0x90, 0xa6, 0x79, 0xc6,
+	0xa4, 0x31, 0x06, 0x11, 0x5c, 0x9a, 0x18, 0x28, 0x8a, 0x0b, 0xff, 0x90, 0xa9, 0x71, 0xdb, 0x0c,
+	0x7d, 0xb7, 0xe5, 0x25, 0xaf, 0x33, 0x75, 0x66, 0x1e, 0xb8, 0x70, 0xe3, 0x37, 0x30, 0xee, 0xdc,
+	0xfb, 0x61, 0x5c, 0xb2, 0x74, 0x69, 0xe0, 0x43, 0xe8, 0xd2, 0x74, 0x66, 0x28, 0xaf, 0x15, 0x93,
+	0xc2, 0xae, 0xf7, 0xdc, 0x33, 0xe7, 0x9e, 0x7b, 0xde, 0x74, 0xa0, 0x3c, 0xe0, 0xda, 0xa0, 0xda,
+	0x1c, 0x2a, 0x69, 0x24, 0x05, 0x83, 0x42, 0x4b, 0xd5, 0x4b, 0xe4, 0xe9, 0xfa, 0x5a, 0x84, 0x27,
+	0x71, 0x17, 0x3b, 0xdc, 0x18, 0x15, 0x1f, 0xa5, 0x06, 0xb5, 0x23, 0xad, 0x97, 0xfa, 0x8a, 0x0f,
+	0x8f, 0x7d, 0x51, 0xee, 0x4a, 0xd1, 0x8b, 0xfb, 0xbe, 0xa2, 0x82, 0x0f, 0x30, 0xea, 0x38, 0x15,
+	0x87, 0x85, 0x5f, 0x08, 0x54, 0x5b, 0x0a, 0xb9, 0xc1, 0x36, 0x6a, 0x1d, 0x4b, 0xc1, 0xf0, 0x7d,
+	0x8a, 0xda, 0xd0, 0x47, 0x50, 0xb4, 0x4a, 0x9d, 0x08, 0x7b, 0x01, 0x69, 0x90, 0x66, 0x69, 0xbb,
+	0xba, 0x79, 0x65, 0x60, 0xf3, 0x60, 0xd4, 0xdc, 0xc7, 0x1e, 0x5b, 0xec, 0xfb, 0x5f, 0xf4, 0x21,
+	0x14, 0xdc, 0xbc, 0x20, 0x67, 0xf9, 0x6b, 0x59, 0x7e, 0xcb, 0x76, 0x0e, 0x47, 0x43, 0x99, 0xa7,
+	0xd1, 0x1a, 0x14, 0x0c, 0x57, 0x7d, 0x34, 0x41, 0xbe, 0x41, 0x9a, 0x45, 0xe6, 0xab, 0xb0, 0x0b,
+	0xab, 0x53, 0x9e, 0xf4, 0x50, 0x0a, 0x8d, 0xf4, 0x1e, 0x2c, 0x69, 0x07, 0x75, 0x8e, 0xb9, 0x88,
+	0x12, 0xb4, 0xce, 0x8a, 0xac, 0xe2, 0xd1, 0x17, 0x16, 0xa4, 0x77, 0xa1, 0xe2, 0xbc, 0x9f, 0xa0,
+	0x1a, 0xc1, 0xd6, 0x4f, 0x9e, 0x95, 0x2d, 0xf8, 0xce, 0x61, 0xe1, 0x37, 0x02, 0xd5, 0x67, 0x1f,
+	0x0c, 0x8a, 0x68, 0x6a, 0xf3, 0x19, 0x87, 0x4c, 0x04, 0x94, 0x9b, 0x29, 0xa0, 0x6d, 0x58, 0xed,
+	0xa6, 0x4a, 0xa1, 0x30, 0x9d, 0x49, 0x7f, 0x79, 0xeb, 0x6f, 0xc5, 0x37, 0x0f, 0xb2, 0x36, 0x5b,
+	0xb0, 0x3a, 0xe5, 0xd2, 0x67, 0x71, 0x1f, 0xee, 0x08, 0x3c, 0x9d, 0x12, 0x9a, 0xb7, 0x42, 0xcb,
+	0x02, 0x4f, 0x27, 0x44, 0x7e, 0x11, 0x58, 0x62, 0xa9, 0x68, 0x1b, 0x1c, 0xde, 0x70, 0xcb, 0x2d,
+	0x98, 0xef, 0x21, 0x46, 0x41, 0xae, 0x91, 0x6f, 0x96, 0xb6, 0x37, 0xb2, 0x0b, 0xbe, 0x1e, 0xdd,
+	0xa6, 0xb7, 0xb6, 0x76, 0x9f, 0xd5, 0x32, 0x69, 0x15, 0x16, 0x7a, 0x68, 0xba, 0xc7, 0x41, 0xbe,
+	0x91, 0x6f, 0x16, 0x99, 0x2b, 0x32, 0x9f, 0x7a, 0xde, 0xc2, 0xbe, 0xa2, 0x5b, 0xf0, 0x9f, 0x1c,
+	0x9a, 0x58, 0x0a, 0x1d, 0x2c, 0xd8, 0x0c, 0x6b, 0xd9, 0x11, 0x2c, 0x15, 0x6f, 0x5c, 0x97, 0x5d,
+	0xd2, 0xe8, 0x03, 0xa0, 0x43, 0xae, 0x4c, 0xcc, 0x93, 0x8e, 0x4a, 0xc7, 0xe6, 0x0b, 0xd6, 0xfc,
+	0xff, 0xbe, 0xc3, 0x52, 0xef, 0x3f, 0xfc, 0x08, 0xcb, 0xe3, 0xc5, 0x7d, 0x70, 0x8f, 0xa1, 0xe0,
+	0x46, 0x04, 0x64, 0x86, 0xa5, 0x3c, 0x97, 0xee, 0xc0, 0xe2, 0x00, 0x0d, 0x8f, 0xb8, 0xe1, 0xd7,
+	0x5d, 0x6f, 0x96, 0x8a, 0x57, 0xbe, 0xcd, 0xc6, 0xc4, 0xf0, 0x13, 0x81, 0xda, 0xe1, 0xd8, 0x52,
+	0x1b, 0x4d, 0x7a, 0xd3, 0xfc, 0x69, 0x26, 0xff, 0xe2, 0x6d, 0x12, 0x0e, 0x0f, 0x60, 0xed, 0x2f,
+	0x0b, 0x3e, 0x89, 0xeb, 0xa3, 0x24, 0xff, 0x88, 0xf2, 0x09, 0xac, 0xb4, 0x12, 0xa9, 0xf1, 0x56,
+	0x7f, 0x97, 0xb0, 0x06, 0xd5, 0xc9, 0xd3, 0xce, 0x43, 0xd8, 0x86, 0x32, 0x43, 0x8d, 0xe6, 0x52,
+	0x6e, 0x03, 0x8a, 0x5d, 0x29, 0x0c, 0x8f, 0x05, 0xba, 0x0f, 0x54, 0x64, 0x57, 0xc0, 0x68, 0x98,
+	0x7f, 0xf8, 0x7a, 0x71, 0x62, 0x50, 0x69, 0x1f, 0x4c, 0xc5, 0xa1, 0xcf, 0x1d, 0x18, 0x2e, 0x43,
+	0xc5, 0x8b, 0xfa, 0x29, 0x55, 0xa0, 0x2f, 0x63, 0x6d, 0xf6, 0x2d, 0x4b, 0xfb, 0x59, 0xe1, 0x57,
+	0x02, 0x2b, 0x13, 0xb0, 0xcf, 0xe5, 0x29, 0x94, 0x13, 0xd9, 0xe5, 0x49, 0xc7, 0xa9, 0x5e, 0x77,
+	0x4f, 0xdc, 0x91, 0xdd, 0xf1, 0xeb, 0xcb, 0x4a, 0xf6, 0x84, 0x83, 0xe9, 0x2e, 0x54, 0x14, 0x0e,
+	0xa4, 0xc1, 0x4b, 0x85, 0xdc, 0x0c, 0x0a, 0x65, 0x77, 0xc4, 0xe1, 0x7b, 0xed, 0xef, 0xe7, 0x75,
+	0x72, 0x76, 0x5e, 0x27, 0x3f, 0xcf, 0xeb, 0xe4, 0xf3, 0x45, 0x7d, 0xee, 0xec, 0xa2, 0x3e, 0xf7,
+	0xe3, 0xa2, 0x3e, 0x07, 0xeb, 0x52, 0xf5, 0xb3, 0x42, 0x51, 0xac, 0x8d, 0x4a, 0x85, 0x89, 0x07,
+	0xb8, 0x17, 0xec, 0x8f, 0x0a, 0x2b, 0x18, 0x31, 0x87, 0xd9, 0x6b, 0xac, 0x0f, 0xc9, 0x6f, 0x42,
+	0x8e, 0x0a, 0xf6, 0xd1, 0xdf, 0xf9, 0x13, 0x00, 0x00, 0xff, 0xff, 0x5a, 0xf6, 0xab, 0x80, 0x58,
+	0x06, 0x00, 0x00,
 }

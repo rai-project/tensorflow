@@ -6,9 +6,9 @@ package tensorflow
 import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import google_protobuf "github.com/gogo/protobuf/types"
+import types "github.com/gogo/protobuf/types"
 
-import binary "encoding/binary"
+import encoding_binary "encoding/binary"
 
 import io "io"
 
@@ -16,6 +16,12 @@ import io "io"
 var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
 
 // NOTE: This protocol buffer is evolving, and will go through revisions in the
 // coming months.
@@ -47,10 +53,38 @@ type MetaGraphDef struct {
 	AssetFileDef []*AssetFileDef `protobuf:"bytes,6,rep,name=asset_file_def,json=assetFileDef" json:"asset_file_def,omitempty"`
 }
 
-func (m *MetaGraphDef) Reset()                    { *m = MetaGraphDef{} }
-func (m *MetaGraphDef) String() string            { return proto.CompactTextString(m) }
-func (*MetaGraphDef) ProtoMessage()               {}
-func (*MetaGraphDef) Descriptor() ([]byte, []int) { return fileDescriptorMetaGraph, []int{0} }
+func (m *MetaGraphDef) Reset()         { *m = MetaGraphDef{} }
+func (m *MetaGraphDef) String() string { return proto.CompactTextString(m) }
+func (*MetaGraphDef) ProtoMessage()    {}
+func (*MetaGraphDef) Descriptor() ([]byte, []int) {
+	return fileDescriptor_meta_graph_f1f53ce019dff66d, []int{0}
+}
+func (m *MetaGraphDef) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MetaGraphDef) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MetaGraphDef.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *MetaGraphDef) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MetaGraphDef.Merge(dst, src)
+}
+func (m *MetaGraphDef) XXX_Size() int {
+	return m.Size()
+}
+func (m *MetaGraphDef) XXX_DiscardUnknown() {
+	xxx_messageInfo_MetaGraphDef.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MetaGraphDef proto.InternalMessageInfo
 
 func (m *MetaGraphDef) GetMetaInfoDef() *MetaGraphDef_MetaInfoDef {
 	if m != nil {
@@ -105,7 +139,7 @@ type MetaGraphDef_MetaInfoDef struct {
 	StrippedOpList *OpList `protobuf:"bytes,2,opt,name=stripped_op_list,json=strippedOpList" json:"stripped_op_list,omitempty"`
 	// A serialized protobuf. Can be the time this meta graph is created, or
 	// modified, or name of the model.
-	AnyInfo *google_protobuf.Any `protobuf:"bytes,3,opt,name=any_info,json=anyInfo" json:"any_info,omitempty"`
+	AnyInfo *types.Any `protobuf:"bytes,3,opt,name=any_info,json=anyInfo" json:"any_info,omitempty"`
 	// User supplied tag(s) on the meta_graph and included graph_def.
 	//
 	// MetaGraphDefs should be tagged with their capabilities or use-cases.
@@ -127,8 +161,34 @@ func (m *MetaGraphDef_MetaInfoDef) Reset()         { *m = MetaGraphDef_MetaInfoD
 func (m *MetaGraphDef_MetaInfoDef) String() string { return proto.CompactTextString(m) }
 func (*MetaGraphDef_MetaInfoDef) ProtoMessage()    {}
 func (*MetaGraphDef_MetaInfoDef) Descriptor() ([]byte, []int) {
-	return fileDescriptorMetaGraph, []int{0, 0}
+	return fileDescriptor_meta_graph_f1f53ce019dff66d, []int{0, 0}
 }
+func (m *MetaGraphDef_MetaInfoDef) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MetaGraphDef_MetaInfoDef) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MetaGraphDef_MetaInfoDef.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *MetaGraphDef_MetaInfoDef) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MetaGraphDef_MetaInfoDef.Merge(dst, src)
+}
+func (m *MetaGraphDef_MetaInfoDef) XXX_Size() int {
+	return m.Size()
+}
+func (m *MetaGraphDef_MetaInfoDef) XXX_DiscardUnknown() {
+	xxx_messageInfo_MetaGraphDef_MetaInfoDef.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MetaGraphDef_MetaInfoDef proto.InternalMessageInfo
 
 func (m *MetaGraphDef_MetaInfoDef) GetMetaGraphVersion() string {
 	if m != nil {
@@ -144,7 +204,7 @@ func (m *MetaGraphDef_MetaInfoDef) GetStrippedOpList() *OpList {
 	return nil
 }
 
-func (m *MetaGraphDef_MetaInfoDef) GetAnyInfo() *google_protobuf.Any {
+func (m *MetaGraphDef_MetaInfoDef) GetAnyInfo() *types.Any {
 	if m != nil {
 		return m.AnyInfo
 	}
@@ -244,10 +304,38 @@ type CollectionDef struct {
 	Kind isCollectionDef_Kind `protobuf_oneof:"kind"`
 }
 
-func (m *CollectionDef) Reset()                    { *m = CollectionDef{} }
-func (m *CollectionDef) String() string            { return proto.CompactTextString(m) }
-func (*CollectionDef) ProtoMessage()               {}
-func (*CollectionDef) Descriptor() ([]byte, []int) { return fileDescriptorMetaGraph, []int{1} }
+func (m *CollectionDef) Reset()         { *m = CollectionDef{} }
+func (m *CollectionDef) String() string { return proto.CompactTextString(m) }
+func (*CollectionDef) ProtoMessage()    {}
+func (*CollectionDef) Descriptor() ([]byte, []int) {
+	return fileDescriptor_meta_graph_f1f53ce019dff66d, []int{1}
+}
+func (m *CollectionDef) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CollectionDef) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CollectionDef.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *CollectionDef) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CollectionDef.Merge(dst, src)
+}
+func (m *CollectionDef) XXX_Size() int {
+	return m.Size()
+}
+func (m *CollectionDef) XXX_DiscardUnknown() {
+	xxx_messageInfo_CollectionDef.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CollectionDef proto.InternalMessageInfo
 
 type isCollectionDef_Kind interface {
 	isCollectionDef_Kind()
@@ -420,27 +508,27 @@ func _CollectionDef_OneofSizer(msg proto.Message) (n int) {
 	switch x := m.Kind.(type) {
 	case *CollectionDef_NodeList_:
 		s := proto.Size(x.NodeList)
-		n += proto.SizeVarint(1<<3 | proto.WireBytes)
+		n += 1 // tag and wire
 		n += proto.SizeVarint(uint64(s))
 		n += s
 	case *CollectionDef_BytesList_:
 		s := proto.Size(x.BytesList)
-		n += proto.SizeVarint(2<<3 | proto.WireBytes)
+		n += 1 // tag and wire
 		n += proto.SizeVarint(uint64(s))
 		n += s
 	case *CollectionDef_Int64List_:
 		s := proto.Size(x.Int64List)
-		n += proto.SizeVarint(3<<3 | proto.WireBytes)
+		n += 1 // tag and wire
 		n += proto.SizeVarint(uint64(s))
 		n += s
 	case *CollectionDef_FloatList_:
 		s := proto.Size(x.FloatList)
-		n += proto.SizeVarint(4<<3 | proto.WireBytes)
+		n += 1 // tag and wire
 		n += proto.SizeVarint(uint64(s))
 		n += s
 	case *CollectionDef_AnyList_:
 		s := proto.Size(x.AnyList)
-		n += proto.SizeVarint(5<<3 | proto.WireBytes)
+		n += 1 // tag and wire
 		n += proto.SizeVarint(uint64(s))
 		n += s
 	case nil:
@@ -468,8 +556,34 @@ func (m *CollectionDef_NodeList) Reset()         { *m = CollectionDef_NodeList{}
 func (m *CollectionDef_NodeList) String() string { return proto.CompactTextString(m) }
 func (*CollectionDef_NodeList) ProtoMessage()    {}
 func (*CollectionDef_NodeList) Descriptor() ([]byte, []int) {
-	return fileDescriptorMetaGraph, []int{1, 0}
+	return fileDescriptor_meta_graph_f1f53ce019dff66d, []int{1, 0}
 }
+func (m *CollectionDef_NodeList) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CollectionDef_NodeList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CollectionDef_NodeList.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *CollectionDef_NodeList) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CollectionDef_NodeList.Merge(dst, src)
+}
+func (m *CollectionDef_NodeList) XXX_Size() int {
+	return m.Size()
+}
+func (m *CollectionDef_NodeList) XXX_DiscardUnknown() {
+	xxx_messageInfo_CollectionDef_NodeList.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CollectionDef_NodeList proto.InternalMessageInfo
 
 func (m *CollectionDef_NodeList) GetValue() []string {
 	if m != nil {
@@ -499,8 +613,34 @@ func (m *CollectionDef_BytesList) Reset()         { *m = CollectionDef_BytesList
 func (m *CollectionDef_BytesList) String() string { return proto.CompactTextString(m) }
 func (*CollectionDef_BytesList) ProtoMessage()    {}
 func (*CollectionDef_BytesList) Descriptor() ([]byte, []int) {
-	return fileDescriptorMetaGraph, []int{1, 1}
+	return fileDescriptor_meta_graph_f1f53ce019dff66d, []int{1, 1}
 }
+func (m *CollectionDef_BytesList) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CollectionDef_BytesList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CollectionDef_BytesList.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *CollectionDef_BytesList) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CollectionDef_BytesList.Merge(dst, src)
+}
+func (m *CollectionDef_BytesList) XXX_Size() int {
+	return m.Size()
+}
+func (m *CollectionDef_BytesList) XXX_DiscardUnknown() {
+	xxx_messageInfo_CollectionDef_BytesList.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CollectionDef_BytesList proto.InternalMessageInfo
 
 func (m *CollectionDef_BytesList) GetValue() [][]byte {
 	if m != nil {
@@ -518,8 +658,34 @@ func (m *CollectionDef_Int64List) Reset()         { *m = CollectionDef_Int64List
 func (m *CollectionDef_Int64List) String() string { return proto.CompactTextString(m) }
 func (*CollectionDef_Int64List) ProtoMessage()    {}
 func (*CollectionDef_Int64List) Descriptor() ([]byte, []int) {
-	return fileDescriptorMetaGraph, []int{1, 2}
+	return fileDescriptor_meta_graph_f1f53ce019dff66d, []int{1, 2}
 }
+func (m *CollectionDef_Int64List) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CollectionDef_Int64List) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CollectionDef_Int64List.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *CollectionDef_Int64List) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CollectionDef_Int64List.Merge(dst, src)
+}
+func (m *CollectionDef_Int64List) XXX_Size() int {
+	return m.Size()
+}
+func (m *CollectionDef_Int64List) XXX_DiscardUnknown() {
+	xxx_messageInfo_CollectionDef_Int64List.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CollectionDef_Int64List proto.InternalMessageInfo
 
 func (m *CollectionDef_Int64List) GetValue() []int64 {
 	if m != nil {
@@ -537,8 +703,34 @@ func (m *CollectionDef_FloatList) Reset()         { *m = CollectionDef_FloatList
 func (m *CollectionDef_FloatList) String() string { return proto.CompactTextString(m) }
 func (*CollectionDef_FloatList) ProtoMessage()    {}
 func (*CollectionDef_FloatList) Descriptor() ([]byte, []int) {
-	return fileDescriptorMetaGraph, []int{1, 3}
+	return fileDescriptor_meta_graph_f1f53ce019dff66d, []int{1, 3}
 }
+func (m *CollectionDef_FloatList) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CollectionDef_FloatList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CollectionDef_FloatList.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *CollectionDef_FloatList) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CollectionDef_FloatList.Merge(dst, src)
+}
+func (m *CollectionDef_FloatList) XXX_Size() int {
+	return m.Size()
+}
+func (m *CollectionDef_FloatList) XXX_DiscardUnknown() {
+	xxx_messageInfo_CollectionDef_FloatList.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CollectionDef_FloatList proto.InternalMessageInfo
 
 func (m *CollectionDef_FloatList) GetValue() []float32 {
 	if m != nil {
@@ -549,17 +741,43 @@ func (m *CollectionDef_FloatList) GetValue() []float32 {
 
 // AnyList is used for collecting Any protos.
 type CollectionDef_AnyList struct {
-	Value []*google_protobuf.Any `protobuf:"bytes,1,rep,name=value" json:"value,omitempty"`
+	Value []*types.Any `protobuf:"bytes,1,rep,name=value" json:"value,omitempty"`
 }
 
 func (m *CollectionDef_AnyList) Reset()         { *m = CollectionDef_AnyList{} }
 func (m *CollectionDef_AnyList) String() string { return proto.CompactTextString(m) }
 func (*CollectionDef_AnyList) ProtoMessage()    {}
 func (*CollectionDef_AnyList) Descriptor() ([]byte, []int) {
-	return fileDescriptorMetaGraph, []int{1, 4}
+	return fileDescriptor_meta_graph_f1f53ce019dff66d, []int{1, 4}
+}
+func (m *CollectionDef_AnyList) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *CollectionDef_AnyList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_CollectionDef_AnyList.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *CollectionDef_AnyList) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CollectionDef_AnyList.Merge(dst, src)
+}
+func (m *CollectionDef_AnyList) XXX_Size() int {
+	return m.Size()
+}
+func (m *CollectionDef_AnyList) XXX_DiscardUnknown() {
+	xxx_messageInfo_CollectionDef_AnyList.DiscardUnknown(m)
 }
 
-func (m *CollectionDef_AnyList) GetValue() []*google_protobuf.Any {
+var xxx_messageInfo_CollectionDef_AnyList proto.InternalMessageInfo
+
+func (m *CollectionDef_AnyList) GetValue() []*types.Any {
 	if m != nil {
 		return m.Value
 	}
@@ -579,10 +797,38 @@ type TensorInfo struct {
 	TensorShape *TensorShapeProto `protobuf:"bytes,3,opt,name=tensor_shape,json=tensorShape" json:"tensor_shape,omitempty"`
 }
 
-func (m *TensorInfo) Reset()                    { *m = TensorInfo{} }
-func (m *TensorInfo) String() string            { return proto.CompactTextString(m) }
-func (*TensorInfo) ProtoMessage()               {}
-func (*TensorInfo) Descriptor() ([]byte, []int) { return fileDescriptorMetaGraph, []int{2} }
+func (m *TensorInfo) Reset()         { *m = TensorInfo{} }
+func (m *TensorInfo) String() string { return proto.CompactTextString(m) }
+func (*TensorInfo) ProtoMessage()    {}
+func (*TensorInfo) Descriptor() ([]byte, []int) {
+	return fileDescriptor_meta_graph_f1f53ce019dff66d, []int{2}
+}
+func (m *TensorInfo) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *TensorInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_TensorInfo.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *TensorInfo) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TensorInfo.Merge(dst, src)
+}
+func (m *TensorInfo) XXX_Size() int {
+	return m.Size()
+}
+func (m *TensorInfo) XXX_DiscardUnknown() {
+	xxx_messageInfo_TensorInfo.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TensorInfo proto.InternalMessageInfo
 
 type isTensorInfo_Encoding interface {
 	isTensorInfo_Encoding()
@@ -690,12 +936,12 @@ func _TensorInfo_OneofSizer(msg proto.Message) (n int) {
 	// encoding
 	switch x := m.Encoding.(type) {
 	case *TensorInfo_Name:
-		n += proto.SizeVarint(1<<3 | proto.WireBytes)
+		n += 1 // tag and wire
 		n += proto.SizeVarint(uint64(len(x.Name)))
 		n += len(x.Name)
 	case *TensorInfo_CooSparse_:
 		s := proto.Size(x.CooSparse)
-		n += proto.SizeVarint(4<<3 | proto.WireBytes)
+		n += 1 // tag and wire
 		n += proto.SizeVarint(uint64(s))
 		n += s
 	case nil:
@@ -718,10 +964,38 @@ type TensorInfo_CooSparse struct {
 	DenseShapeTensorName string `protobuf:"bytes,3,opt,name=dense_shape_tensor_name,json=denseShapeTensorName,proto3" json:"dense_shape_tensor_name,omitempty"`
 }
 
-func (m *TensorInfo_CooSparse) Reset()                    { *m = TensorInfo_CooSparse{} }
-func (m *TensorInfo_CooSparse) String() string            { return proto.CompactTextString(m) }
-func (*TensorInfo_CooSparse) ProtoMessage()               {}
-func (*TensorInfo_CooSparse) Descriptor() ([]byte, []int) { return fileDescriptorMetaGraph, []int{2, 0} }
+func (m *TensorInfo_CooSparse) Reset()         { *m = TensorInfo_CooSparse{} }
+func (m *TensorInfo_CooSparse) String() string { return proto.CompactTextString(m) }
+func (*TensorInfo_CooSparse) ProtoMessage()    {}
+func (*TensorInfo_CooSparse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_meta_graph_f1f53ce019dff66d, []int{2, 0}
+}
+func (m *TensorInfo_CooSparse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *TensorInfo_CooSparse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_TensorInfo_CooSparse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *TensorInfo_CooSparse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TensorInfo_CooSparse.Merge(dst, src)
+}
+func (m *TensorInfo_CooSparse) XXX_Size() int {
+	return m.Size()
+}
+func (m *TensorInfo_CooSparse) XXX_DiscardUnknown() {
+	xxx_messageInfo_TensorInfo_CooSparse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TensorInfo_CooSparse proto.InternalMessageInfo
 
 func (m *TensorInfo_CooSparse) GetValuesTensorName() string {
 	if m != nil {
@@ -817,10 +1091,38 @@ type SignatureDef struct {
 	MethodName string `protobuf:"bytes,3,opt,name=method_name,json=methodName,proto3" json:"method_name,omitempty"`
 }
 
-func (m *SignatureDef) Reset()                    { *m = SignatureDef{} }
-func (m *SignatureDef) String() string            { return proto.CompactTextString(m) }
-func (*SignatureDef) ProtoMessage()               {}
-func (*SignatureDef) Descriptor() ([]byte, []int) { return fileDescriptorMetaGraph, []int{3} }
+func (m *SignatureDef) Reset()         { *m = SignatureDef{} }
+func (m *SignatureDef) String() string { return proto.CompactTextString(m) }
+func (*SignatureDef) ProtoMessage()    {}
+func (*SignatureDef) Descriptor() ([]byte, []int) {
+	return fileDescriptor_meta_graph_f1f53ce019dff66d, []int{3}
+}
+func (m *SignatureDef) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *SignatureDef) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_SignatureDef.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *SignatureDef) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SignatureDef.Merge(dst, src)
+}
+func (m *SignatureDef) XXX_Size() int {
+	return m.Size()
+}
+func (m *SignatureDef) XXX_DiscardUnknown() {
+	xxx_messageInfo_SignatureDef.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SignatureDef proto.InternalMessageInfo
 
 func (m *SignatureDef) GetInputs() map[string]*TensorInfo {
 	if m != nil {
@@ -854,10 +1156,38 @@ type AssetFileDef struct {
 	Filename string `protobuf:"bytes,2,opt,name=filename,proto3" json:"filename,omitempty"`
 }
 
-func (m *AssetFileDef) Reset()                    { *m = AssetFileDef{} }
-func (m *AssetFileDef) String() string            { return proto.CompactTextString(m) }
-func (*AssetFileDef) ProtoMessage()               {}
-func (*AssetFileDef) Descriptor() ([]byte, []int) { return fileDescriptorMetaGraph, []int{4} }
+func (m *AssetFileDef) Reset()         { *m = AssetFileDef{} }
+func (m *AssetFileDef) String() string { return proto.CompactTextString(m) }
+func (*AssetFileDef) ProtoMessage()    {}
+func (*AssetFileDef) Descriptor() ([]byte, []int) {
+	return fileDescriptor_meta_graph_f1f53ce019dff66d, []int{4}
+}
+func (m *AssetFileDef) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *AssetFileDef) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_AssetFileDef.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *AssetFileDef) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AssetFileDef.Merge(dst, src)
+}
+func (m *AssetFileDef) XXX_Size() int {
+	return m.Size()
+}
+func (m *AssetFileDef) XXX_DiscardUnknown() {
+	xxx_messageInfo_AssetFileDef.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AssetFileDef proto.InternalMessageInfo
 
 func (m *AssetFileDef) GetTensorInfo() *TensorInfo {
 	if m != nil {
@@ -875,6 +1205,8 @@ func (m *AssetFileDef) GetFilename() string {
 
 func init() {
 	proto.RegisterType((*MetaGraphDef)(nil), "tensorflow.MetaGraphDef")
+	proto.RegisterMapType((map[string]*CollectionDef)(nil), "tensorflow.MetaGraphDef.CollectionDefEntry")
+	proto.RegisterMapType((map[string]*SignatureDef)(nil), "tensorflow.MetaGraphDef.SignatureDefEntry")
 	proto.RegisterType((*MetaGraphDef_MetaInfoDef)(nil), "tensorflow.MetaGraphDef.MetaInfoDef")
 	proto.RegisterType((*CollectionDef)(nil), "tensorflow.CollectionDef")
 	proto.RegisterType((*CollectionDef_NodeList)(nil), "tensorflow.CollectionDef.NodeList")
@@ -885,6 +1217,8 @@ func init() {
 	proto.RegisterType((*TensorInfo)(nil), "tensorflow.TensorInfo")
 	proto.RegisterType((*TensorInfo_CooSparse)(nil), "tensorflow.TensorInfo.CooSparse")
 	proto.RegisterType((*SignatureDef)(nil), "tensorflow.SignatureDef")
+	proto.RegisterMapType((map[string]*TensorInfo)(nil), "tensorflow.SignatureDef.InputsEntry")
+	proto.RegisterMapType((map[string]*TensorInfo)(nil), "tensorflow.SignatureDef.OutputsEntry")
 	proto.RegisterType((*AssetFileDef)(nil), "tensorflow.AssetFileDef")
 }
 func (m *MetaGraphDef) Marshal() (dAtA []byte, err error) {
@@ -1285,7 +1619,7 @@ func (m *CollectionDef_FloatList) MarshalTo(dAtA []byte) (int, error) {
 		i = encodeVarintMetaGraph(dAtA, i, uint64(len(m.Value)*4))
 		for _, num := range m.Value {
 			f16 := math.Float32bits(float32(num))
-			binary.LittleEndian.PutUint32(dAtA[i:], uint32(f16))
+			encoding_binary.LittleEndian.PutUint32(dAtA[i:], uint32(f16))
 			i += 4
 		}
 	}
@@ -1544,6 +1878,9 @@ func encodeVarintMetaGraph(dAtA []byte, offset int, v uint64) int {
 	return offset + 1
 }
 func (m *MetaGraphDef) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.MetaInfoDef != nil {
@@ -1594,6 +1931,9 @@ func (m *MetaGraphDef) Size() (n int) {
 }
 
 func (m *MetaGraphDef_MetaInfoDef) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.MetaGraphVersion)
@@ -1626,6 +1966,9 @@ func (m *MetaGraphDef_MetaInfoDef) Size() (n int) {
 }
 
 func (m *CollectionDef) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.Kind != nil {
@@ -1635,6 +1978,9 @@ func (m *CollectionDef) Size() (n int) {
 }
 
 func (m *CollectionDef_NodeList_) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.NodeList != nil {
@@ -1644,6 +1990,9 @@ func (m *CollectionDef_NodeList_) Size() (n int) {
 	return n
 }
 func (m *CollectionDef_BytesList_) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.BytesList != nil {
@@ -1653,6 +2002,9 @@ func (m *CollectionDef_BytesList_) Size() (n int) {
 	return n
 }
 func (m *CollectionDef_Int64List_) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.Int64List != nil {
@@ -1662,6 +2014,9 @@ func (m *CollectionDef_Int64List_) Size() (n int) {
 	return n
 }
 func (m *CollectionDef_FloatList_) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.FloatList != nil {
@@ -1671,6 +2026,9 @@ func (m *CollectionDef_FloatList_) Size() (n int) {
 	return n
 }
 func (m *CollectionDef_AnyList_) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.AnyList != nil {
@@ -1680,6 +2038,9 @@ func (m *CollectionDef_AnyList_) Size() (n int) {
 	return n
 }
 func (m *CollectionDef_NodeList) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.Value) > 0 {
@@ -1692,6 +2053,9 @@ func (m *CollectionDef_NodeList) Size() (n int) {
 }
 
 func (m *CollectionDef_BytesList) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.Value) > 0 {
@@ -1704,6 +2068,9 @@ func (m *CollectionDef_BytesList) Size() (n int) {
 }
 
 func (m *CollectionDef_Int64List) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.Value) > 0 {
@@ -1717,6 +2084,9 @@ func (m *CollectionDef_Int64List) Size() (n int) {
 }
 
 func (m *CollectionDef_FloatList) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.Value) > 0 {
@@ -1726,6 +2096,9 @@ func (m *CollectionDef_FloatList) Size() (n int) {
 }
 
 func (m *CollectionDef_AnyList) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.Value) > 0 {
@@ -1738,6 +2111,9 @@ func (m *CollectionDef_AnyList) Size() (n int) {
 }
 
 func (m *TensorInfo) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.Encoding != nil {
@@ -1754,6 +2130,9 @@ func (m *TensorInfo) Size() (n int) {
 }
 
 func (m *TensorInfo_Name) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.Name)
@@ -1761,6 +2140,9 @@ func (m *TensorInfo_Name) Size() (n int) {
 	return n
 }
 func (m *TensorInfo_CooSparse_) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.CooSparse != nil {
@@ -1770,6 +2152,9 @@ func (m *TensorInfo_CooSparse_) Size() (n int) {
 	return n
 }
 func (m *TensorInfo_CooSparse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	l = len(m.ValuesTensorName)
@@ -1788,6 +2173,9 @@ func (m *TensorInfo_CooSparse) Size() (n int) {
 }
 
 func (m *SignatureDef) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if len(m.Inputs) > 0 {
@@ -1824,6 +2212,9 @@ func (m *SignatureDef) Size() (n int) {
 }
 
 func (m *AssetFileDef) Size() (n int) {
+	if m == nil {
+		return 0
+	}
 	var l int
 	_ = l
 	if m.TensorInfo != nil {
@@ -2394,7 +2785,7 @@ func (m *MetaGraphDef_MetaInfoDef) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if m.AnyInfo == nil {
-				m.AnyInfo = &google_protobuf.Any{}
+				m.AnyInfo = &types.Any{}
 			}
 			if err := m.AnyInfo.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
@@ -2946,6 +3337,17 @@ func (m *CollectionDef_Int64List) Unmarshal(dAtA []byte) error {
 				if postIndex > l {
 					return io.ErrUnexpectedEOF
 				}
+				var elementCount int
+				var count int
+				for _, integer := range dAtA {
+					if integer < 128 {
+						count++
+					}
+				}
+				elementCount = count
+				if elementCount != 0 && len(m.Value) == 0 {
+					m.Value = make([]int64, 0, elementCount)
+				}
 				for iNdEx < postIndex {
 					var v int64
 					for shift := uint(0); ; shift += 7 {
@@ -3023,7 +3425,7 @@ func (m *CollectionDef_FloatList) Unmarshal(dAtA []byte) error {
 				if (iNdEx + 4) > l {
 					return io.ErrUnexpectedEOF
 				}
-				v = uint32(binary.LittleEndian.Uint32(dAtA[iNdEx:]))
+				v = uint32(encoding_binary.LittleEndian.Uint32(dAtA[iNdEx:]))
 				iNdEx += 4
 				v2 := float32(math.Float32frombits(v))
 				m.Value = append(m.Value, v2)
@@ -3050,12 +3452,17 @@ func (m *CollectionDef_FloatList) Unmarshal(dAtA []byte) error {
 				if postIndex > l {
 					return io.ErrUnexpectedEOF
 				}
+				var elementCount int
+				elementCount = packedLen / 4
+				if elementCount != 0 && len(m.Value) == 0 {
+					m.Value = make([]float32, 0, elementCount)
+				}
 				for iNdEx < postIndex {
 					var v uint32
 					if (iNdEx + 4) > l {
 						return io.ErrUnexpectedEOF
 					}
-					v = uint32(binary.LittleEndian.Uint32(dAtA[iNdEx:]))
+					v = uint32(encoding_binary.LittleEndian.Uint32(dAtA[iNdEx:]))
 					iNdEx += 4
 					v2 := float32(math.Float32frombits(v))
 					m.Value = append(m.Value, v2)
@@ -3139,7 +3546,7 @@ func (m *CollectionDef_AnyList) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Value = append(m.Value, &google_protobuf.Any{})
+			m.Value = append(m.Value, &types.Any{})
 			if err := m.Value[len(m.Value)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
@@ -4007,71 +4414,71 @@ var (
 	ErrIntOverflowMetaGraph   = fmt.Errorf("proto: integer overflow")
 )
 
-func init() { proto.RegisterFile("meta_graph.proto", fileDescriptorMetaGraph) }
+func init() { proto.RegisterFile("meta_graph.proto", fileDescriptor_meta_graph_f1f53ce019dff66d) }
 
-var fileDescriptorMetaGraph = []byte{
-	// 993 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x96, 0x41, 0x6f, 0x1b, 0x45,
-	0x14, 0xc7, 0xb3, 0xb6, 0xe3, 0xd8, 0xcf, 0x4e, 0x70, 0x87, 0xa8, 0xa4, 0x2b, 0x14, 0x52, 0xd3,
-	0x4a, 0x55, 0x29, 0x1b, 0xb5, 0xb4, 0x80, 0x50, 0xd5, 0x62, 0xd7, 0xb4, 0x89, 0x04, 0x4d, 0xd9,
-	0x54, 0x48, 0x88, 0x83, 0x35, 0xf1, 0xce, 0x3a, 0xab, 0x38, 0x33, 0xab, 0x9d, 0x71, 0xaa, 0x3d,
-	0xf6, 0x1b, 0xf0, 0x11, 0x90, 0xf8, 0x0e, 0x7c, 0x06, 0x8e, 0x5c, 0xb8, 0xa3, 0xf0, 0x25, 0x38,
-	0xa2, 0x79, 0xb3, 0xb3, 0x9e, 0x25, 0x31, 0xb9, 0xf4, 0xe6, 0xb7, 0xf3, 0xff, 0xff, 0xe6, 0xcd,
-	0xbc, 0x37, 0x33, 0x86, 0xde, 0x29, 0x53, 0x74, 0x3c, 0xcd, 0x68, 0x7a, 0x1c, 0xa4, 0x99, 0x50,
-	0x82, 0x80, 0x62, 0x5c, 0x8a, 0x2c, 0x9e, 0x89, 0x37, 0xfe, 0x8d, 0xa9, 0x10, 0xd3, 0x19, 0xdb,
-	0xc5, 0x91, 0xa3, 0x79, 0xbc, 0x4b, 0x79, 0x6e, 0x64, 0x7e, 0xc7, 0xf1, 0xf8, 0x5d, 0x91, 0x8e,
-	0x23, 0x16, 0x17, 0x11, 0x31, 0x84, 0xb1, 0x3c, 0xa6, 0x29, 0xb3, 0x72, 0x95, 0xa7, 0x4c, 0xda,
-	0x40, 0xd2, 0x33, 0x96, 0x99, 0xa0, 0xff, 0x76, 0x0d, 0xba, 0xdf, 0x31, 0x45, 0x5f, 0x68, 0xde,
-	0x88, 0xc5, 0x64, 0x0f, 0xd6, 0x31, 0xa9, 0x84, 0xc7, 0x42, 0x53, 0xb7, 0xbc, 0x1d, 0xef, 0x4e,
-	0xe7, 0xc1, 0xad, 0x60, 0x91, 0x58, 0xe0, 0x1a, 0x30, 0xd8, 0xe7, 0xb1, 0x18, 0xb1, 0x38, 0xec,
-	0x9c, 0x2e, 0x02, 0x72, 0x1f, 0xda, 0x98, 0x25, 0x52, 0x6a, 0x48, 0xd9, 0x74, 0x29, 0x96, 0x10,
-	0xb6, 0xa6, 0x76, 0xf2, 0xfb, 0xd0, 0xc6, 0xe4, 0xd0, 0x52, 0xbf, 0x68, 0x39, 0xd4, 0x83, 0x68,
-	0x91, 0xc5, 0x2f, 0x12, 0xc2, 0xc6, 0x44, 0xcc, 0x66, 0x6c, 0xa2, 0x12, 0xc1, 0xd1, 0xd7, 0xd8,
-	0xa9, 0xdf, 0xe9, 0x3c, 0xf8, 0x64, 0x69, 0xc2, 0xcf, 0x4a, 0xf9, 0x88, 0xc5, 0xdf, 0x70, 0x95,
-	0xe5, 0xe1, 0xfa, 0xc4, 0xfd, 0x46, 0x0e, 0x60, 0x5d, 0x26, 0x53, 0x4e, 0xd5, 0x3c, 0x63, 0x88,
-	0x5c, 0x45, 0xe4, 0xdd, 0xa5, 0xc8, 0x43, 0xab, 0x2e, 0x89, 0x5d, 0xe9, 0x7c, 0x22, 0x4f, 0x60,
-	0x83, 0x4a, 0xc9, 0xd4, 0x38, 0x4e, 0x66, 0x86, 0xd8, 0x44, 0xe2, 0x96, 0x4b, 0x1c, 0x68, 0xc5,
-	0xf3, 0x64, 0xa6, 0x1d, 0x61, 0x97, 0x3a, 0x91, 0xff, 0x6b, 0x0d, 0x3a, 0xce, 0x3e, 0x93, 0x7b,
-	0x40, 0x16, 0x9d, 0x33, 0x3e, 0x63, 0x99, 0x4c, 0x04, 0xc7, 0x4a, 0xb5, 0x43, 0xec, 0x29, 0xcc,
-	0xec, 0x07, 0xf3, 0x9d, 0x3c, 0x86, 0x9e, 0x54, 0x59, 0x92, 0xa6, 0x2c, 0x1a, 0x8b, 0x74, 0x3c,
-	0x4b, 0xa4, 0x2a, 0xea, 0x41, 0xdc, 0xf9, 0x0f, 0xd2, 0x6f, 0x13, 0xa9, 0xc2, 0x0d, 0xab, 0x35,
-	0x31, 0xd9, 0x85, 0x16, 0xe5, 0x39, 0xf6, 0x43, 0x59, 0x12, 0xd3, 0x98, 0x81, 0x6d, 0xcc, 0x60,
-	0xc0, 0xf3, 0x70, 0x8d, 0xf2, 0x5c, 0xe7, 0x47, 0x08, 0x34, 0x14, 0x9d, 0x4a, 0xac, 0x43, 0x3b,
-	0xc4, 0xdf, 0xe4, 0x53, 0x20, 0x8b, 0x99, 0xca, 0x84, 0x57, 0x31, 0xe1, 0x6b, 0x8b, 0x11, 0x9b,
-	0xf1, 0x43, 0xb8, 0xee, 0xc8, 0xa7, 0x89, 0x2a, 0x2d, 0x4d, 0xb4, 0x6c, 0x2e, 0x46, 0x5f, 0x24,
-	0xaa, 0x70, 0xf9, 0x3f, 0x01, 0xb9, 0x58, 0x5b, 0xd2, 0x83, 0xfa, 0x09, 0xcb, 0x8b, 0xcd, 0xd1,
-	0x3f, 0xc9, 0x2e, 0xac, 0x9e, 0xd1, 0xd9, 0x9c, 0x15, 0x9b, 0x70, 0xc3, 0xdd, 0x84, 0x0a, 0x20,
-	0x34, 0xba, 0xaf, 0x6a, 0x5f, 0x7a, 0xfe, 0x8f, 0x70, 0xed, 0x42, 0x95, 0x2f, 0x61, 0x07, 0x55,
-	0x76, 0xa5, 0xc0, 0xae, 0xdf, 0x41, 0xf7, 0x7f, 0x6b, 0xc0, 0x7a, 0x65, 0x5e, 0x32, 0x80, 0x36,
-	0x17, 0x11, 0x33, 0xa5, 0x32, 0x07, 0xb0, 0xbf, 0x34, 0xcb, 0xe0, 0xa5, 0x88, 0x98, 0x2e, 0xd5,
-	0xde, 0x4a, 0xd8, 0xe2, 0xc5, 0x6f, 0x32, 0x02, 0x38, 0xca, 0x15, 0x93, 0x6e, 0xb9, 0x3f, 0x5e,
-	0xce, 0x18, 0x6a, 0x6d, 0x01, 0x69, 0x1f, 0xd9, 0x40, 0x53, 0x12, 0xae, 0x3e, 0x7f, 0x68, 0x28,
-	0xf5, 0xab, 0x28, 0xfb, 0x5a, 0x6b, 0x29, 0x89, 0x0d, 0x34, 0x25, 0x9e, 0x09, 0xaa, 0x0c, 0xa5,
-	0x71, 0x15, 0xe5, 0xb9, 0xd6, 0x5a, 0x4a, 0x6c, 0x03, 0xf2, 0xc4, 0x34, 0x22, 0x32, 0x56, 0x91,
-	0x71, 0x73, 0x39, 0x63, 0xc0, 0xf3, 0x82, 0xa0, 0xfb, 0x52, 0xff, 0xf4, 0x77, 0xa0, 0x65, 0x77,
-	0x8a, 0x6c, 0xda, 0x32, 0x79, 0xd8, 0xa4, 0x26, 0xf0, 0x6f, 0x42, 0xbb, 0xdc, 0x87, 0xaa, 0xa4,
-	0x6b, 0x25, 0xb7, 0xa1, 0x5d, 0x2e, 0x92, 0x6c, 0xb9, 0x92, 0xfa, 0xb0, 0xd6, 0xf3, 0x1c, 0x59,
-	0xb9, 0x8a, 0xaa, 0xac, 0xe6, 0xca, 0x1e, 0xc1, 0x5a, 0x91, 0x28, 0xb9, 0xeb, 0x8a, 0x96, 0x9d,
-	0x31, 0x23, 0x19, 0x36, 0xa1, 0x71, 0x92, 0xf0, 0xa8, 0xff, 0xb6, 0x0e, 0xf0, 0x1a, 0x77, 0x00,
-	0x0f, 0xde, 0x26, 0x34, 0x38, 0x3d, 0x65, 0xa6, 0x1d, 0xf7, 0x56, 0x42, 0x8c, 0x34, 0x38, 0xd2,
-	0xd7, 0x3f, 0xf6, 0xc0, 0x46, 0xf5, 0x3e, 0x1d, 0x51, 0x45, 0x5f, 0xe7, 0x29, 0x0b, 0x8d, 0x84,
-	0x3c, 0x85, 0xae, 0xfb, 0x7a, 0x14, 0x05, 0xff, 0xd0, 0xb5, 0x98, 0xf9, 0x0e, 0xf5, 0xf0, 0x2b,
-	0x9d, 0x5a, 0xd8, 0x51, 0x8b, 0x2f, 0x64, 0x00, 0x30, 0x11, 0x62, 0x2c, 0x53, 0x9a, 0x49, 0x56,
-	0x54, 0x7a, 0xe7, 0xa2, 0x5d, 0xa7, 0x1b, 0x3c, 0x13, 0xe2, 0x10, 0x75, 0xba, 0xcc, 0x13, 0x1b,
-	0xf8, 0xbf, 0x78, 0xd0, 0x2e, 0x87, 0xf4, 0x4d, 0x87, 0x6b, 0x96, 0xe3, 0x22, 0xb1, 0xc5, 0x0a,
-	0xc3, 0x9e, 0x19, 0x31, 0xc8, 0x97, 0x7a, 0xad, 0x01, 0xbc, 0x9f, 0xf0, 0x28, 0x99, 0xfc, 0x47,
-	0x5e, 0x33, 0xf7, 0x4c, 0x31, 0xe4, 0xe8, 0x1f, 0xc1, 0x07, 0x11, 0xe3, 0x92, 0x99, 0xe5, 0x56,
-	0x3c, 0x75, 0x73, 0xd1, 0xe0, 0x30, 0xae, 0x6d, 0x61, 0x1b, 0x02, 0xb4, 0x18, 0x9f, 0x88, 0x28,
-	0xe1, 0xd3, 0xfe, 0x9f, 0x35, 0xe8, 0xba, 0x07, 0x9b, 0x3c, 0x86, 0x66, 0xc2, 0xd3, 0xb9, 0x92,
-	0x45, 0x25, 0x6f, 0x2d, 0xbb, 0x02, 0x82, 0x7d, 0x94, 0x99, 0xf7, 0xa2, 0xf0, 0x90, 0xa7, 0xb0,
-	0x26, 0xe6, 0x0a, 0xed, 0x35, 0xb4, 0xdf, 0x5e, 0x6a, 0x3f, 0x30, 0x3a, 0xe3, 0xb7, 0x2e, 0xf2,
-	0x11, 0xe8, 0x47, 0xf8, 0x58, 0x44, 0xee, 0x32, 0xc0, 0x7c, 0xd2, 0xc9, 0xfb, 0xdf, 0x43, 0xc7,
-	0x99, 0xf8, 0x92, 0x2b, 0xec, 0x5e, 0xf5, 0x0a, 0xbb, 0x7e, 0x79, 0xf9, 0xdc, 0xbb, 0x31, 0x84,
-	0xae, 0x9b, 0xcc, 0xbb, 0x60, 0xf6, 0x27, 0xd0, 0x75, 0x1f, 0x44, 0xf2, 0x05, 0x14, 0x8d, 0x66,
-	0x5e, 0x22, 0xef, 0x7f, 0x39, 0xc5, 0xbf, 0x28, 0x3c, 0x15, 0x3e, 0xb4, 0xf4, 0xab, 0xeb, 0x34,
-	0x42, 0x19, 0x0f, 0xbf, 0xfe, 0xfd, 0x7c, 0xdb, 0xfb, 0xe3, 0x7c, 0xdb, 0xfb, 0xeb, 0x7c, 0xdb,
-	0xfb, 0xf9, 0xef, 0xed, 0x15, 0xd8, 0x12, 0xd9, 0xd4, 0x85, 0xc6, 0x19, 0x3d, 0x65, 0x6f, 0x44,
-	0x76, 0x32, 0x7c, 0xaf, 0x7c, 0xf1, 0xb1, 0xef, 0xe5, 0x2b, 0xef, 0x1f, 0xcf, 0x3b, 0x6a, 0xe2,
-	0xf9, 0xfc, 0xec, 0xdf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x35, 0xa7, 0xe3, 0xd4, 0xca, 0x09, 0x00,
-	0x00,
+var fileDescriptor_meta_graph_f1f53ce019dff66d = []byte{
+	// 1003 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x96, 0xc1, 0x6e, 0x1b, 0x37,
+	0x13, 0xc7, 0xb5, 0x92, 0x2c, 0x4b, 0x23, 0xd9, 0x9f, 0xc2, 0xcf, 0x48, 0x9d, 0x45, 0xa1, 0x3a,
+	0x6a, 0x02, 0x04, 0x69, 0xba, 0x46, 0xd2, 0xa4, 0x2d, 0x8a, 0x20, 0x81, 0x14, 0x35, 0xb1, 0x81,
+	0x36, 0x4e, 0xd7, 0x41, 0x81, 0xa2, 0x07, 0x81, 0xd6, 0x72, 0xe5, 0x85, 0x65, 0x72, 0xb1, 0xa4,
+	0x1c, 0xec, 0x31, 0x6f, 0xd0, 0x47, 0x28, 0xd0, 0x77, 0xe8, 0x33, 0xf4, 0x98, 0x4b, 0x81, 0x1e,
+	0x0b, 0xfb, 0x25, 0x7a, 0x2c, 0x38, 0x5c, 0xae, 0xa8, 0xda, 0x6a, 0x2e, 0xbd, 0x69, 0x96, 0xff,
+	0xff, 0x8f, 0x43, 0xce, 0x90, 0x14, 0x74, 0x4f, 0x99, 0xa2, 0xe3, 0x69, 0x46, 0xd3, 0xe3, 0x20,
+	0xcd, 0x84, 0x12, 0x04, 0x14, 0xe3, 0x52, 0x64, 0xf1, 0x4c, 0xbc, 0xf1, 0x6f, 0x4c, 0x85, 0x98,
+	0xce, 0xd8, 0x2e, 0x8e, 0x1c, 0xcd, 0xe3, 0x5d, 0xca, 0x73, 0x23, 0xf3, 0xdb, 0x8e, 0xc7, 0xef,
+	0x88, 0x74, 0x1c, 0xb1, 0xb8, 0x88, 0x88, 0x21, 0x8c, 0xe5, 0x31, 0x4d, 0x99, 0x95, 0xab, 0x3c,
+	0x65, 0xd2, 0x06, 0x92, 0x9e, 0xb1, 0xcc, 0x04, 0xfd, 0xb7, 0xeb, 0xd0, 0xf9, 0x96, 0x29, 0xfa,
+	0x42, 0xf3, 0x46, 0x2c, 0x26, 0x7b, 0xb0, 0x81, 0x49, 0x25, 0x3c, 0x16, 0x9a, 0xba, 0xed, 0xed,
+	0x78, 0x77, 0xda, 0x0f, 0x6e, 0x05, 0x8b, 0xc4, 0x02, 0xd7, 0x80, 0xc1, 0x3e, 0x8f, 0xc5, 0x88,
+	0xc5, 0x61, 0xfb, 0x74, 0x11, 0x90, 0xfb, 0xd0, 0xc2, 0x2c, 0x91, 0x52, 0x45, 0xca, 0x96, 0x4b,
+	0xb1, 0x84, 0xb0, 0x39, 0xb5, 0x93, 0xdf, 0x87, 0x16, 0x26, 0x87, 0x96, 0xda, 0x65, 0xcb, 0xa1,
+	0x1e, 0x44, 0x8b, 0x2c, 0x7e, 0x91, 0x10, 0x36, 0x27, 0x62, 0x36, 0x63, 0x13, 0x95, 0x08, 0x8e,
+	0xbe, 0xfa, 0x4e, 0xed, 0x4e, 0xfb, 0xc1, 0x27, 0x2b, 0x13, 0x7e, 0x56, 0xca, 0x47, 0x2c, 0xfe,
+	0x9a, 0xab, 0x2c, 0x0f, 0x37, 0x26, 0xee, 0x37, 0x72, 0x00, 0x1b, 0x32, 0x99, 0x72, 0xaa, 0xe6,
+	0x19, 0x43, 0xe4, 0x1a, 0x22, 0xef, 0xae, 0x44, 0x1e, 0x5a, 0x75, 0x49, 0xec, 0x48, 0xe7, 0x13,
+	0x79, 0x02, 0x9b, 0x54, 0x4a, 0xa6, 0xc6, 0x71, 0x32, 0x33, 0xc4, 0x06, 0x12, 0xb7, 0x5d, 0xe2,
+	0x40, 0x2b, 0x9e, 0x27, 0x33, 0xed, 0x08, 0x3b, 0xd4, 0x89, 0xfc, 0x5f, 0xaa, 0xd0, 0x76, 0xf6,
+	0x99, 0xdc, 0x03, 0xb2, 0xe8, 0x9c, 0xf1, 0x19, 0xcb, 0x64, 0x22, 0x38, 0x56, 0xaa, 0x15, 0x62,
+	0x4f, 0x61, 0x66, 0xdf, 0x9b, 0xef, 0xe4, 0x31, 0x74, 0xa5, 0xca, 0x92, 0x34, 0x65, 0xd1, 0x58,
+	0xa4, 0xe3, 0x59, 0x22, 0x55, 0x51, 0x0f, 0xe2, 0xce, 0x7f, 0x90, 0x7e, 0x93, 0x48, 0x15, 0x6e,
+	0x5a, 0xad, 0x89, 0xc9, 0x2e, 0x34, 0x29, 0xcf, 0xb1, 0x1f, 0xca, 0x92, 0x98, 0xc6, 0x0c, 0x6c,
+	0x63, 0x06, 0x03, 0x9e, 0x87, 0xeb, 0x94, 0xe7, 0x3a, 0x3f, 0x42, 0xa0, 0xae, 0xe8, 0x54, 0x62,
+	0x1d, 0x5a, 0x21, 0xfe, 0x26, 0x9f, 0x02, 0x59, 0xcc, 0x54, 0x26, 0xbc, 0x86, 0x09, 0x5f, 0x5b,
+	0x8c, 0xd8, 0x8c, 0x1f, 0xc2, 0x75, 0x47, 0x3e, 0x4d, 0x54, 0x69, 0x69, 0xa0, 0x65, 0x6b, 0x31,
+	0xfa, 0x22, 0x51, 0x85, 0xcb, 0xff, 0x11, 0xc8, 0xe5, 0xda, 0x92, 0x2e, 0xd4, 0x4e, 0x58, 0x5e,
+	0x6c, 0x8e, 0xfe, 0x49, 0x76, 0x61, 0xed, 0x8c, 0xce, 0xe6, 0xac, 0xd8, 0x84, 0x1b, 0xee, 0x26,
+	0x2c, 0x01, 0x42, 0xa3, 0xfb, 0xaa, 0xfa, 0xa5, 0xe7, 0xff, 0x00, 0xd7, 0x2e, 0x55, 0xf9, 0x0a,
+	0x76, 0xb0, 0xcc, 0x5e, 0x2a, 0xb0, 0xeb, 0x77, 0xd0, 0xfd, 0x5f, 0xeb, 0xb0, 0xb1, 0x34, 0x2f,
+	0x19, 0x40, 0x8b, 0x8b, 0x88, 0x99, 0x52, 0x99, 0x03, 0xd8, 0x5f, 0x99, 0x65, 0xf0, 0x52, 0x44,
+	0x4c, 0x97, 0x6a, 0xaf, 0x12, 0x36, 0x79, 0xf1, 0x9b, 0x8c, 0x00, 0x8e, 0x72, 0xc5, 0xa4, 0x5b,
+	0xee, 0x8f, 0x57, 0x33, 0x86, 0x5a, 0x5b, 0x40, 0x5a, 0x47, 0x36, 0xd0, 0x94, 0x84, 0xab, 0xcf,
+	0x1f, 0x1a, 0x4a, 0xed, 0x7d, 0x94, 0x7d, 0xad, 0xb5, 0x94, 0xc4, 0x06, 0x9a, 0x12, 0xcf, 0x04,
+	0x55, 0x86, 0x52, 0x7f, 0x1f, 0xe5, 0xb9, 0xd6, 0x5a, 0x4a, 0x6c, 0x03, 0xf2, 0xc4, 0x34, 0x22,
+	0x32, 0xd6, 0x90, 0x71, 0x73, 0x35, 0x63, 0xc0, 0xf3, 0x82, 0xa0, 0xfb, 0x52, 0xff, 0xf4, 0x77,
+	0xa0, 0x69, 0x77, 0x8a, 0x6c, 0xd9, 0x32, 0x79, 0xd8, 0xa4, 0x26, 0xf0, 0x6f, 0x42, 0xab, 0xdc,
+	0x87, 0x65, 0x49, 0xc7, 0x4a, 0x6e, 0x43, 0xab, 0x5c, 0x24, 0xd9, 0x76, 0x25, 0xb5, 0x61, 0xb5,
+	0xeb, 0x39, 0xb2, 0x72, 0x15, 0xcb, 0xb2, 0xaa, 0x2b, 0x7b, 0x04, 0xeb, 0x45, 0xa2, 0xe4, 0xae,
+	0x2b, 0x5a, 0x75, 0xc6, 0x8c, 0x64, 0xd8, 0x80, 0xfa, 0x49, 0xc2, 0xa3, 0xfe, 0xdb, 0x1a, 0xc0,
+	0x6b, 0xdc, 0x01, 0x3c, 0x78, 0x5b, 0x50, 0xe7, 0xf4, 0x94, 0x99, 0x76, 0xdc, 0xab, 0x84, 0x18,
+	0x69, 0x70, 0xa4, 0xaf, 0x7f, 0xec, 0x81, 0xcd, 0xe5, 0xfb, 0x74, 0x44, 0x15, 0x7d, 0x9d, 0xa7,
+	0x2c, 0x34, 0x12, 0xf2, 0x14, 0x3a, 0xee, 0xeb, 0x51, 0x14, 0xfc, 0x43, 0xd7, 0x62, 0xe6, 0x3b,
+	0xd4, 0xc3, 0xaf, 0x74, 0x6a, 0x61, 0x5b, 0x2d, 0xbe, 0x90, 0x01, 0xc0, 0x44, 0x88, 0xb1, 0x4c,
+	0x69, 0x26, 0x59, 0x51, 0xe9, 0x9d, 0xcb, 0x76, 0x9d, 0x6e, 0xf0, 0x4c, 0x88, 0x43, 0xd4, 0xe9,
+	0x32, 0x4f, 0x6c, 0xe0, 0xff, 0xec, 0x41, 0xab, 0x1c, 0xd2, 0x37, 0x1d, 0xae, 0x59, 0x8e, 0x8b,
+	0xc4, 0x16, 0x2b, 0x0c, 0xbb, 0x66, 0xc4, 0x20, 0x5f, 0xea, 0xb5, 0x06, 0xf0, 0xff, 0x84, 0x47,
+	0xc9, 0xe4, 0x1f, 0xf2, 0xaa, 0xb9, 0x67, 0x8a, 0x21, 0x47, 0xff, 0x08, 0x3e, 0x88, 0x18, 0x97,
+	0xcc, 0x2c, 0x77, 0xc9, 0x53, 0x33, 0x17, 0x0d, 0x0e, 0xe3, 0xda, 0x16, 0xb6, 0x21, 0x40, 0x93,
+	0xf1, 0x89, 0x88, 0x12, 0x3e, 0xed, 0xff, 0x5e, 0x85, 0x8e, 0x7b, 0xb0, 0xc9, 0x63, 0x68, 0x24,
+	0x3c, 0x9d, 0x2b, 0x59, 0x54, 0xf2, 0xd6, 0xaa, 0x2b, 0x20, 0xd8, 0x47, 0x99, 0x79, 0x2f, 0x0a,
+	0x0f, 0x79, 0x0a, 0xeb, 0x62, 0xae, 0xd0, 0x5e, 0x45, 0xfb, 0xed, 0x95, 0xf6, 0x03, 0xa3, 0x33,
+	0x7e, 0xeb, 0x22, 0x1f, 0x81, 0x7e, 0x84, 0x8f, 0x45, 0xe4, 0x2e, 0x03, 0xcc, 0x27, 0x9d, 0xbc,
+	0xff, 0x1d, 0xb4, 0x9d, 0x89, 0xaf, 0xb8, 0xc2, 0xee, 0x2d, 0x5f, 0x61, 0xd7, 0xaf, 0x2e, 0x9f,
+	0x7b, 0x37, 0x86, 0xd0, 0x71, 0x93, 0xf9, 0x2f, 0x98, 0xfd, 0x09, 0x74, 0xdc, 0x07, 0x91, 0x7c,
+	0x01, 0x45, 0xa3, 0x99, 0x97, 0xc8, 0xfb, 0x57, 0x4e, 0xf1, 0x2f, 0x0a, 0x4f, 0x85, 0x0f, 0x4d,
+	0xfd, 0xea, 0x3a, 0x8d, 0x50, 0xc6, 0xc3, 0xbd, 0xdf, 0xce, 0x7b, 0xde, 0xbb, 0xf3, 0x9e, 0xf7,
+	0xe7, 0x79, 0xcf, 0xfb, 0xe9, 0xa2, 0x57, 0x79, 0x77, 0xd1, 0xab, 0xfc, 0x71, 0xd1, 0xab, 0xc0,
+	0xb6, 0xc8, 0xa6, 0x2e, 0x3c, 0xce, 0xe8, 0x29, 0x7b, 0x23, 0xb2, 0x93, 0xe1, 0xff, 0xca, 0x97,
+	0x1f, 0xfb, 0x5f, 0xbe, 0xf2, 0xfe, 0xf2, 0xbc, 0xa3, 0x06, 0x9e, 0xd3, 0xcf, 0xfe, 0x0e, 0x00,
+	0x00, 0xff, 0xff, 0xb5, 0x51, 0x2c, 0xd0, 0xd2, 0x09, 0x00, 0x00,
 }
