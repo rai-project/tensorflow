@@ -26,7 +26,7 @@ inputs: # model inputs
       dimensions: [3, 513]
 output:
   type: semanticsegment
-  description: the output bounding box # a description of the output parameter
+  description: the output semantic segment # a description of the output parameter
   parameters:
     element_type: int64
     masks_layer: 'SemanticPredictions'
