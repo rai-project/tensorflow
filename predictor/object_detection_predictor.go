@@ -1,18 +1,5 @@
 package predictor
 
-// #cgo LDFLAGS: -ltensorflow
-// #cgo CFLAGS: -I${SRCDIR}/../../../tensorflow/tensorflow
-// #include "tensorflow/c/c_api.h"
-import "C"
-
-// #include "tensorflow/core/framework/graph.pb.h"
-// #include <stdlib.h>
-// #include <string.h>
-// void setDefaultDevice(const char * device, TF_Graph * graph_def) {
-//  tensorflow::GraphDef def;
-//  GetGraphDef(graph_def, &def);
-//  graph::SetDefaultDevice(device, def);
-// 	}
 import (
 	"bufio"
 	"bytes"

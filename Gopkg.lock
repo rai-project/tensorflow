@@ -104,15 +104,17 @@
   version = "v3.6.1"
 
 [[projects]]
-  digest = "1:09a914d4a8a0869525d20b83e1b7519686116c5be518f78585fb8fde3bce1ad6"
+  branch = "master"
+  digest = "0:"
+  name = "github.com/alangpierce/go-forceexport"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "8f1d6941cd755b975763ddb1f836561edddac2b8"
+
+[[projects]]
+  digest = "0:"
   name = "github.com/anthonynsimon/bild"
-  packages = [
-    "clone",
-    "imgio",
-    "math/f64",
-    "parallel",
-    "transform",
-  ]
+  packages = ["parallel"]
   pruneopts = "T"
   revision = "35fd1904d43f809ded0959922164885e25577aa2"
   version = "v0.10.0"
@@ -236,6 +238,30 @@
   version = "v2.1.0"
 
 [[projects]]
+  digest = "0:"
+  name = "github.com/cheekybits/genny"
+  packages = ["generic"]
+  pruneopts = "T"
+  revision = "d2cf3cdd35ce0d789056c4bc02a4d6349c947caf"
+  version = "v1.0.0"
+
+[[projects]]
+  digest = "0:"
+  name = "github.com/chewxy/hm"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "61efb3290a086d1335e8954b3734c102126818ba"
+  version = "v1.0.0"
+
+[[projects]]
+  digest = "0:"
+  name = "github.com/chewxy/math32"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "d1e7b22839c693f54edf7811dd9487623abf2cd2"
+  version = "v1.0.0"
+
+[[projects]]
   branch = "master"
   digest = "1:6dd0478a59aee734b125e5b6be2a56f738f0d6882aa5f5b14709dbe1e417dd38"
   name = "github.com/cockroachdb/cmux"
@@ -349,7 +375,6 @@
     "pkg/jsonmessage",
     "pkg/longpath",
     "pkg/mount",
-    "pkg/parsers",
     "pkg/pools",
     "pkg/progress",
     "pkg/signal",
@@ -676,6 +701,19 @@
   pruneopts = "T"
   revision = "92583770e3f01b09a0d3e9bdf64321d8bebd48f2"
   version = "v1.4.1"
+
+[[projects]]
+  digest = "0:"
+  name = "github.com/h2non/filetype"
+  packages = [
+    ".",
+    "matchers",
+    "matchers/isobmff",
+    "types",
+  ]
+  pruneopts = "T"
+  revision = "2248f2e2f77cd8cf9694216e3f9589d71005de37"
+  version = "v1.0.8"
 
 [[projects]]
   digest = "0:"
@@ -1249,11 +1287,11 @@
     "framework/cmd/server",
     "framework/feature",
     "framework/options",
-    "framework/predict",
+    "framework/predictor",
     "steps",
   ]
   pruneopts = "T"
-  revision = "a2461eed7175274589055ce7c775c0e4baf86b16"
+  revision = "63e8652f719be1dd87c3f82937f091d070a04179"
 
 [[projects]]
   branch = "master"
@@ -1929,6 +1967,14 @@
 [[projects]]
   branch = "master"
   digest = "0:"
+  name = "github.com/xtgo/set"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "708d80f4a27458f99f8ca12bd0e638c6ee65627f"
+
+[[projects]]
+  branch = "master"
+  digest = "0:"
   name = "golang.org/x/crypto"
   packages = [
     "acme",
@@ -2042,6 +2088,28 @@
   packages = ["rate"]
   pruneopts = "T"
   revision = "85acf8d2951cb2a3bde7632f9ff273ef0379bcbd"
+
+[[projects]]
+  branch = "master"
+  digest = "0:"
+  name = "gonum.org/v1/gonum"
+  packages = [
+    "blas",
+    "blas/blas64",
+    "blas/cblas128",
+    "blas/gonum",
+    "floats",
+    "internal/asm/c128",
+    "internal/asm/f32",
+    "internal/asm/f64",
+    "internal/math32",
+    "lapack",
+    "lapack/gonum",
+    "lapack/lapack64",
+    "mat",
+  ]
+  pruneopts = "T"
+  revision = "e42c1265cdd5792c378b044743576767cf9ad1e0"
 
 [[projects]]
   branch = "master"
@@ -2225,6 +2293,34 @@
 
 [[projects]]
   digest = "0:"
+  name = "gorgonia.org/tensor"
+  packages = [
+    ".",
+    "internal/execution",
+    "internal/storage",
+  ]
+  pruneopts = "T"
+  revision = "2ab2564f998fe504b94a1679c1c95277cdedea47"
+  version = "v0.8.1"
+
+[[projects]]
+  branch = "master"
+  digest = "0:"
+  name = "gorgonia.org/vecf32"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "a06d791a4e66be4d2fcae4530bb67afa232a0dae"
+
+[[projects]]
+  branch = "master"
+  digest = "0:"
+  name = "gorgonia.org/vecf64"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "d21373a26cc12a37eaab0182a21d0225c3b7ef34"
+
+[[projects]]
+  digest = "0:"
   name = "upper.io/db.v3"
   packages = [
     ".",
@@ -2239,8 +2335,8 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/anthonynsimon/bild/imgio",
-    "github.com/anthonynsimon/bild/transform",
+    "github.com/alangpierce/go-forceexport",
+    "github.com/cheekybits/genny/generic",
     "github.com/elazarl/go-bindata-assetfs",
     "github.com/fatih/color",
     "github.com/gogo/protobuf/proto",
@@ -2258,7 +2354,7 @@
     "github.com/rai-project/dlframework/framework/agent",
     "github.com/rai-project/dlframework/framework/cmd/server",
     "github.com/rai-project/dlframework/framework/options",
-    "github.com/rai-project/dlframework/framework/predict",
+    "github.com/rai-project/dlframework/framework/predictor",
     "github.com/rai-project/downloadmanager",
     "github.com/rai-project/go-cupti",
     "github.com/rai-project/image",
@@ -2274,6 +2370,7 @@
     "github.com/tensorflow/tensorflow/tensorflow/go/op",
     "golang.org/x/net/context",
     "google.golang.org/grpc",
+    "gorgonia.org/tensor",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

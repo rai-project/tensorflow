@@ -18,7 +18,6 @@ package predictor
 
 // #cgo LDFLAGS: -L/opt/tensorflow/lib -ltensorflow -lstdc++
 // #cgo !nogpu LDFLAGS: -L/usr/local/cuda/lib64 -lcublas -lcudart -lcudnn -lcurand -lcusparse -lcufft
-// #cgo CFLAGS: -I${SRCDIR}
+// #cgo CFLAGS: -I${SRCDIR} -O3 -Wall -g
 // #cgo !nogpu CFLAGS: -I/usr/local/cuda/include
-// #cgo CFLAGS: -O3 -Wall -g
 import "C"

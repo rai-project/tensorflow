@@ -7,15 +7,75 @@
 
 [![](https://images.microbadger.com/badges/version/carml/tensorflow:ppc64le-gpu-latest.svg)](https://microbadger.com/images/carml/tensorflow:ppc64le-gpu-latest> 'Get your own version badge on microbadger.com') [![](https://images.microbadger.com/badges/version/carml/tensorflow:ppc64le-cpu-latest.svg)](https://microbadger.com/images/carml/tensorflow:ppc64le-cpu-latest 'Get your own version badge on microbadger.com') [![](https://images.microbadger.com/badges/version/carml/tensorflow:amd64-cpu-latest.svg)](https://microbadger.com/images/carml/tensorflow:amd64-cpu-latest 'Get your own version badge on microbadger.com') [![](https://images.microbadger.com/badges/version/carml/tensorflow:amd64-gpu-latest.svg)](https://microbadger.com/images/carml/tensorflow:amd64-gpu-latest 'Get your own version badge on microbadger.com')
 
-Refer to [TensorFlow in Go](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/go#building-the-tensorflow-c-library-from-source) for instructions
+## Installation
 
-## Install TensorFlow With pip
+Download and install the MLModelScope TensorFlow Agent:
 
-Refer to [Install TensorFlow with pip](https://www.tensorflow.org/install/pip).
+```
+go get -v github.com/rai-project/tensorflow
 
-Note for python 3.7.x, see [Is python 3.7.x supported with TensorFlow](https://github.com/tensorflow/tensorflow/issues/17022).
+```
 
-## Install TensorFlow From Source
+The agent requires The TensorFlow C library and other Go packages.
+
+### The TensorFlow C library
+
+The TensorFlow C library is required for the TensorFlow Go package.
+You can download pre-built TensorFlow C library from [Install TensorFlow for C](https://www.tensorflow.org/install/lang_c).
+
+Extract the downloaded archive to `/opt/tensorflow/`.
+
+```
+tar -C /opt/tensorflow -xzf (downloaded file)
+```
+
+Configure the linker environmental variables since the TensorFlow C library is extracted to a non-system directory. Place the following in either your `~/.bashrc` or `~/.zshrc` file
+
+Linux
+
+```
+export LIBRARY_PATH=$LIBRARY_PATH:/opt/tensorflow/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/tensorflow/lib
+```
+
+macOS
+
+```
+export LIBRARY_PATH=$LIBRARY_PATH:/opt/tensorflow/lib
+export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/opt/tensorflow/lib
+```
+
+You can test the installed TensorFlow C library using an [examle C program](https://www.tensorflow.org/install/lang_c#build).
+
+### Setting `LD_LIBRARY_PATH`
+
+To build the TensorFlow C library from source, refer to [TensorFlow in Go](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/go#building-the-tensorflow-c-library-from-source) .
+
+### Go packages
+
+You can install the dependency through `go get`.
+
+```
+cd $GOPATH/src/github.com/rai-project/tensorflow
+go get -u -v ./...
+```
+
+Or use [Dep](https://github.com/golang/dep).
+
+```
+dep ensure
+```
+
+This installs the dependency in `vendor/`.
+
+## Run
+
+```
+cd $GOPATH/src/github.com/rai-project/tensorflow
+go run tensorflow-agent/main.go -l -d -v
+```
+
+## Notes on installing TensorFlow From Source
 
 ### Install Bazel
 
@@ -96,13 +156,7 @@ bazel build -c opt //tensorflow:libtensorflow.so
 cp ${GOPATH}/src/github.com/tensorflow/tensorflow/bazel-bin/tensorflow/libtensorflow.so /opt/tensorflow/lib
 ```
 
-### Setting `LD_LIBRARY_PATH`
-
-Place the following in either your `~/.bashrc` or `~/.zshrc` file
-
-```bash
-export LD_LIBRARY_PATH=/opt/tensorflow/lib:$LD_LIBRARY_PATH
-```
+Need to put the directory that contains `libtensorflow_framework.so` and `libtensorflow.so` into `$PATH`.
 
 ### PowerPC
 
@@ -138,9 +192,6 @@ export TF_NEED_S3=0
 
 ### Issues
 
-#### Install tensorflow 1.12.0 with CUDA 10.0
+- Install tensorflow 1.12.0 with CUDA 10.0
 
-Build from source -> build the pip package -> GPU support -> bazel build -> ERROR: Config value cuda is not defined in any .rc file
-https://github.com/tensorflow/tensorflow/issues/23401
-
-Need to put the directory that contains `libtensorflow_framework.so` and `libtensorflow.so` into `$PATH`.
+Build from source -> build the pip package -> GPU support -> bazel build -> ERROR: Config value cuda is not defined in any .rc file https://github.com/tensorflow/tensorflow/issues/23401
