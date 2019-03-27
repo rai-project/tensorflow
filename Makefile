@@ -13,9 +13,8 @@ install-deps:
 generate: clean generate-models
 
 generate-proto:
-	protoc --plugin=protoc-gen-go=${GOPATH}/bin/protoc-gen-go \
-    -Iproto --go_out=${GOPATH}/src \
-		--gogofaster_out=Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,plugins=grpc:. \
+	protoc --plugin=protoc-gen-go=${GOPATH}/bin/protoc-gen-gogofaster \
+    -Iproto --gogofaster_out=Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,plugins=grpc+marshalto+unmarshal:${GOPATH}/src  \
 		proto/allocation_description.proto \
     proto/api_def.proto \
     proto/attr_value.proto \
@@ -63,8 +62,7 @@ generate-proto:
     proto/variable.proto \
     proto/versions.proto \
     proto/worker.proto \
-    proto/worker_service.proto ; \
-  rm -fr github.com
+    proto/worker_service.proto
 
 generate-models:
 	go-bindata -nomemcopy -prefix builtin_models/ -pkg tensorflow -o builtin_models_static.go -ignore=.DS_Store  -ignore=README.md builtin_models/...

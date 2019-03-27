@@ -79,11 +79,11 @@ func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption
 		if node.GetMemoryStats() != nil {
 			stats := node.GetMemoryStats()
 			memStatsTags = opentracing.Tags{
-				"host_temp_memory_size":              stats.GetHostTempMemorySize(),
+				"temp_memory_size":                   stats.GetTempMemorySize(),
+				"persistent_memory_size":             stats.GetPersistentMemorySize(),
 				"device_temp_memory_size":            stats.GetDeviceTempMemorySize(),
-				"host_persistent_memory_size":        stats.GetHostPersistentMemorySize(),
 				"device_persistent_memory_size":      stats.GetDevicePersistentMemorySize(),
-				"host_persistent_tensor_alloc_ids":   stats.GetHostPersistentTensorAllocIds(),
+				"host_persistent_tensor_alloc_ids":   stats.GetPersistentTensorAllocIds(),
 				"device_persistent_tensor_alloc_ids": stats.GetDevicePersistentTensorAllocIds(),
 			}
 		}
