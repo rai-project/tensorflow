@@ -66,6 +66,14 @@ dep ensure -v
 
 This installs the dependency in `vendor/`.
 
+### libjpeg-turbo
+
+[libjpeg-turbo](https://github.com/libjpeg-turbo/libjpeg-turbo) is a JPEG image codec that uses SIMD instructions (MMX, SSE2, AVX2, NEON, AltiVec) to accelerate baseline JPEG compression and decompression. It outperforms libjpeg by a significant amount.
+
+The default is to use libjpeg-turb, to opt-out, use build tag `nolibjpeg`.
+
+To install libjpeg-turbo, refer to [libjpeg-turbo](https://github.com/libjpeg-turbo/libjpeg-turbo).
+
 ## Run
 
 With GPU enabled
@@ -75,11 +83,11 @@ cd $GOPATH/src/github.com/rai-project/tensorflow
 go run tensorflow-agent/main.go -l -d -v
 ```
 
-Without GPU
+Without GPU or libjpeg-turbo
 
 ```
 cd $GOPATH/src/github.com/rai-project/tensorflow
-go run -tags=nogpu tensorflow-agent/main.go -l -d -v
+go run -tags="nogpu nolibjpeg" tensorflow-agent/main.go -l -d -v
 ```
 
 ## Notes on installing TensorFlow from source
