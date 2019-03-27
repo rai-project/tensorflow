@@ -49,7 +49,7 @@ output:
   parameters: # type parameters
     element_type: float32
     probabilities_layer: 'prob'
-    features_url: http://data.dmlc.ml/mxnet/models/imagenet/synset.txt
+    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset.txt
     features_checksum: 4d234b5833aca44928065a180db3016a
 model: # specifies model graph and weights resources
   base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
