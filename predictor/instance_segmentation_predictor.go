@@ -353,7 +353,7 @@ func (p *InstanceSegmentationPredictor) Predict(ctx context.Context, data interf
 	session := p.tfSession
 	graph := p.tfGraph
 
-	tensor, err := makeTensorFromGoTensor(input)
+	tensor, err := makeTensorFromGoTensors(input)
 	if err != nil {
 		return err
 	}

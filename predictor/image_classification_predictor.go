@@ -336,7 +336,7 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interfa
 	session := p.tfSession
 	graph := p.tfGraph
 
-	tensor, err := makeTensorFromGoTensor(input)
+	tensor, err := makeTensorFromGoTensors(input)
 	if err != nil {
 		return err
 	}

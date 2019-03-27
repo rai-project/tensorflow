@@ -77,10 +77,10 @@ To install libjpeg-turbo, refer to [libjpeg-turbo](https://github.com/libjpeg-tu
 Linux
 
 ```
+  export TURBO_VER=2.0.2
   cd /tmp
-  wget http://downloads.sourceforge.net/project/libjpeg-turbo/$1/libjpeg-turbo-official_$1_amd64.deb
-  dpkg -x libjpeg-turbo-official_$1_amd64.deb /tmp/libjpeg-turbo-official
-  mv /tmp/libjpeg-turbo-official/opt/libjpeg-turbo /tmp/libjpeg-turbo
+  wget https://cfhcable.dl.sourceforge.net/project/libjpeg-turbo/$TURBO_VER/libjpeg-turbo-official_$TURBO_VER_amd64.deb
+  sudo dpkg -i libjpeg-turbo-official_$TURBO_VER_amd64.deb
 ```
 
 macOS
@@ -96,12 +96,16 @@ These services provide tracing, registry, and database servers.
 
 #### Installing Docker
 
-[Install Docker](https://docs.docker.com/engine/installation/). An easy way is using
+Refer to [Install Docker](https://docs.docker.com/install/).
+
+On Ubuntu, an easy way is using
 
 ```
 curl -fsSL get.docker.com -o get-docker.sh | sudo sh
 sudo usermod -aG docker $USER
 ```
+
+On macOS, [intsall Docker Destop](https://docs.docker.com/docker-for-mac/install/)
 
 #### Configuration
 
@@ -186,6 +190,8 @@ docker run -p 27017:27017 --restart always -d  -v $HOME/data/MLModelScope/mongo:
 
 ## Usage
 
+#### Use the agent with the [MLModelScope Web UI](https://github.com/rai-project/mlmodelscope)
+
 Run the agent with GPU enabled
 
 ```
@@ -193,16 +199,24 @@ cd $GOPATH/src/github.com/rai-project/tensorflow
 go run tensorflow-agent/main.go -l -d -v
 ```
 
-Run the agent ithout GPU or libjpeg-turbo
+Run the agent without GPU or libjpeg-turbo
 
 ```
 cd $GOPATH/src/github.com/rai-project/tensorflow
 go run -tags="nogpu nolibjpeg" tensorflow-agent/main.go -l -d -v
 ```
 
-## Notes on installing TensorFlow from source
+#### Use the agent through command line
 
-### Install Bazel
+TODO
+
+#### Use the agent through Docker container
+
+TODO
+
+## Notes on installing TensorFlow from source (ignore this if you are a user)
+
+#### Install Bazel
 
 {{% notice note %}}
 Currently there's issue using bazel 0.19.1 to build TensorFlow 1.12 with CUDA 10.0
@@ -212,7 +226,7 @@ Currently there's issue using bazel 0.19.1 to build TensorFlow 1.12 with CUDA 10
 
 - [Installing Bazel on macOS](https://docs.bazel.build/versions/master/install-os-x.html#install-on-mac-os-x-homebrew)
 
-### Build
+#### Build
 
 Build TensorFlow 1.12 with the following scripts.
 
@@ -283,7 +297,7 @@ cp ${GOPATH}/src/github.com/tensorflow/tensorflow/bazel-bin/tensorflow/libtensor
 
 Need to put the directory that contains `libtensorflow_framework.so` and `libtensorflow.so` into `$PATH`.
 
-### PowerPC
+#### PowerPC
 
 For TensorFlow compilation, here are the recommended tensorflow-configure settings:
 
@@ -315,7 +329,7 @@ export TF_NEED_GDR=0
 export TF_NEED_S3=0
 ```
 
-### Issues
+#### Issues
 
 - Install tensorflow 1.12.0 with CUDA 10.0
 
