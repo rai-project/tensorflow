@@ -5,7 +5,7 @@ option cc_enable_arenas = true;
 option java_outer_classname = "TensorBundleProtos";
 option java_multiple_files = true;
 option java_package = "org.tensorflow.util";
-
+option go_package = "github.com/rai-project/tensorflow";
 import "tensor_shape.proto";
 import "tensor_slice.proto";
 import "types.proto";

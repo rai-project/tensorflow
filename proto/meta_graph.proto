@@ -5,7 +5,7 @@ option cc_enable_arenas = true;
 option java_outer_classname = "MetaGraphProtos";
 option java_multiple_files = true;
 option java_package = "org.tensorflow.framework";
-
+option go_package = "github.com/rai-project/tensorflow";
 import "google/protobuf/any.proto";
 
 import "graph.proto";
@@ -61,6 +61,10 @@ message MetaGraphDef {
     // graph. This will be populated by the framework, which will overwrite any
     // user supplied value.
     string tensorflow_git_version = 6;
+
+    // A flag to denote whether default-valued attrs have been stripped from
+    // the nodes in this graph_def.
+    bool stripped_default_attrs = 7;
   }
   MetaInfoDef meta_info_def = 1;
 
@@ -155,7 +159,9 @@ message CollectionDef {
   //       value: "ImageSummary:0"
   //     }
   //   }
-  message NodeList { repeated string value = 1; }
+  message NodeList {
+    repeated string value = 1;
+  }
 
   // BytesList is used for collecting strings and serialized protobufs. For
   // example:
@@ -170,16 +176,24 @@ message CollectionDef {
   //     }
   //   }
   // }
-  message BytesList { repeated bytes value = 1; }
+  message BytesList {
+    repeated bytes value = 1;
+  }
 
   // Int64List is used for collecting int, int64 and long values.
-  message Int64List { repeated int64 value = 1 [ packed = true ]; }
+  message Int64List {
+    repeated int64 value = 1 [packed = true];
+  }
 
   // FloatList is used for collecting float values.
-  message FloatList { repeated float value = 1 [ packed = true ]; }
+  message FloatList {
+    repeated float value = 1 [packed = true];
+  }
 
   // AnyList is used for collecting Any protos.
-  message AnyList { repeated google.protobuf.Any value = 1; }
+  message AnyList {
+    repeated google.protobuf.Any value = 1;
+  }
 
   oneof kind {
     NodeList node_list = 1;

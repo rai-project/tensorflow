@@ -5,6 +5,7 @@ option cc_enable_arenas = true;
 option java_outer_classname = "VersionsProtos";
 option java_multiple_files = true;
 option java_package = "org.tensorflow.framework";
+option go_package = "github.com/rai-project/tensorflow";
 
 // Version information for a piece of serialized data
 //

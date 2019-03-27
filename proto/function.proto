@@ -5,7 +5,7 @@ option cc_enable_arenas = true;
 option java_outer_classname = "FunctionProtos";
 option java_multiple_files = true;
 option java_package = "org.tensorflow.framework";
-
+option go_package = "github.com/rai-project/tensorflow";
 import "attr_value.proto";
 import "node_def.proto";
 import "op_def.proto";
@@ -30,7 +30,8 @@ message FunctionDef {
   // Attributes specific to this function definition.
   map<string, AttrValue> attr = 5;
 
-  // NOTE: field id 2 deleted on Jan 11, 2016, GraphDef version 21.
+  // NOTE: field id 2 deleted on Jan 11, 2017, GraphDef version 21.
+  reserved 2;
 
   // In both of the following fields, there is the need to specify an
   // output that is used as either the input to another node (in
@@ -96,6 +97,6 @@ message FunctionDef {
 // loss function). dL/dx_i is the partial derivative of L with respect
 // to x_i.
 message GradientDef {
-  string function_name = 1; // The function name.
-  string gradient_func = 2; // The gradient function's name.
+  string function_name = 1;  // The function name.
+  string gradient_func = 2;  // The gradient function's name.
 }
