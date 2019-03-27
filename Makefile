@@ -14,7 +14,7 @@ generate: clean generate-models
 
 generate-proto:
 	protoc --plugin=protoc-gen-go=${GOPATH}/bin/protoc-gen-go \
-    -Iproto --go_out=paths=source_relative:. \
+    -Iproto --go_out=${GOPATH}/src \
 		--gogofaster_out=Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,plugins=grpc:. \
 		proto/allocation_description.proto \
     proto/api_def.proto \
