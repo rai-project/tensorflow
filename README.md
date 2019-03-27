@@ -68,9 +68,18 @@ This installs the dependency in `vendor/`.
 
 ## Run
 
+With GPU enabled
+
 ```
 cd $GOPATH/src/github.com/rai-project/tensorflow
 go run tensorflow-agent/main.go -l -d -v
+```
+
+Without GPU
+
+```
+cd $GOPATH/src/github.com/rai-project/tensorflow
+go run -tags=nogpu tensorflow-agent/main.go -l -d -v
 ```
 
 ## Notes on installing TensorFlow from source
