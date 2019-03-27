@@ -18,7 +18,7 @@ go get -v github.com/rai-project/tensorflow
 
 The agent requires The TensorFlow C library and other Go packages.
 
-### The TensorFlow C library
+#### The TensorFlow C library
 
 The TensorFlow C library is required for the TensorFlow Go package.
 You can download pre-built TensorFlow C library from [Install TensorFlow for C](https://www.tensorflow.org/install/lang_c).
@@ -49,7 +49,7 @@ You can test the installed TensorFlow C library using an [examle C program](http
 
 To build the TensorFlow C library from source, refer to [TensorFlow in Go](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/go#building-the-tensorflow-c-library-from-source) .
 
-### Go packages
+#### Go packages
 
 You can install the dependency through `go get`.
 
@@ -66,7 +66,7 @@ dep ensure -v
 
 This installs the dependency in `vendor/`.
 
-### libjpeg-turbo
+#### libjpeg-turbo
 
 [libjpeg-turbo](https://github.com/libjpeg-turbo/libjpeg-turbo) is a JPEG image codec that uses SIMD instructions (MMX, SSE2, AVX2, NEON, AltiVec) to accelerate baseline JPEG compression and decompression. It outperforms libjpeg by a significant amount.
 
@@ -94,7 +94,7 @@ brew install jpeg-turbo
 MLModelScope relies on a few external services.
 These services provide tracing, registry, and database servers.
 
-### Installing Docker
+#### Installing Docker
 
 [Install Docker](https://docs.docker.com/engine/installation/). An easy way is using
 
@@ -103,7 +103,7 @@ curl -fsSL get.docker.com -o get-docker.sh | sudo sh
 sudo usermod -aG docker $USER
 ```
 
-### Configuration
+#### Configuration
 
 You must have a `carml` config file called `.carml_config.yml` under your home directory. An example config file `carml_config.yml.example` is in [github.com/rai-project/MLModelScope](https://github.com/rai-project/MLModelScope) . You can move it to `~/.carml_config.yml`.
 
@@ -136,7 +136,7 @@ logger:
     - syslog
 ```
 
-### Starting Trace Server
+#### Starting Trace Server
 
 - On x86 (e.g. intel) machines, start [jaeger](http://jaeger.readthedocs.io/en/latest/getting_started/) by
 
@@ -154,7 +154,7 @@ docker run -d -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 -p5775:5775/udp -p6831:6831/udp
 
 The trace server runs on http://localhost:16686
 
-### Starting Registry Server
+#### Starting Registry Server
 
 - On x86 (e.g. intel) machines, start [consul](https://hub.docker.com/_/consul/) by
 
@@ -170,7 +170,7 @@ docker run -p 8500:8500 -p 8600:8600 -d MLModelScope/consul:ppc64le-latest
 
 The registry server runs on http://localhost:8500
 
-### Starting Database Server
+#### Starting Database Server
 
 - On x86 (e.g. intel) machines, start [mongodb](https://hub.docker.com/_/mongo/) by
 
