@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package tensorflow.eager;
+option go_package = "github.com/rai-project/tensorflow";
 
 import "attr_value.proto";
 import "device_attributes.proto";

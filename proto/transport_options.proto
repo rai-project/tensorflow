@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package tensorflow;
+option go_package = "github.com/rai-project/tensorflow";
 
 // Extra data needed on a non-RDMA RecvBufResponse.
 message RecvBufRespExtra {
