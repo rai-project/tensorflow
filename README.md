@@ -13,7 +13,6 @@ Download and install the MLModelScope TensorFlow Agent:
 
 ```
 go get -v github.com/rai-project/tensorflow
-
 ```
 
 The agent requires The TensorFlow C library and other Go packages.
@@ -21,7 +20,8 @@ The agent requires The TensorFlow C library and other Go packages.
 #### The TensorFlow C library
 
 The TensorFlow C library is required for the TensorFlow Go package.
-You can download pre-built TensorFlow C library from [Install TensorFlow for C](https://www.tensorflow.org/install/lang_c).
+You can download pre-built TensorFlow C library from [Install TensorFlow for C](https://www.tensorflow.org/install/lang_c). Currently (03/28/2019) the provided binary only supports CUDA 9.0. If
+you want to use other CUDA version for GPU, refer to the issue posted on TensorFlow GitHub page, [Tensorflow Installation for C does not work for Ubuntu 18.04 CUDA 10](https://github.com/tensorflow/tensorflow/issues/27225).
 
 Extract the downloaded archive to `/opt/tensorflow/`.
 
@@ -65,6 +65,15 @@ dep ensure -v
 ```
 
 This installs the dependency in `vendor/`.
+
+If you encounter error when getting go-cupti, especially encoutering error `/usr/bin/ld: cannot find -lcuda`. You need to create a softlink towards libcuda.so by 
+```
+sudo ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/libcuda.so
+```
+and add LD_LIBRARY_PATH environment variable for CUPTI in `~/.bashrc` or `~/.zshrc` file by
+```
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64
+```
 
 #### libjpeg-turbo
 
