@@ -1,7 +1,7 @@
 name: SRGAN # name of your model
 framework:
   name: TensorFlow # framework for the model
-  version: 1.12.0 # framework version contraint
+  version: 1.12 # framework version contraint
 version: 1.0 # version information in semantic version format
 container: # containers used to perform model evaluation
   amd64:
@@ -36,11 +36,11 @@ model: # specifies model graph and weights sources
   base_url:
   graph_path: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/srgan_1.2/frozen_model.pb
   is_archive:
-    false # if set, then the base_url is a url to an archive
+    false # if true, then the base_url is a url to an archive
     # the graph_path and weights_path then denote the
     # file names of the graph and weights within the archive
   graph_checksum: 4af37a6975db591bfd1c780eb8019f97
 attributes: # extra model attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: DIV2K - bicubic downscaling x4 competition # dataset used to for training
-  manifest_author: Cheng
+  manifest_author: Cheng Li

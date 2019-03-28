@@ -331,6 +331,6 @@ export TF_NEED_S3=0
 
 #### Issues
 
-- Install tensorflow 1.12.0 with CUDA 10.0
+- Install tensorflow 1.12 with CUDA 10.0
 
 Build from source -> build the pip package -> GPU support -> bazel build -> ERROR: Config value cuda is not defined in any .rc file https://github.com/tensorflow/tensorflow/issues/23401

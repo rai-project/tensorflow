@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"context"
 	goimage "image"
-	"image/png"
 	"os"
 	"path/filepath"
 	"testing"
 
+	"github.com/k0kubun/pp"
 	"github.com/rai-project/dlframework"
 
 	"github.com/rai-project/dlframework/framework/options"
@@ -20,7 +20,7 @@ import (
 	gotensor "gorgonia.org/tensor"
 )
 
-func TestImageEnhancementInference(t *testing.T) {
+func TestImageEnhancement(t *testing.T) {
 	tf.Register()
 	model, err := tf.FrameworkManifest.FindModel("srgan:1.0")
 	assert.NoError(t, err)
@@ -85,13 +85,22 @@ func TestImageEnhancementInference(t *testing.T) {
 		panic("expecting an image feature")
 	}
 
+	// hrimg, err := image.Read((bytes.NewReader(f.Image.GetData())))
+	// if err != nil {
+	// 	panic(err)
+	// }
+
 	hrimg, _, _ := goimage.Decode(bytes.NewReader(f.Image.GetData()))
 
-	output, _ := os.Create("/tmp/output.png")
-	defer output.Close()
+	pp.Println(hrimg.At(0, 0))
+	// jpeg.Decode(output, hrimg)
+	// pp.Println(bytes[0])
+	// assert.InDelta(t, float32(0.520469), intMask[72122], 0.001)
 
-	err = png.Encode(output, hrimg)
-	if err != nil {
-		panic(err)
-	}
+	// output, _ := os.Create("/tmp/output.png")
+	// defer output.Close()
+	// err = png.Encode(output, hrimg)
+	// if err != nil {
+	// 	panic(err)
+	// }
 }

@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/k0kubun/pp"
 	"github.com/rai-project/dlframework/framework/options"
 	"github.com/rai-project/image"
 	"github.com/rai-project/image/types"
@@ -23,7 +22,7 @@ func max(x, y int) int {
 	return x
 }
 
-func TestSemanticSegmentationInference(t *testing.T) {
+func TestSemanticSegmentation(t *testing.T) {
 	tf.Register()
 	model, err := tf.FrameworkManifest.FindModel("deeplabv3_mobilenetv2_pascal_voc:1.0")
 	assert.NoError(t, err)
@@ -88,5 +87,8 @@ func TestSemanticSegmentationInference(t *testing.T) {
 		return
 	}
 
-	pp.Println(pred[0][:1])
+	sseg := pred[0][0].GetSemanticSegment()
+	intMask := sseg.GetIntMask()
+
+	assert.Equal(t, int32(7), intMask[72122])
 }

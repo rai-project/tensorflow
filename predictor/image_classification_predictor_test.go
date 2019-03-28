@@ -71,7 +71,8 @@ func TestPredictorNew(t *testing.T) {
 
 func TestImageClassification(t *testing.T) {
 	tf.Register()
-	model, err := tf.FrameworkManifest.FindModel("bvlc_alexnet_caffe:1.0")
+	// model, err := tf.FrameworkManifest.FindModel("bvlc_alexnet_caffe:1.0")
+	model, err := tf.FrameworkManifest.FindModel("bvlc_googlenet_caffe:1.0")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
 
@@ -92,7 +93,7 @@ func TestImageClassification(t *testing.T) {
 	defer predictor.Close()
 
 	imgDir, _ := filepath.Abs("./_fixtures")
-	imgPath := filepath.Join(imgDir, "platypus.jpg")
+	imgPath := filepath.Join(imgDir, "hamburger.jpg")
 	r, err := os.Open(imgPath)
 	if err != nil {
 		panic(err)
