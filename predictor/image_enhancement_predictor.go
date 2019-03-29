@@ -339,8 +339,7 @@ func (p *ImageEnhancementPredictor) ReadPredictedFeatures(ctx context.Context) (
 	if !ok {
 		return nil, errors.New("output is not of type [][][][]float32")
 	}
-
-	return p.CreateImageFeatures(ctx, e)
+	return p.CreateRawImageFeatures(ctx, e)
 }
 
 func (p *ImageEnhancementPredictor) Reset(ctx context.Context) error {

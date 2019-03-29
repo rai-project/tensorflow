@@ -21,7 +21,7 @@ inputs: # model inputs
   - type: image # first input modality
     description: the input image # description of the first input
     parameters:
-      element_type: uint8
+      element_type: float32
       input_layer: 'input_image'
       mean: [127.5, 127.5, 127.5]
       scale: 127.5
