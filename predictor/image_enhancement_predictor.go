@@ -307,6 +307,10 @@ func makeUniformImage() [][][][]float32 {
 
 // Predict ...
 func (p *ImageEnhancementPredictor) Predict(ctx context.Context, data interface{}, opts ...options.Option) error {
+	// p.images = makeUniformImage()
+
+	// return nil
+
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "predict")
 	defer span.Finish()
 
