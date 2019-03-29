@@ -287,6 +287,24 @@ func (p *ImageEnhancementPredictor) runOptions() *proto.RunOptions {
 	return nil
 }
 
+func makeUniformImage() [][][][]float32 {
+	images := make([][][][]float32, 10)
+	width := 1000
+	height := 1000
+	for ii := range images {
+		sl := make([][][]float32, height)
+		for jj := range sl {
+			el := make([][]float32, width)
+			for kk := range el {
+				el[kk] = []float32{1, 0, 1}
+			}
+			sl[jj] = el
+		}
+		images[ii] = sl
+	}
+	return images
+}
+
 // Predict ...
 func (p *ImageEnhancementPredictor) Predict(ctx context.Context, data interface{}, opts ...options.Option) error {
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "predict")
