@@ -23,7 +23,8 @@ inputs: # model inputs
     parameters:
       element_type: uint8
       input_layer: 'ImageTensor'
-      dimensions: [3, 513]
+      max_dimension: 513
+      keep_aspect_ratio: true
 output:
   type: semanticsegment
   description: the output semantic segment # a description of the output parameter
