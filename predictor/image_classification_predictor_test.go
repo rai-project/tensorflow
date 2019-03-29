@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/k0kubun/pp"
 	"github.com/rai-project/dlframework/framework/options"
 	"github.com/rai-project/image"
 	"github.com/rai-project/image/types"
@@ -72,7 +71,7 @@ func TestPredictorNew(t *testing.T) {
 func TestImageClassification(t *testing.T) {
 	tf.Register()
 	// model, err := tf.FrameworkManifest.FindModel("bvlc_alexnet_caffe:1.0")
-	model, err := tf.FrameworkManifest.FindModel("bvlc_googlenet_caffe:1.0")
+	model, err := tf.FrameworkManifest.FindModel("mobilenet_v1_1.0_224:1.0")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
 
@@ -93,7 +92,7 @@ func TestImageClassification(t *testing.T) {
 	defer predictor.Close()
 
 	imgDir, _ := filepath.Abs("./_fixtures")
-	imgPath := filepath.Join(imgDir, "hamburger.jpg")
+	imgPath := filepath.Join(imgDir, "platypus.jpg")
 	r, err := os.Open(imgPath)
 	if err != nil {
 		panic(err)
@@ -103,17 +102,17 @@ func TestImageClassification(t *testing.T) {
 		panic(err)
 	}
 
-	height := 227
-	width := 227
+	height := 224
+	width := 224
 	channels := 3
-	resized, err := image.Resize(img, image.Resized(height, width))
+
+	resized, err := image.Resize(img, image.Resized(height, width), image.ResizeAlgorithm(types.ResizeAlgorithmLinear))
 	if err != nil {
 		panic(err)
 	}
 
 	input := make([]*gotensor.Dense, batchSize)
-	// imgBytes := resized.(*types.RGBImage).Pix
-	imgFloats, err := normalizeImageHWC(resized.(*types.RGBImage), []float32{123, 117, 104}, 1.0)
+	imgFloats, err := normalizeImageHWC(resized.(*types.RGBImage), []float32{128, 128, 128}, 128)
 	if err != nil {
 		panic(err)
 	}
@@ -136,7 +135,6 @@ func TestImageClassification(t *testing.T) {
 	if err != nil {
 		return
 	}
-
-	pp.Println(pred[0][0])
-
+	assert.InDelta(t, float32(0.998212), pred[0][0].GetProbability(), 0.001)
+	assert.Equal(t, int32(104), pred[0][0].GetClassification().GetIndex())
 }

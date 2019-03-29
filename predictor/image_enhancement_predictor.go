@@ -139,19 +139,20 @@ func (p *ImageEnhancementPredictor) download(ctx context.Context) error {
 		if err != nil {
 			return errors.Wrapf(err, "failed to download model archive from %v", model.Model.BaseUrl)
 		}
-		return nil
-	}
-	checksum := p.GetGraphChecksum()
-	if checksum == "" {
-		return errors.New("Need graph file checksum in the model manifest")
-	}
-
-	span.LogFields(
-		olog.String("event", "download graph"),
-	)
-
-	if _, err := downloadmanager.DownloadFile(p.GetGraphUrl(), p.GetGraphPath(), downloadmanager.MD5Sum(checksum)); err != nil {
-		return err
+	} else {
+		span.LogFields(
+			olog.String("event", "download graph"),
+		)
+		checksum := p.GetGraphChecksum()
+		if checksum != "" {
+			if _, err := downloadmanager.DownloadFile(p.GetGraphUrl(), p.GetGraphPath(), downloadmanager.MD5Sum(checksum)); err != nil {
+				return err
+			}
+		} else {
+			if _, err := downloadmanager.DownloadFile(p.GetGraphUrl(), p.GetGraphPath()); err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil

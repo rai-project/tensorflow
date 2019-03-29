@@ -19,7 +19,7 @@ inputs:
   - type: image
     description: the input image
     parameters:
-      layer_name: "input"
+      layer_name: 'input'
       dimensions: [3, 224, 224]
       mean: [128, 128, 128]
       scale: 128
@@ -28,8 +28,8 @@ output:
   description: an output image net label
   parameters:
     # type parameters
-    layer_name: "resnet_v2_50/predictions/Reshape_1"
-    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset1.txt
+    layer_name: 'resnet_v2_50/predictions/Reshape_1'
+    features_url: https://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset1.txt
     features_checksum: 6c05083991207dea5c37f2d271014fad
 model:
   base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/graphs
@@ -39,4 +39,3 @@ model:
 attributes:
   manifest_author: abduld
   training_dataset: ImageNet
-

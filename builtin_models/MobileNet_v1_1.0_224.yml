@@ -34,10 +34,10 @@ inputs:
       element_type: float32
       input_layer: 'input'
       layout: 'HWC'
-      color_mode: 'BGR'
+      color_mode: 'RGB'
       dimensions: [3, 224, 224]
       mean: [128, 128, 128]
-      scale:
+      scale: 128
 output:
   # the type of the output
   type: classification
@@ -46,8 +46,8 @@ output:
   parameters: # type parameters
     element_type: float32
     probabilities_layer: 'MobilenetV1/Predictions/Reshape_1'
-    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset1.txt
-    features_checksum: 4d234b5833aca44928065a180db3016a
+    features_url: https://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset1.txt
+    features_checksum: 6c05083991207dea5c37f2d271014fad
 model: # specifies model graph and weights resources
   base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_224.tgz
   graph_path: mobilenet_v1_1.0_224_frozen.pb
