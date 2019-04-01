@@ -1,7 +1,7 @@
 name: BVLC_AlexNet # name of your model
 framework:
   name: TensorFlow # framework for the model
-  version: 1.12.0 # framework version contraint
+  version: 1.12 # framework version contraint
 version: 1.0 # version information in semantic version format
 container: # containers used to perform model prediction
   # multiple platforms can be specified
@@ -49,14 +49,14 @@ output:
   parameters: # type parameters
     element_type: float32
     probabilities_layer: 'prob'
-    features_url: http://data.dmlc.ml/mxnet/models/imagenet/synset.txt
+    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset.txt
     features_checksum: 4d234b5833aca44928065a180db3016a
 model: # specifies model graph and weights resources
   base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
   graph_path: bvlc_alexnet_1.0/frozen_model.pb
   graph_checksum: 6d23f40191c1dcac71285f41a85abd8e
   is_archive:
-    false # if set, then the base_url is a url to an archive
+    false # if true, then the base_url is a url to an archive
     # the graph_path and weights_path then denote the
     # file names of the graph and weights within the archive
 attributes: # extra network attributes

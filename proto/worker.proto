@@ -478,7 +478,7 @@ message RecvBufResponse {
   // intended use.
 
   fixed64 buf_ptr = 1;  // Address of source field on server.
-  int64 num_bytes = 2;  // Byte length of buf_ptr field, if set.
+  int64 num_bytes = 2;  // Byte length of buf_ptr field, if true.
   bool is_dead = 3;     // True if value is 'dead' like a tensor.
   // Optional, implementation-specific data.
   google.protobuf.Any transport_options = 4;

@@ -1,18 +1,17 @@
 package predictor
 
 import (
-	"bytes"
 	"context"
-	goimage "image"
-	"image/png"
+	"image"
+	"image/color"
+	"image/jpeg"
 	"os"
 	"path/filepath"
 	"testing"
 
 	"github.com/rai-project/dlframework"
-
 	"github.com/rai-project/dlframework/framework/options"
-	"github.com/rai-project/image"
+	raiiamge "github.com/rai-project/image"
 	"github.com/rai-project/image/types"
 	nvidiasmi "github.com/rai-project/nvidia-smi"
 	tf "github.com/rai-project/tensorflow"
@@ -20,7 +19,7 @@ import (
 	gotensor "gorgonia.org/tensor"
 )
 
-func TestImageEnhancementInference(t *testing.T) {
+func TestImageEnhancement(t *testing.T) {
 	tf.Register()
 	model, err := tf.FrameworkManifest.FindModel("srgan:1.0")
 	assert.NoError(t, err)
@@ -48,7 +47,7 @@ func TestImageEnhancementInference(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	img, err := image.Read(r)
+	img, err := raiiamge.Read(r)
 	if err != nil {
 		panic(err)
 	}
@@ -80,18 +79,43 @@ func TestImageEnhancementInference(t *testing.T) {
 		panic(err)
 	}
 
-	f, ok := pred[0][0].Feature.(*dlframework.Feature_Image)
+	f, ok := pred[0][0].Feature.(*dlframework.Feature_RawImage)
 	if !ok {
 		panic("expecting an image feature")
 	}
 
-	hrimg, _, _ := goimage.Decode(bytes.NewReader(f.Image.GetData()))
-
-	output, _ := os.Create("/tmp/output.png")
-	defer output.Close()
-
-	err = png.Encode(output, hrimg)
-	if err != nil {
-		panic(err)
+	fl := f.RawImage.GetFloatList()
+	outWidth := f.RawImage.GetWidth()
+	outHeight := f.RawImage.GetHeight()
+	offset := 0
+	outImg := types.NewRGBImage(image.Rect(0, 0, int(outWidth), int(outHeight)))
+	for h := 0; h < int(outHeight); h++ {
+		for w := 0; w < int(outWidth); w++ {
+			R := uint8(fl[offset+0])
+			G := uint8(fl[offset+1])
+			B := uint8(fl[offset+2])
+			outImg.Set(w, h, color.RGBA{R, G, B, 255})
+			offset += 3
+		}
 	}
+
+	if false {
+		output, err := os.Create("/tmp/output.jpg")
+		if err != nil {
+			panic(err)
+		}
+		defer output.Close()
+		err = jpeg.Encode(output, outImg, nil)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	assert.Equal(t, int32(1356), outHeight)
+	assert.Equal(t, int32(2040), outWidth)
+	assert.Equal(t, types.RGB{
+		R: 0xc1,
+		G: 0xba,
+		B: 0xb6,
+	}, outImg.At(0, 0))
 }

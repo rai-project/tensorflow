@@ -11,7 +11,7 @@ container:
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  Inception v1 architecture, implemented in the winning ILSVRC 2014 submission GoogLeNet. 
+  Inception v1 architecture, implemented in the winning ILSVRC 2014 submission GoogLeNet.
   Intorduced in Going deeper with convolutions, Szegedy et al. (2014)
 references:
   - http://arxiv.org/abs/1512.00567
@@ -20,7 +20,7 @@ inputs:
   - type: image
     description: the input image
     parameters:
-      layer_name: "input"
+      layer_name: 'input'
       dimensions: [3, 224, 224]
       mean: [128, 128, 128]
       scale: 128
@@ -29,8 +29,8 @@ output:
   description: an output image net label
   parameters:
     # type parameters
-    layer_name: "InceptionV1/Logits/Predictions/Reshape_1"
-    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset1.txt
+    layer_name: 'InceptionV1/Logits/Predictions/Reshape_1'
+    features_url: https://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset1.txt
     features_checksum: 6c05083991207dea5c37f2d271014fad
 model:
   graph_path: http://s3.amazonaws.com/store.carml.org/models/tensorflow/graphs/inception_v1_frozen.pb

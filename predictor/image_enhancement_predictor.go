@@ -139,19 +139,20 @@ func (p *ImageEnhancementPredictor) download(ctx context.Context) error {
 		if err != nil {
 			return errors.Wrapf(err, "failed to download model archive from %v", model.Model.BaseUrl)
 		}
-		return nil
-	}
-	checksum := p.GetGraphChecksum()
-	if checksum == "" {
-		return errors.New("Need graph file checksum in the model manifest")
-	}
-
-	span.LogFields(
-		olog.String("event", "download graph"),
-	)
-
-	if _, err := downloadmanager.DownloadFile(p.GetGraphUrl(), p.GetGraphPath(), downloadmanager.MD5Sum(checksum)); err != nil {
-		return err
+	} else {
+		span.LogFields(
+			olog.String("event", "download graph"),
+		)
+		checksum := p.GetGraphChecksum()
+		if checksum != "" {
+			if _, err := downloadmanager.DownloadFile(p.GetGraphUrl(), p.GetGraphPath(), downloadmanager.MD5Sum(checksum)); err != nil {
+				return err
+			}
+		} else {
+			if _, err := downloadmanager.DownloadFile(p.GetGraphUrl(), p.GetGraphPath()); err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil
@@ -286,8 +287,30 @@ func (p *ImageEnhancementPredictor) runOptions() *proto.RunOptions {
 	return nil
 }
 
+func makeUniformImage() [][][][]float32 {
+	images := make([][][][]float32, 10)
+	width := 1000
+	height := 1000
+	for ii := range images {
+		sl := make([][][]float32, height)
+		for jj := range sl {
+			el := make([][]float32, width)
+			for kk := range el {
+				el[kk] = []float32{1, 0, 1}
+			}
+			sl[jj] = el
+		}
+		images[ii] = sl
+	}
+	return images
+}
+
 // Predict ...
 func (p *ImageEnhancementPredictor) Predict(ctx context.Context, data interface{}, opts ...options.Option) error {
+	// p.images = makeUniformImage()
+
+	// return nil
+
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "predict")
 	defer span.Finish()
 
@@ -338,8 +361,7 @@ func (p *ImageEnhancementPredictor) ReadPredictedFeatures(ctx context.Context) (
 	if !ok {
 		return nil, errors.New("output is not of type [][][][]float32")
 	}
-
-	return p.CreateImageFeatures(ctx, e)
+	return p.CreateRawImageFeatures(ctx, e)
 }
 
 func (p *ImageEnhancementPredictor) Reset(ctx context.Context) error {
