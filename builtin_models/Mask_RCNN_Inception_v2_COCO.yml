@@ -1,7 +1,7 @@
 name: Mask_RCNN_Inception_v2_COCO # name of your model
 framework:
   name: TensorFlow # framework for the model
-  version: 1.12.0 # framework version contraint
+  version: 1.12 # framework version contraint
 version: 1.0 # version information in semantic version format
 container: # containers used to perform model evaluation
   amd64:
@@ -31,17 +31,17 @@ output:
     probabilities_layer: 'detection_scores'
     classes_layer: 'detection_classes'
     masks_layer: 'detection_masks'
-    features_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/ssd_mobilenet_v1_coco_2017_11_17/labels.txt
+    features_url: https://s3.amazonaws.com/store.carml.org/synsets/coco/labels.txt
     features_checksum: 4418c85d01e6c82ff6849b8239759438
 model: # specifies model graph and weights sources
   base_url:
   graph_path: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/mask_rcnn_inception_v2_coco_2018_01_28/frozen_inference_graph.pb
   is_archive:
-    false # if set, then the base_url is a url to an archive
+    false # if true, then the base_url is a url to an archive
     # the graph_path and weights_path then denote the
     # file names of the graph and weights within the archive
   graph_checksum: b47e443b313a709e4c39c1caeaa3ecb3
 attributes: # extra model attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: COCO # dataset used to for training
-  manifest_author: Cheng
+  manifest_author: Cheng Li

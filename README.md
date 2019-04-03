@@ -66,6 +66,16 @@ dep ensure -v
 
 This installs the dependency in `vendor/`.
 
+#### CGO Pointer Errors
+
+The CGO interface passes go pointers to the C API. This is an error by the CGO runtime. Disable the error by placing
+
+```
+export GODEBUG=cgocheck=0
+```
+
+in your `~/.bashrc` or `~/.zshrc` file and then run either `source ~/.bashrc` or `source ~/.zshrc`
+
 #### libjpeg-turbo
 
 [libjpeg-turbo](https://github.com/libjpeg-turbo/libjpeg-turbo) is a JPEG image codec that uses SIMD instructions (MMX, SSE2, AVX2, NEON, AltiVec) to accelerate baseline JPEG compression and decompression. It outperforms libjpeg by a significant amount.
@@ -331,6 +341,6 @@ export TF_NEED_S3=0
 
 #### Issues
 
-- Install tensorflow 1.12.0 with CUDA 10.0
+- Install tensorflow 1.12 with CUDA 10.0
 
 Build from source -> build the pip package -> GPU support -> bazel build -> ERROR: Config value cuda is not defined in any .rc file https://github.com/tensorflow/tensorflow/issues/23401

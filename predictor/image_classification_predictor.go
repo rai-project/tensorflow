@@ -52,7 +52,6 @@ func NewImageClassificationPredictor(model dlframework.ModelManifest, opts ...op
 	}
 
 	predictor := new(ImageClassificationPredictor)
-
 	return predictor.Load(context.Background(), model, opts...)
 }
 
@@ -144,31 +143,34 @@ func (p *ImageClassificationPredictor) download(ctx context.Context) error {
 		if err != nil {
 			return errors.Wrapf(err, "failed to download model archive from %v", model.Model.BaseUrl)
 		}
-		return nil
-	}
-	checksum := p.GetGraphChecksum()
-	if checksum == "" {
-		return errors.New("Need graph file checksum in the model manifest")
-	}
-
-	span.LogFields(
-		olog.String("event", "download graph"),
-	)
-
-	if _, err := downloadmanager.DownloadFile(p.GetGraphUrl(), p.GetGraphPath(), downloadmanager.MD5Sum(checksum)); err != nil {
-		return err
-	}
-
-	checksum = p.GetFeaturesChecksum()
-	if checksum == "" {
-		return errors.New("Need features file checksum in the model manifest")
+	} else {
+		span.LogFields(
+			olog.String("event", "download graph"),
+		)
+		checksum := p.GetGraphChecksum()
+		if checksum != "" {
+			if _, err := downloadmanager.DownloadFile(p.GetGraphUrl(), p.GetGraphPath(), downloadmanager.MD5Sum(checksum)); err != nil {
+				return err
+			}
+		} else {
+			if _, err := downloadmanager.DownloadFile(p.GetGraphUrl(), p.GetGraphPath()); err != nil {
+				return err
+			}
+		}
 	}
 
 	span.LogFields(
 		olog.String("event", "download features"),
 	)
-	if _, err := downloadmanager.DownloadFile(p.GetFeaturesUrl(), p.GetFeaturesPath(), downloadmanager.MD5Sum(checksum)); err != nil {
-		return err
+	checksum := p.GetFeaturesChecksum()
+	if checksum != "" {
+		if _, err := downloadmanager.DownloadFile(p.GetFeaturesUrl(), p.GetFeaturesPath(), downloadmanager.MD5Sum(checksum)); err != nil {
+			return err
+		}
+	} else {
+		if _, err := downloadmanager.DownloadFile(p.GetFeaturesUrl(), p.GetFeaturesPath()); err != nil {
+			return err
+		}
 	}
 
 	return nil

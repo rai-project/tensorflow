@@ -25,7 +25,7 @@ output:
   type: feature
   description: an output image net label
   parameters:
-    features_url: http://data.dmlc.ml/mxnet/models/imagenet/synset.txt
+    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset.txt
 model:
   checkpoint: http://download.tensorflow.org/models/mobilenet_v1_0.75_224_2017_06_14.tar.gz
   is_archive: true

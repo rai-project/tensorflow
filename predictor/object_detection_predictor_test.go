@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/k0kubun/pp"
 	"github.com/rai-project/dlframework/framework/options"
 	"github.com/rai-project/image"
 	"github.com/rai-project/image/types"
@@ -16,7 +15,7 @@ import (
 	gotensor "gorgonia.org/tensor"
 )
 
-func TestObjectDetectionInference(t *testing.T) {
+func TestObjectDetection(t *testing.T) {
 	tf.Register()
 	model, err := tf.FrameworkManifest.FindModel("ssd_mobilenet_v1_coco:1.0")
 	assert.NoError(t, err)
@@ -74,5 +73,5 @@ func TestObjectDetectionInference(t *testing.T) {
 		return
 	}
 
-	pp.Println(pred[0][:3])
+	assert.InDelta(t, float32(0.936415), pred[0][0].GetProbability(), 0.001)
 }
