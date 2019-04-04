@@ -119,14 +119,13 @@ func (p *ImageClassificationPredictor) Load(ctx context.Context, model dlframewo
 }
 
 func (p *ImageClassificationPredictor) download(ctx context.Context) error {
-	span, ctx := opentracing.StartSpanFromContext(
+	span, ctx := tracer.StartSpanFromContext(
 		ctx,
+		tracer.APPLICATION_TRACE,
 		"download",
 		opentracing.Tags{
 			"graph_url":           p.GetGraphUrl(),
 			"target_graph_file":   p.GetGraphPath(),
-			"weights_url":         p.GetWeightsUrl(),
-			"target_weights_file": p.GetWeightsPath(),
 			"feature_url":         p.GetFeaturesUrl(),
 			"target_feature_file": p.GetFeaturesPath(),
 		},

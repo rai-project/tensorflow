@@ -8,7 +8,6 @@ import (
 )
 
 func FromCheckpoint(r io.Reader) (*GraphDef, error) {
-
 	bts, err := ioutil.ReadAll(r)
 	if err != nil {
 		return nil, err

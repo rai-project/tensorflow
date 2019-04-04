@@ -1,11 +1,10 @@
 package predictor
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"time"
-
-	"context"
 
 	opentracing "github.com/opentracing/opentracing-go"
 	proto "github.com/rai-project/tensorflow"

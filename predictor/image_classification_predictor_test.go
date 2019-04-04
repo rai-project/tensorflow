@@ -50,7 +50,7 @@ func normalizeImageCHW(in *types.RGBImage, mean []float32, scale float32) ([]flo
 }
 func TestPredictorNew(t *testing.T) {
 	tf.Register()
-	model, err := tf.FrameworkManifest.FindModel("bvlc-alexnet:1.0")
+	model, err := tf.FrameworkManifest.FindModel("mobilenet_v1_1.0_224:1.0")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
 
@@ -65,12 +65,10 @@ func TestPredictorNew(t *testing.T) {
 
 	assert.NotEmpty(t, imgPredictor.tfGraph)
 	assert.NotEmpty(t, imgPredictor.tfSession)
-
 }
 
 func TestImageClassification(t *testing.T) {
 	tf.Register()
-	// model, err := tf.FrameworkManifest.FindModel("bvlc_alexnet_caffe:1.0")
 	model, err := tf.FrameworkManifest.FindModel("mobilenet_v1_1.0_224:1.0")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
