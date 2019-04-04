@@ -1192,7 +1192,14 @@
 [[projects]]
   digest = "0:"
   name = "github.com/openzipkin/zipkin-go-opentracing"
-  packages = ["."]
+  packages = [
+    ".",
+    "flag",
+    "thrift/gen-go/scribe",
+    "thrift/gen-go/zipkincore",
+    "types",
+    "wire",
+  ]
   pruneopts = "T"
   revision = "f0f479ad013a498e4cbfb369414e5d3880903779"
   version = "v0.3.5"
