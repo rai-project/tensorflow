@@ -198,8 +198,15 @@ func (s *Session) Run(ctx context.Context, feeds map[Output]*Tensor, fetches []O
 		fmt.Println(string(js))
 	}
 
-	tracer, err := NewTrace(meta.StepStats)
-	tracer.Publish(ctx)
+	if runOpts != nil {
+		tracer, err := NewTrace(meta.StepStats)
+		if err != nil {
+		 return nil, err
+		}
+		if err == nil {
+			tracer.Publish(ctx)
+		}
+	}
 
 	// Make sure GC won't harvest input tensors until SessionRun() is finished
 	runtime.KeepAlive(feeds)

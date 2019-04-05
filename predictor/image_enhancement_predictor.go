@@ -3,32 +3,23 @@ package predictor
 import (
 	"bytes"
 	"context"
-	"io"
 	"io/ioutil"
-	"runtime"
 	"strings"
 
-	opentracing "github.com/opentracing/opentracing-go"
-	olog "github.com/opentracing/opentracing-go/log"
 	"github.com/pkg/errors"
 	"github.com/rai-project/config"
 	"github.com/rai-project/dlframework"
 	"github.com/rai-project/dlframework/framework/agent"
 	"github.com/rai-project/dlframework/framework/options"
 	common "github.com/rai-project/dlframework/framework/predictor"
-	"github.com/rai-project/downloadmanager"
-	nvidiasmi "github.com/rai-project/nvidia-smi"
 	"github.com/rai-project/tensorflow"
-	proto "github.com/rai-project/tensorflow"
 	"github.com/rai-project/tracer"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 	gotensor "gorgonia.org/tensor"
 )
 
 type ImageEnhancementPredictor struct {
-	common.ImagePredictor
-	tfGraph     *tf.Graph
-	tfSession   *Session
+	*ImagePredictor
 	inputLayer  string
 	outputLayer string
 	images      interface{}
@@ -50,241 +41,35 @@ func NewImageEnhancementPredictor(model dlframework.ModelManifest, opts ...optio
 
 	predictor := new(ImageEnhancementPredictor)
 
-	return predictor.Load(context.Background(), model, opts...)
+	return predictor.Load(ctx, model, opts...)
 }
 
-// Download ...
-func (p *ImageEnhancementPredictor) Download(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) error {
-	framework, err := model.ResolveFramework()
-	if err != nil {
-		return err
-	}
-
-	workDir, err := model.WorkDir()
-	if err != nil {
-		return err
-	}
-
-	ip := &ImageEnhancementPredictor{
-		ImagePredictor: common.ImagePredictor{
-			Base: common.Base{
-				Framework: framework,
-				Model:     model,
-				WorkDir:   workDir,
-				Options:   options.New(opts...),
-			},
-		},
-	}
-
-	if err = ip.download(ctx); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (p *ImageEnhancementPredictor) Load(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
-	framework, err := model.ResolveFramework()
+func (self *ImageEnhancementPredictor) Load(ctx context.Context, modelManifest dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
+	pred, err := self.ImagePredictor.Load(ctx, modelManifest, opts...)
 	if err != nil {
 		return nil, err
 	}
 
-	workDir, err := model.WorkDir()
-	if err != nil {
-		return nil, err
+	p := &ImageEnhancementPredictor{
+		ImagePredictor: pred,
 	}
 
-	ip := &ImageEnhancementPredictor{
-		ImagePredictor: common.ImagePredictor{
-			Base: common.Base{
-				Framework: framework,
-				Model:     model,
-				WorkDir:   workDir,
-				Options:   options.New(opts...),
-			},
-		},
-	}
-
-	if err = ip.download(ctx); err != nil {
-		return nil, err
-	}
-
-	if err = ip.loadPredictor(ctx); err != nil {
-		return nil, err
-	}
-
-	return ip, nil
-}
-
-func (p *ImageEnhancementPredictor) download(ctx context.Context) error {
-	span, ctx := opentracing.StartSpanFromContext(
-		ctx,
-		"download",
-		opentracing.Tags{
-			"graph_url":           p.GetGraphUrl(),
-			"target_graph_file":   p.GetGraphPath(),
-			"weights_url":         p.GetWeightsUrl(),
-			"target_weights_file": p.GetWeightsPath(),
-		},
-	)
-	defer span.Finish()
-
-	model := p.Model
-	if model.Model.IsArchive {
-		baseURL := model.Model.BaseUrl
-		span.LogFields(
-			olog.String("event", "download model archive"),
-		)
-		_, err := downloadmanager.DownloadInto(baseURL, p.WorkDir, downloadmanager.Context(ctx))
-		if err != nil {
-			return errors.Wrapf(err, "failed to download model archive from %v", model.Model.BaseUrl)
-		}
-	} else {
-		span.LogFields(
-			olog.String("event", "download graph"),
-		)
-		checksum := p.GetGraphChecksum()
-		if checksum != "" {
-			if _, err := downloadmanager.DownloadFile(p.GetGraphUrl(), p.GetGraphPath(), downloadmanager.MD5Sum(checksum)); err != nil {
-				return err
-			}
-		} else {
-			if _, err := downloadmanager.DownloadFile(p.GetGraphUrl(), p.GetGraphPath()); err != nil {
-				return err
-			}
-		}
-	}
-
-	return nil
-}
-
-func (p *ImageEnhancementPredictor) loadPredictor(ctx context.Context) error {
-	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "load_predictor")
-	defer span.Finish()
-
-	if p.tfSession != nil {
-		return nil
-	}
-
-	span.LogFields(
-		olog.String("event", "read graph"),
-	)
 	model, err := ioutil.ReadFile(p.GetGraphPath())
 	if err != nil {
-		return errors.Wrapf(err, "cannot read %s", p.GetGraphPath())
-	}
-
-	// Construct an in-memory graph from the serialized form.
-	graph := tf.NewGraph()
-	if err := graph.Import(model, ""); err != nil {
-		return errors.Wrap(err, "unable to create tensorflow model graph")
+		return nil, errors.Wrapf(err, "cannot read %s", p.GetGraphPath())
 	}
 
 	modelReader := bytes.NewReader(model)
 	p.inputLayer, err = p.GetInputLayerName(modelReader, "input_layer")
 	if err != nil {
-		return errors.Wrap(err, "failed to get the input layer name")
+		return nil, errors.Wrap(err, "failed to get the input layer name")
 	}
 	p.outputLayer, err = p.GetOutputLayerName(modelReader, "output_layer")
 	if err != nil {
-		return errors.Wrap(err, "failed to get the probabilities layer name")
+		return nil, errors.Wrap(err, "failed to get the probabilities layer name")
 	}
 
-	// Create a session for inference over graph.
-	var sessionConfig tensorflow.ConfigProto
-	if p.Options.UsesGPU() {
-		sessionConfig = tensorflow.ConfigProto{
-			DeviceCount: map[string]int32{
-				"GPU": int32(nvidiasmi.GPUCount),
-			},
-			// LogDevicePlacement: true,
-			GpuOptions: &proto.GPUOptions{
-				ForceGpuCompatible: true,
-				// PerProcessGpuMemoryFraction: 0.5,
-			},
-		}
-	} else {
-		sessionConfig = tensorflow.ConfigProto{
-			DeviceCount: map[string]int32{
-				"CPU": int32(runtime.NumCPU()),
-				"GPU": int32(0),
-			},
-			// LogDevicePlacement: true,
-			GpuOptions: &tensorflow.GPUOptions{
-				ForceGpuCompatible: false,
-			},
-		}
-	}
-	sessionOpts := &SessionOptions{}
-	if buf, err := sessionConfig.Marshal(); err == nil {
-		sessionOpts.Config = buf
-	}
-	session, err := NewSession(graph, sessionOpts)
-	if err != nil {
-		return errors.Wrap(err, "unable to create tensorflow session")
-	}
-
-	p.tfGraph = graph
-	p.tfSession = session
-
-	return nil
-}
-
-func (p ImageEnhancementPredictor) GetInputLayerName(reader io.Reader, layer string) (string, error) {
-	model := p.Model
-	modelInputs := model.GetInputs()
-	typeParameters := modelInputs[0].GetParameters()
-	name, err := p.GetTypeParameter(typeParameters, layer)
-	if err != nil {
-		graphDef, err := tensorflow.FromCheckpoint(reader)
-		if err != nil {
-			return "", errors.Wrap(err, "failed to read metagraph from checkpoint")
-		}
-		nodes := graphDef.GetNode()
-		if nodes == nil {
-			return "", errors.New("failed to read graph nodes")
-		}
-		// get the first node which has no input
-		for _, n := range nodes {
-			if len(n.GetInput()) == 0 {
-				return n.GetName(), nil
-			}
-		}
-		return "", errors.New("cannot determin the name of the input layer")
-	}
-	return name, nil
-}
-
-func (p ImageEnhancementPredictor) GetOutputLayerName(reader io.Reader, layer string) (string, error) {
-	model := p.Model
-	modelOutput := model.GetOutput()
-	typeParameters := modelOutput.GetParameters()
-	name, err := p.GetTypeParameter(typeParameters, layer)
-	if err != nil {
-		graphDef, err := tensorflow.FromCheckpoint(reader)
-		if err != nil {
-			return "", errors.Wrap(err, "failed to read metagraph from checkpoint")
-		}
-		nodes := graphDef.GetNode()
-		if nodes == nil {
-			return "", errors.New("failed to read graph nodes")
-		}
-		if len(nodes) == 0 {
-			return "", errors.New("cannot determin the name of the output layer")
-		}
-		// get the last node in the graph
-		return nodes[len(nodes)-1].GetName(), nil
-	}
-	return name, nil
-}
-
-func (p *ImageEnhancementPredictor) runOptions() *proto.RunOptions {
-	if p.TraceLevel() >= tracer.FRAMEWORK_TRACE {
-		return &proto.RunOptions{
-			TraceLevel: proto.RunOptions_SOFTWARE_TRACE,
-		}
-	}
-	return nil
+	return p, nil
 }
 
 func makeUniformImage() [][][][]float32 {
@@ -331,6 +116,7 @@ func (p *ImageEnhancementPredictor) Predict(ctx context.Context, data interface{
 	}
 
 	sessionSpan, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "c_predict")
+	cuptiSpan := p.cuptiStartSpan(ctx)
 	fetches, err := session.Run(ctx,
 		map[tf.Output]*tf.Tensor{
 			graph.Operation(p.inputLayer).Output(0): tensor,
@@ -341,6 +127,9 @@ func (p *ImageEnhancementPredictor) Predict(ctx context.Context, data interface{
 		nil,
 		p.runOptions(),
 	)
+	if cuptiSpan != nil {
+		cuptiSpan.Finish()
+	}
 	sessionSpan.Finish()
 
 	if err != nil {
@@ -365,15 +154,6 @@ func (p *ImageEnhancementPredictor) ReadPredictedFeatures(ctx context.Context) (
 }
 
 func (p *ImageEnhancementPredictor) Reset(ctx context.Context) error {
-
-	return nil
-}
-
-func (p *ImageEnhancementPredictor) Close() error {
-	if p.tfSession != nil {
-		p.tfSession.Close()
-	}
-	forceGC()
 	return nil
 }
 
@@ -385,9 +165,11 @@ func init() {
 	config.AfterInit(func() {
 		framework := tensorflow.FrameworkManifest
 		agent.AddPredictor(framework, &ImageEnhancementPredictor{
-			ImagePredictor: common.ImagePredictor{
-				Base: common.Base{
-					Framework: framework,
+			ImagePredictor: &ImagePredictor{
+				ImagePredictor: common.ImagePredictor{
+					Base: common.Base{
+						Framework: framework,
+					},
 				},
 			},
 		})
