@@ -13,6 +13,7 @@ import (
 	"github.com/rai-project/dlframework/framework/options"
 	common "github.com/rai-project/dlframework/framework/predictor"
 	"github.com/rai-project/downloadmanager"
+	cupti "github.com/rai-project/go-cupti"
 	nvidiasmi "github.com/rai-project/nvidia-smi"
 	"github.com/rai-project/tensorflow"
 	proto "github.com/rai-project/tensorflow"
@@ -278,6 +279,21 @@ func (p *ImagePredictor) runOptions() *proto.RunOptions {
 	return nil
 }
 
-func (p *ImagePredictor) cuptiStartSpan(ctx context.Context) opentracing.Span {
-	return nil
+func (p *ImagePredictor) cuptiStart(ctx context.Context) (*cupti.CUPTI, error) {
+	if !p.UseGPU() || p.TraceLevel() < tracer.HARDWARE_TRACE {
+		return nil, nil
+	}
+	cu, err := cupti.New(cupti.Context(ctx), cupti.SamplingPeriod(0))
+	if err != nil {
+		return nil, err
+	}
+	return cu, nil
+}
+
+func (p *ImagePredictor) cuptiClose(cu *cupti.CUPTI) {
+	if cu == nil {
+		return
+	}
+	cu.Wait()
+	cu.Close()
 }

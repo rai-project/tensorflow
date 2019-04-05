@@ -94,8 +94,13 @@ func (p *ImageEnhancementPredictor) Predict(ctx context.Context, data interface{
 		return err
 	}
 
-	sessionSpan, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "c_predict")
-	cuptiSpan := p.cuptiStartSpan(ctx)
+	sessionSpan, ctx := tracer.StartSpanFromContext(ctx, tracer.MODEL_TRACE, "c_predict")
+
+	cu, err := p.cuptiStart(ctx)
+	if err != nil {
+		return err
+	}
+
 	fetches, err := session.Run(ctx,
 		map[tf.Output]*tf.Tensor{
 			graph.Operation(p.inputLayer).Output(0): tensor,
@@ -106,9 +111,8 @@ func (p *ImageEnhancementPredictor) Predict(ctx context.Context, data interface{
 		nil,
 		p.runOptions(),
 	)
-	if cuptiSpan != nil {
-		cuptiSpan.Finish()
-	}
+
+	p.cuptiClose(cu)
 	sessionSpan.Finish()
 
 	if err != nil {
