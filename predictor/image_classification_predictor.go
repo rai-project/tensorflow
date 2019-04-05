@@ -13,6 +13,9 @@ import (
 	opentracing "github.com/opentracing/opentracing-go"
 	olog "github.com/opentracing/opentracing-go/log"
 	"github.com/pkg/errors"
+	tf "github.com/tensorflow/tensorflow/tensorflow/go"
+	gotensor "gorgonia.org/tensor"
+
 	"github.com/rai-project/config"
 	"github.com/rai-project/dlframework"
 	"github.com/rai-project/dlframework/framework/agent"
@@ -23,8 +26,6 @@ import (
 	"github.com/rai-project/tensorflow"
 	proto "github.com/rai-project/tensorflow"
 	"github.com/rai-project/tracer"
-	tf "github.com/tensorflow/tensorflow/tensorflow/go"
-	gotensor "gorgonia.org/tensor"
 )
 
 type ImageClassificationPredictor struct {
@@ -52,7 +53,7 @@ func NewImageClassificationPredictor(model dlframework.ModelManifest, opts ...op
 	}
 
 	predictor := new(ImageClassificationPredictor)
-	return predictor.Load(context.Background(), model, opts...)
+	return predictor.Load(ctx, model, opts...)
 }
 
 // Download ...
@@ -106,6 +107,13 @@ func (p *ImageClassificationPredictor) Load(ctx context.Context, model dlframewo
 			},
 		},
 	}
+
+	parent := opentracing.SpanFromContext(ctx)
+	if parent == nil {
+		panic("parent")
+	}
+
+	parent.Finish()
 
 	if err = ip.download(ctx); err != nil {
 		return nil, err

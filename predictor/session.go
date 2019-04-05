@@ -23,12 +23,15 @@ import "C"
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"runtime"
 	"sync"
-  "unsafe"
+	"unsafe"
+
 	protobuf "github.com/golang/protobuf/proto"
+
 	proto "github.com/rai-project/tensorflow"
 )
 
@@ -58,7 +61,7 @@ func NewSession(graph *Graph, options *SessionOptions) (*Session, error) {
 	defer doneOpt()
 	if err != nil {
 		return nil, err
-  }
+	}
 	cSess := C.TF_NewSession(graphPtrC(graph), cOpt, status.c)
 	if err := status.Err(); err != nil {
 		return nil, err
@@ -135,7 +138,6 @@ func (s *Session) ListDevices() ([]Device, error) {
 // the fetches argument. If fetches is set to nil, the returned Tensor fetches
 // is empty.
 
-
 func (s *Session) Run(ctx context.Context, feeds map[Output]*Tensor, fetches []Output, targets []*Operation, runOpts *proto.RunOptions) ([]*Tensor, error) {
 	s.mu.Lock()
 	if s.c == nil {
@@ -147,8 +149,8 @@ func (s *Session) Run(ctx context.Context, feeds map[Output]*Tensor, fetches []O
 	defer s.wg.Done()
 
 	c := newCRunArgs(feeds, fetches, targets)
-  status := newStatus()
-  
+	status := newStatus()
+
 	var runOptsBuf *C.TF_Buffer
 	var runMetaData *C.TF_Buffer
 
@@ -171,13 +173,33 @@ func (s *Session) Run(ctx context.Context, feeds map[Output]*Tensor, fetches []O
 	}
 
 	runMetaData = C.TF_NewBuffer()
-  defer C.TF_DeleteBuffer(runMetaData)
-  
+	defer C.TF_DeleteBuffer(runMetaData)
+
 	C.TF_SessionRun(s.c, runOptsBuf,
 		ptrOutput(c.feeds), ptrTensor(c.feedTensors), C.int(len(feeds)),
 		ptrOutput(c.fetches), ptrTensor(c.fetchTensors), C.int(len(fetches)),
 		ptrOperation(c.targets), C.int(len(targets)),
 		runMetaData, status.c)
+
+	var meta proto.RunMetadata
+
+	// A []byte slice backed by C memory.
+	// See: https://github.com/golang/go/wiki/cgo#turning-c-arrays-into-go-slices
+	length := int(runMetaData.length)
+	slice := (*[1 << 30]byte)(unsafe.Pointer(runMetaData.data))[:length:length]
+
+	protobuf.Unmarshal(slice, &meta)
+
+	js, err := json.MarshalIndent(meta.StepStats, "", "  ")
+	if err != nil {
+		panic("failed to marshal step stats " + err.Error())
+	}
+	if false {
+		fmt.Println(string(js))
+	}
+
+	tracer, err := NewTrace(meta.StepStats)
+	tracer.Publish(ctx)
 
 	// Make sure GC won't harvest input tensors until SessionRun() is finished
 	runtime.KeepAlive(feeds)
@@ -288,7 +310,7 @@ func newCRunArgs(feeds map[Output]*Tensor, fetches []Output, targets []*Operatio
 		targets:      make([]*C.TF_Operation, len(targets)),
 	}
 	for o, t := range feeds {
-    c.feeds = append(c.feeds, outputC(o))
+		c.feeds = append(c.feeds, outputC(o))
 		c.feedTensors = append(c.feedTensors, tensorPtrC(t))
 	}
 	for i, o := range fetches {

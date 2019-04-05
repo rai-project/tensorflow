@@ -7,6 +7,7 @@ import (
 	"time"
 
 	opentracing "github.com/opentracing/opentracing-go"
+
 	proto "github.com/rai-project/tensorflow"
 )
 
@@ -43,7 +44,7 @@ func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption
 		device := tr.device
 		node := tr.node
 		startTime := time.Unix(0, node.GetAllStartMicros()*int64(time.Microsecond))
-		endTime := time.Unix(0, (node.GetAllStartMicros()+node.GetAllEndRelMicros())*int64(time.Microsecond))
+		endTime := time.Unix(0, (node.GetAllStartMicros()+(node.GetOpEndRelMicros()-node.GetOpStartRelMicros()))*int64(time.Microsecond))
 
 		tags := opentracing.Tags{
 			"trace_source":   "framework",
