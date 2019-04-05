@@ -1,4 +1,4 @@
-name: Faster_RCNN_ResNet101_lowproposals_COCO # name of your model
+name: Faster_RCNN_ResNet101_Lowproposals_COCO # name of your model
 framework:
   name: TensorFlow # framework for the model
   version: 1.12 # framework version contraint
@@ -39,8 +39,8 @@ model: # specifies model graph and weights sources
     false # if true, then the base_url is a url to an archive
     # the graph_path and weights_path then denote the
     # file names of the graph and weights within the archive
-  graph_checksum: 8b6edeb143566f830e35765438b452ff
+  graph_checksum: e8cc341b4dbde7cf5650fd6480989dc0
 attributes: # extra model attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: COCO # dataset used to for training
-  manifest_author: Cheng Li
+  manifest_author: Jingning Tang

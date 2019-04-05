@@ -1,4 +1,4 @@
-name: Faster_RCNN_Inception_ResNet_v2_atrous_COCO # name of your model
+name: Faster_RCNN_Inception_ResNet_v2_Atrous_COCO # name of your model
 framework:
   name: TensorFlow # framework for the model
   version: 1.12 # framework version contraint
@@ -39,7 +39,7 @@ model: # specifies model graph and weights sources
     false # if true, then the base_url is a url to an archive
     # the graph_path and weights_path then denote the
     # file names of the graph and weights within the archive
-  graph_checksum: c9df908a779062ce00abe8f98e4a3eb1
+  graph_checksum: a7cba73fa2af9aa394658057adaf0f2d
 attributes: # extra model attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: COCO # dataset used to for training

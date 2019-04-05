@@ -1,4 +1,4 @@
-name: DeepLabv3_MobileNetv2_PASCAL_VOC # name of your model
+name: DeepLabv3_MobileNet_v2_PASCAL_VOC # name of your model
 framework:
   name: TensorFlow # framework for the model
   version: 1.12 # framework version contraint
