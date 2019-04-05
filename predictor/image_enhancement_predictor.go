@@ -21,7 +21,7 @@ import (
 type ImageEnhancementPredictor struct {
 	*ImagePredictor
 	inputLayer  string
-	outputLayer string
+	imagesLayer string
 	images      interface{}
 }
 
@@ -64,38 +64,17 @@ func (self *ImageEnhancementPredictor) Load(ctx context.Context, modelManifest d
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get the input layer name")
 	}
-	p.outputLayer, err = p.GetOutputLayerName(modelReader, "output_layer")
+	p.imagesLayer, err = p.GetOutputLayerName(modelReader, "output_layer")
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to get the probabilities layer name")
+		return nil, errors.Wrap(err, "failed to get the images layer name")
 	}
 
 	return p, nil
 }
 
-func makeUniformImage() [][][][]float32 {
-	images := make([][][][]float32, 10)
-	width := 1000
-	height := 1000
-	for ii := range images {
-		sl := make([][][]float32, height)
-		for jj := range sl {
-			el := make([][]float32, width)
-			for kk := range el {
-				el[kk] = []float32{1, 0, 1}
-			}
-			sl[jj] = el
-		}
-		images[ii] = sl
-	}
-	return images
-}
-
 // Predict ...
 func (p *ImageEnhancementPredictor) Predict(ctx context.Context, data interface{}, opts ...options.Option) error {
-	// p.images = makeUniformImage()
-
-	// return nil
-
+	p.images = makeUniformImage()
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "predict")
 	defer span.Finish()
 
@@ -122,7 +101,7 @@ func (p *ImageEnhancementPredictor) Predict(ctx context.Context, data interface{
 			graph.Operation(p.inputLayer).Output(0): tensor,
 		},
 		[]tf.Output{
-			graph.Operation(p.outputLayer).Output(0),
+			graph.Operation(p.imagesLayer).Output(0),
 		},
 		nil,
 		p.runOptions(),
@@ -151,10 +130,6 @@ func (p *ImageEnhancementPredictor) ReadPredictedFeatures(ctx context.Context) (
 		return nil, errors.New("output is not of type [][][][]float32")
 	}
 	return p.CreateRawImageFeatures(ctx, e)
-}
-
-func (p *ImageEnhancementPredictor) Reset(ctx context.Context) error {
-	return nil
 }
 
 func (p ImageEnhancementPredictor) Modality() (dlframework.Modality, error) {
