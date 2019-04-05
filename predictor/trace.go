@@ -24,7 +24,6 @@ func NewTrace(data *proto.StepStats) (*Trace, error) {
 	if len(data.GetDevStats()) == 0 {
 		return nil, errors.New("no device stats available")
 	}
-
 	nodes := []traceNode{}
 	for _, dev := range data.GetDevStats() {
 		for _, nd := range dev.GetNodeStats() {
@@ -39,24 +38,29 @@ func NewTrace(data *proto.StepStats) (*Trace, error) {
 	}, nil
 }
 
+// Notes about start and end time from the NodeExecStats proto:
+// For GPU, there is no difference between op_end_rel_micros and
+// all_end_rel_micros. All are kernel times.
+// For CPU, op_end_rel is the kernel time, while all_end_rel_micros includes
+// some post-processing. Besides, currently, there is no way to measure
+// the execution time of async ops accurately.
 func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption) error {
 	for layerSequenceIndex, tr := range t.nodes {
 		device := tr.device
 		node := tr.node
 		startTime := time.Unix(0, node.GetAllStartMicros()*int64(time.Microsecond))
-		endTime := time.Unix(0, (node.GetAllStartMicros()+(node.GetOpEndRelMicros()-node.GetOpStartRelMicros()))*int64(time.Microsecond))
-
+		endTime := time.Unix(0, (node.GetAllStartMicros()+node.GetAllEndRelMicros())*int64(time.Microsecond))
 		tags := opentracing.Tags{
-			"trace_source":   "framework",
-			"framework_name": "tensorflow",
-			"device":         device,
-			// "all_start_micros":    node.GetAllStartMicros(),
-			// "all_end_rel_micros":  node.GetAllEndRelMicros(),
-			// "op_start_rel_micros": node.GetOpStartRelMicros(),
-			// "op_end_rel_micros":   node.GetOpEndRelMicros(),
-			"timeline_label":   node.GetTimelineLabel(),
-			"scheduled_micros": node.GetScheduledMicros(),
-			"thread_id":        node.GetThreadId(),
+			"trace_source":        "framework",
+			"framework_name":      "tensorflow",
+			"device":              device,
+			"all_start_micros":    node.GetAllStartMicros(),
+			"all_end_rel_micros":  node.GetAllEndRelMicros(),
+			"op_start_rel_micros": node.GetOpStartRelMicros(),
+			"op_end_rel_micros":   node.GetOpEndRelMicros(),
+			"timeline_label":      node.GetTimelineLabel(),
+			"scheduled_micros":    node.GetScheduledMicros(),
+			"thread_id":           node.GetThreadId(),
 			// "start_time":          startTime,
 			// "end_time":            endTime,
 			"layer_sequence_index": layerSequenceIndex,
