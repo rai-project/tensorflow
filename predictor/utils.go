@@ -14,6 +14,10 @@ import (
 	gotensor "gorgonia.org/tensor"
 )
 
+func disableFrameworkAutoTuning() {
+	os.Setenv("TF_CUDNN_USE_AUTOTUNE", "0")
+}
+
 func makeTensorFromGoTensors(in0 []*gotensor.Dense) (*tf.Tensor, error) {
 	if len(in0) < 1 {
 		return nil, errors.New("no dense tensor in input")

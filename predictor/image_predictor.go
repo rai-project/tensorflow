@@ -105,6 +105,10 @@ func (p *ImagePredictor) Load(ctx context.Context, model dlframework.ModelManife
 		},
 	}
 
+	if ip.Options.DisableFrameworkAutoTuning() {
+		disableFrameworkAutoTuning()
+	}
+
 	if err = ip.download(ctx); err != nil {
 		return nil, err
 	}
