@@ -18,14 +18,14 @@ import (
 	gotensor "gorgonia.org/tensor"
 )
 
-type ImageClassificationPredictor struct {
+type SemanticSegmentationPredictor struct {
 	*ImagePredictor
-	inputLayer         string
-	probabilitiesLayer string
-	probabilities      interface{}
+	inputLayer string
+	masksLayer string
+	masks      interface{}
 }
 
-func NewImageClassificationPredictor(model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
+func NewSemanticSegmentationPredictor(model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
 	ctx := context.Background()
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "new_predictor")
 	defer span.Finish()
@@ -39,17 +39,18 @@ func NewImageClassificationPredictor(model dlframework.ModelManifest, opts ...op
 		return nil, errors.New("input type not supported")
 	}
 
-	predictor := new(ImageClassificationPredictor)
+	predictor := new(SemanticSegmentationPredictor)
+
 	return predictor.Load(ctx, model, opts...)
 }
 
-func (self *ImageClassificationPredictor) Load(ctx context.Context, modelManifest dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
+func (self *SemanticSegmentationPredictor) Load(ctx context.Context, modelManifest dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
 	pred, err := self.ImagePredictor.Load(ctx, modelManifest, opts...)
 	if err != nil {
 		return nil, err
 	}
 
-	p := &ImageClassificationPredictor{
+	p := &SemanticSegmentationPredictor{
 		ImagePredictor: pred,
 	}
 
@@ -61,18 +62,18 @@ func (self *ImageClassificationPredictor) Load(ctx context.Context, modelManifes
 
 	p.inputLayer, err = p.GetInputLayerName(modelReader, "input_layer")
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to get the input layer name")
+		return nil, errors.Wrap(err, "failed to get input layer name")
 	}
-	p.probabilitiesLayer, err = p.GetOutputLayerName(modelReader, "probabilities_layer")
+	p.masksLayer, err = p.GetOutputLayerName(modelReader, "masks_layer")
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to get the probabilities layer name")
+		return nil, errors.Wrap(err, "failed to get the masks layer name")
 	}
 
 	return p, nil
 }
 
 // Predict ...
-func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interface{}, opts ...options.Option) error {
+func (p *SemanticSegmentationPredictor) Predict(ctx context.Context, data interface{}, opts ...options.Option) error {
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "predict")
 	defer span.Finish()
 
@@ -99,7 +100,7 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interfa
 			graph.Operation(p.inputLayer).Output(0): tensor,
 		},
 		[]tf.Output{
-			graph.Operation(p.probabilitiesLayer).Output(0),
+			graph.Operation(p.masksLayer).Output(0),
 		},
 		nil,
 		p.runOptions(),
@@ -108,24 +109,22 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interfa
 		cuptiSpan.Finish()
 	}
 	sessionSpan.Finish()
-
 	if err != nil {
 		return errors.Wrapf(err, "failed to perform session.Run")
 	}
 
-	p.probabilities = fetches[0].Value()
-
+	p.masks = fetches[0].Value()
 	return nil
 }
 
 // ReadPredictedFeatures ...
-func (p *ImageClassificationPredictor) ReadPredictedFeatures(ctx context.Context) ([]dlframework.Features, error) {
+func (p *SemanticSegmentationPredictor) ReadPredictedFeatures(ctx context.Context) ([]dlframework.Features, error) {
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "read_predicted_features")
 	defer span.Finish()
 
-	e, ok := p.probabilities.([][]float32)
+	masks, ok := p.masks.([][][]int64)
 	if !ok {
-		return nil, errors.New("output is not of type [][]float32")
+		return nil, errors.New("output is not of type [][][]int64")
 	}
 
 	labels, err := p.GetLabels()
@@ -133,17 +132,17 @@ func (p *ImageClassificationPredictor) ReadPredictedFeatures(ctx context.Context
 		return nil, errors.New("cannot get the labels")
 	}
 
-	return p.CreateClassificationFeatures(ctx, e, labels)
+	return p.CreateSemanticSegmentFeatures(ctx, masks, labels)
 }
 
-func (p ImageClassificationPredictor) Modality() (dlframework.Modality, error) {
-	return dlframework.ImageClassificationModality, nil
+func (p SemanticSegmentationPredictor) Modality() (dlframework.Modality, error) {
+	return dlframework.ImageSemanticSegmentationModality, nil
 }
 
 func init() {
 	config.AfterInit(func() {
 		framework := tensorflow.FrameworkManifest
-		agent.AddPredictor(framework, &ImageClassificationPredictor{
+		agent.AddPredictor(framework, &SemanticSegmentationPredictor{
 			ImagePredictor: &ImagePredictor{
 				ImagePredictor: common.ImagePredictor{
 					Base: common.Base{

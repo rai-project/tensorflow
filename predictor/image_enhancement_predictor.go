@@ -58,8 +58,8 @@ func (self *ImageEnhancementPredictor) Load(ctx context.Context, modelManifest d
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot read %s", p.GetGraphPath())
 	}
-
 	modelReader := bytes.NewReader(model)
+
 	p.inputLayer, err = p.GetInputLayerName(modelReader, "input_layer")
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get the input layer name")

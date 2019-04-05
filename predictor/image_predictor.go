@@ -74,6 +74,14 @@ func (p *ImagePredictor) GetOutputLayerName(reader io.Reader, layer string) (str
 	return name, nil
 }
 
+func (p *ImagePredictor) Close() error {
+	if p.tfSession != nil {
+		p.tfSession.Close()
+	}
+	forceGC()
+	return nil
+}
+
 func (p *ImagePredictor) Load(ctx context.Context, model dlframework.ModelManifest, opts ...options.Option) (*ImagePredictor, error) {
 	framework, err := model.ResolveFramework()
 	if err != nil {
@@ -137,14 +145,6 @@ func (p *ImagePredictor) Download(ctx context.Context, model dlframework.ModelMa
 	return nil
 }
 
-func (p *ImagePredictor) Close() error {
-	if p.tfSession != nil {
-		p.tfSession.Close()
-	}
-	forceGC()
-	return nil
-}
-
 func (p *ImagePredictor) download(ctx context.Context) error {
 	span, ctx := opentracing.StartSpanFromContext(
 		ctx,
@@ -159,18 +159,18 @@ func (p *ImagePredictor) download(ctx context.Context) error {
 	defer span.Finish()
 
 	model := p.Model
+
 	if model.Model.IsArchive {
 		baseURL := model.Model.BaseUrl
 		span.LogFields(
 			olog.String("event", "download model archive"),
 		)
-		_, err := downloadmanager.DownloadInto(baseURL, p.WorkDir, downloadmanager.Context(ctx))
-		if err != nil {
+		if _, err := downloadmanager.DownloadInto(baseURL, p.WorkDir, downloadmanager.Context(ctx)); err != nil {
 			return errors.Wrapf(err, "failed to download model archive from %v", model.Model.BaseUrl)
 		}
 	} else {
 		span.LogFields(
-			olog.String("event", "download graph"),
+			olog.String("event", "download model graph"),
 		)
 		checksum := p.GetGraphChecksum()
 		if checksum != "" {
@@ -179,6 +179,22 @@ func (p *ImagePredictor) download(ctx context.Context) error {
 			}
 		} else {
 			if _, err := downloadmanager.DownloadFile(p.GetGraphUrl(), p.GetGraphPath()); err != nil {
+				return err
+			}
+		}
+	}
+
+	if p.GetFeaturesUrl() != "" {
+		span.LogFields(
+			olog.String("event", "download features"),
+		)
+		checksum := p.GetFeaturesChecksum()
+		if checksum != "" {
+			if _, err := downloadmanager.DownloadFile(p.GetFeaturesUrl(), p.GetFeaturesPath(), downloadmanager.MD5Sum(checksum)); err != nil {
+				return err
+			}
+		} else {
+			if _, err := downloadmanager.DownloadFile(p.GetFeaturesUrl(), p.GetFeaturesPath()); err != nil {
 				return err
 			}
 		}
@@ -199,11 +215,14 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 		olog.String("event", "read graph"),
 	)
 
-	model, err := ioutil.ReadFile(p.GetGraphPath())
-	if err != nil {
-		return errors.Wrapf(err, "cannot read %s", p.GetGraphPath())
+	graphPath := p.GetGraphPath()
+	if graphPath == "" {
+		return errors.New("graph path is empty")
 	}
-
+	model, err := ioutil.ReadFile(graphPath)
+	if err != nil {
+		return errors.Wrapf(err, "cannot read %s", graphPath)
+	}
 	// Construct an in-memory graph from the serialized form.
 	graph := tf.NewGraph()
 	if err := graph.Import(model, ""); err != nil {
