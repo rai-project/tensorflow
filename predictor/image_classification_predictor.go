@@ -92,7 +92,7 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interfa
 		return err
 	}
 
-	sessionSpan, ctx := tracer.StartSpanFromContext(ctx, tracer.MODEL_TRACE, "c_predict")
+	// sessionSpan, ctx := tracer.StartSpanFromContext(ctx, tracer.MODEL_TRACE, "c_predict")
 
 	cu, err := p.cuptiStart(ctx)
 	if err != nil {
@@ -111,7 +111,7 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interfa
 	)
 
 	p.cuptiClose(cu)
-	sessionSpan.Finish()
+	// sessionSpan.Finish()
 
 	if err != nil {
 		return errors.Wrapf(err, "failed to perform session.Run")
