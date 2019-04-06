@@ -9,6 +9,7 @@ import (
 	opentracing "github.com/opentracing/opentracing-go"
 
 	proto "github.com/rai-project/tensorflow"
+	"github.com/rai-project/tracer"
 )
 
 type traceNode struct {
@@ -130,8 +131,9 @@ func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption
 			}
 		}
 
-		s, _ := opentracing.StartSpanFromContext(
+		s, _ := tracer.StartSpanFromContext(
 			ctx,
+			tracer.FRAMEWORK_TRACE,
 			node.GetNodeName(),
 			opentracing.StartTime(startTime),
 			tags,

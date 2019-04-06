@@ -209,16 +209,17 @@ func (p *ImagePredictor) download(ctx context.Context) error {
 }
 
 func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
-	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "load_predictor")
-	defer span.Finish()
+	if ctx != nil {
+		span, _ := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "load_predictor")
+		defer span.Finish()
+		span.LogFields(
+			olog.String("event", "read graph"),
+		)
+	}
 
 	if p.tfSession != nil {
 		return nil
 	}
-
-	span.LogFields(
-		olog.String("event", "read graph"),
-	)
 
 	graphPath := p.GetGraphPath()
 	if graphPath == "" {

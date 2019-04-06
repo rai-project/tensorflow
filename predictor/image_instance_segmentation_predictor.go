@@ -133,6 +133,7 @@ func (p *InstanceSegmentationPredictor) Predict(ctx context.Context, data interf
 	)
 
 	p.cuptiClose(cu)
+
 	sessionSpan.Finish()
 
 	if err != nil {

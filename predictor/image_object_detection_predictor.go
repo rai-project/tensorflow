@@ -126,6 +126,7 @@ func (p *ObjectDetectionPredictor) Predict(ctx context.Context, data interface{}
 	)
 
 	p.cuptiClose(cu)
+
 	sessionSpan.Finish()
 
 	if err != nil {
