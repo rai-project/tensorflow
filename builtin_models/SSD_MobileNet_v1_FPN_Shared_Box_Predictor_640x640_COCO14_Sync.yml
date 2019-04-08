@@ -1,0 +1,46 @@
+name: SSD_MobileNet_v1_FPN_Shared_Box_Predictor_640x640_COCO14_Sync # name of your model
+framework:
+  name: TensorFlow # framework for the model
+  version: 1.12 # framework version contraint
+version: 1.0 # version information in semantic version format
+container: # containers used to perform model evaluation
+  amd64:
+    gpu: raiproject/carml-tensorflow:amd64-cpu
+    cpu: raiproject/carml-tensorflow:amd64-gpu
+  ppc64le:
+    cpu: raiproject/carml-tensorflow:ppc64le-gpu
+    gpu: raiproject/carml-tensorflow:ppc64le-gpu
+description: >
+  TensorFlow Object Detection model, which is trained on the COCO (Common Objects
+  in Context) dataset. Use ssd_mobilenet_v1_fpn_shared_box_predictor_640x640_coco14_sync_2018_07_03
+  from TensorFlow detection model zoo.
+references: # references to papers / websites / etc.. describing the model
+- https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
+license: Apache License, Version 2.0 # license of the model
+inputs: # model inputs
+- type: image   # first input modality
+  description: the input image   # description of the first input
+  parameters:
+    element_type: uint8
+    input_layer: image_tensor
+output:
+  type: boundingbox
+  description: the output bounding box # a description of the output parameter
+  parameters:
+    element_type: float32
+    boxes_layer: detection_boxes
+    probabilities_layer: detection_scores
+    classes_layer: detection_classes
+    features_url: https://s3.amazonaws.com/store.carml.org/synsets/coco/labels.txt
+    features_checksum: 4418c85d01e6c82ff6849b8239759438
+model: # specifies model graph and weights sources
+  base_url:
+  graph_path: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/ssd_mobilenet_v1_fpn_shared_box_predictor_640x640_coco14_sync_2018_07_03/frozen_inference_graph.pb
+  is_archive: false # if true, then the base_url is a url to an archive
+    # the graph_path and weights_path then denote the
+    # file names of the graph and weights within the archive
+  graph_checksum: bd60c1d92f4f7985fce54ecc77768ef1
+attributes: # extra model attributes
+  kind: CNN # the kind of neural network (CNN, RNN, ...)
+  training_dataset: COCO # dataset used to for training
+  manifest_author: Jingning Tang
