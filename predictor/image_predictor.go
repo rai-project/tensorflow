@@ -177,15 +177,14 @@ func (p *ImagePredictor) download(ctx context.Context) error {
 		span.LogFields(
 			olog.String("event", "download model graph"),
 		)
-		checksum := p.GetGraphChecksum()
-		if checksum != "" {
-			if _, err := downloadmanager.DownloadFile(p.GetGraphUrl(), p.GetGraphPath(), downloadmanager.MD5Sum(checksum)); err != nil {
-				return err
-			}
-		} else {
-			if _, err := downloadmanager.DownloadFile(p.GetGraphUrl(), p.GetGraphPath()); err != nil {
-				return err
-			}
+
+		_, err := downloadmanager.DownloadFile(
+			p.GetGraphUrl(),
+			p.GetGraphPath(),
+			downloadmanager.MD5Sum(p.GetGraphChecksum()),
+		)
+		if err != nil {
+			return err
 		}
 	}
 
@@ -193,15 +192,13 @@ func (p *ImagePredictor) download(ctx context.Context) error {
 		span.LogFields(
 			olog.String("event", "download features"),
 		)
-		checksum := p.GetFeaturesChecksum()
-		if checksum != "" {
-			if _, err := downloadmanager.DownloadFile(p.GetFeaturesUrl(), p.GetFeaturesPath(), downloadmanager.MD5Sum(checksum)); err != nil {
-				return err
-			}
-		} else {
-			if _, err := downloadmanager.DownloadFile(p.GetFeaturesUrl(), p.GetFeaturesPath()); err != nil {
-				return err
-			}
+		_, err := downloadmanager.DownloadFile(
+			p.GetFeaturesUrl(),
+			p.GetFeaturesPath(),
+			downloadmanager.MD5Sum(p.GetFeaturesChecksum()),
+		)
+		if err != nil {
+			return err
 		}
 	}
 
@@ -212,9 +209,6 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 	if ctx != nil {
 		span, _ := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "load_predictor")
 		defer span.Finish()
-		span.LogFields(
-			olog.String("event", "read graph"),
-		)
 	}
 
 	if p.tfSession != nil {

@@ -51,6 +51,9 @@ func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption
 		node := tr.node
 		startTime := time.Unix(0, node.GetAllStartMicros()*int64(time.Microsecond))
 		endTime := time.Unix(0, (node.GetAllStartMicros()+node.GetAllEndRelMicros())*int64(time.Microsecond))
+		if endTime.Sub(startTime) <= 10*time.Microsecond {
+			continue
+		}
 		tags := opentracing.Tags{
 			"trace_source":   "framework",
 			"framework_name": "tensorflow",
