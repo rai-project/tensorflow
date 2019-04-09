@@ -1,4 +1,4 @@
-name: MobileNet_v1_1.0_224 # name of your model
+name: MobileNet_v1_0.75_224_Quant # name of your model
 framework:
   name: TensorFlow # framework for the model
   version: 1.12 # framework version contraint
@@ -20,7 +20,7 @@ description: >
   This network consists of 224 layers and achieves 70.9 top-1 and 89.9 top-5 accuracy.
 references: # references to papers / websites / etc.. describing the model
 - https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet_v1.md
-- http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_224.tgz
+- http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.75_224_quant.tgz
 - https://arxiv.org/pdf/1704.04861.pdf
 - https://github.com/keras-team/keras-applications/blob/master/keras_applications/mobilenet.py
 # license of the model
@@ -50,9 +50,9 @@ output:
     features_url: https://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset1.txt
     features_checksum: 6c05083991207dea5c37f2d271014fad
 model: # specifies model graph and weights resources
-  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_224.tgz
-  graph_path: mobilenet_v1_1.0_224_frozen.pb
-  graph_checksum: 7f564c782f0141e4e7bdc5161a6cc2f4
+  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.75_224_quant.tgz
+  graph_path: mobilenet_v1_0.75_224_quant_frozen.pb
+  graph_checksum: bf0d7b02c9f2c70620065b814a76442f
   is_archive: true # if true, then the base_url is a url to an archive
     # the graph_path and weights_path then denote the
     # file names of the graph and weights within the archive

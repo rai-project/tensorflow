@@ -1,0 +1,60 @@
+name: ResNeXt50_32x4d_Caffe # name of your model
+framework:
+  name: TensorFlow # framework for the model
+  version: 1.12 # framework version contraint
+version: 1.0 # version information in semantic version format
+container: # containers used to perform model prediction
+           # multiple platforms can be specified
+  amd64:
+    gpu: raiproject/carml-tensorflow:amd64-cpu
+    cpu: raiproject/carml-tensorflow:amd64-gpu
+  ppc64le:
+    cpu: raiproject/carml-tensorflow:ppc64le-gpu
+    gpu: raiproject/carml-tensorflow:ppc64le-gpu
+description: >
+  ResNeXt is a simple, highly modularized network architecture for image classification. Our network is constructed by repeating
+  a building block that aggregates a set of transformations with the same topology. Our simple design results in a homogeneous,
+  multi-branch architecture that has only a few hyper-parameters to set. This strategy exposes a new dimension, which we call
+  “cardinality” (the size of the set of transformations), as an essential factor in addition to the dimensions of depth and width.
+references: # references to papers / websites / etc.. describing the model
+  - https://github.com/soeaver/caffe-model/tree/master/cls
+  - https://github.com/facebookresearch/ResNeXt
+  - https://github.com/facebookresearch/ResNeXt/blob/master/datasets/README.md
+# license of the model
+license: unrestricted
+# inputs to the model
+inputs:
+  # first input type for the model
+  - type: image
+    # description of the first input
+    description: the input image
+    parameters: # type parameters
+      layer_name: "data"
+      layout: "HWC"
+      color_mode: "BGR"
+      dimensions: [3, 224, 224]
+      mean: [123.675, 116.28, 103.52]
+      scale: 256
+output:
+  # the type of the output
+  type: feature
+  # a description of the output parameter
+  description: the output label
+  parameters:
+    # type parameters
+    layer_name: "prob"
+    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset.txt
+    features_checksum: 4d234b5833aca44928065a180db3016a
+model: # specifies model graph and weights resources
+  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
+  graph_path: resnext50_32x4d_caffe_1.0/frozen_model.pb
+  is_archive: false # if true, then the base_url is a url to an archive
+                    # the graph_path and weights_path then denote the
+                    # file names of the graph and weights within the archive
+  graph_checksum: f27f6fcbf8d44f907c81b00d2268f210
+attributes: # extra network attributes
+  kind: CNN # the kind of neural network (CNN, RNN, ...)
+  training_dataset: ImageNet # dataset used to for training
+  manifest_author: abduld
+# hidden: true # Message type "caffe.PoolingParameter" has no field named "ceil_mode"
+# https://github.com/BVLC/caffe/pull/3057/files
