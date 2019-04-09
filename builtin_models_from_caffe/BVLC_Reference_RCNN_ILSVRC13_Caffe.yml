@@ -1,0 +1,57 @@
+name: BVLC_Reference_RCNN_ILSVRC13_Caffe # name of your model
+framework:
+  name: TensorFlow # framework for the model
+  version: 1.12 # framework version contraint
+version: 1.0 # version information in semantic version format
+container: # containers used to perform model prediction
+           # multiple platforms can be specified
+  amd64:
+    gpu: raiproject/carml-tensorflow:amd64-cpu
+    cpu: raiproject/carml-tensorflow:amd64-gpu
+  ppc64le:
+    cpu: raiproject/carml-tensorflow:ppc64le-gpu
+    gpu: raiproject/carml-tensorflow:ppc64le-gpu
+description: >
+  The pure TensorFlow instantiation of the R-CNN model for ILSVRC13 detection.
+  This model was made by transplanting the R-CNN SVM classifiers into a fc-rcnn classification layer, provided here as an off-the-shelf TensorFlow detector.
+  Try the detection example to see it in action.
+  N.B. For research purposes, make use of the official R-CNN package and not this example.
+  This model was trained by Ross Girshick @rbgirshick
+references: # references to papers / websites / etc.. describing the model
+  - https://github.com/BVLC/Caffe/tree/master/models/bvlc_reference_rcnn_ilsvrc13
+  - https://arxiv.org/abs/1311.2524
+  - http://nbviewer.jupyter.org/github/BVLC/TensorFlow/blob/master/examples/detection.ipynb
+# license of the model
+license: unrestricted
+# inputs to the model
+inputs:
+  # first input type for the model
+  - type: image
+    # description of the first input
+    description: the input image
+    parameters: # type parameters
+      layer_name: "data"
+      layout: "HWC"
+      color_mode: "BGR"
+      dimensions: [3, 227, 227]
+output:
+  # the type of the output
+  type: feature
+  # a description of the output parameter
+  description: the output label
+  parameters:
+    # type parameters
+    layer_name: "prob"
+    features_url: https://raw.githubusercontent.com/rai-project/carml-models/master/data/ilsvrc12/det_synset_words.txt
+    features_checksum: fe0fe33bc8cb071f8ca73073d97973c6
+model: # specifies model graph and weights resources
+  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
+  graph_path: bvlc_reference_rcnn_ilsvrc13_caffe_1.0/frozen_model.pb
+  is_archive: false # if true, then the base_url is a url to an archive
+                    # the graph_path and weights_path then denote the
+                    # file names of the graph and weights within the archive
+  graph_checksum: 4733f8f3f3d7293b10f4e176be2fa02d
+attributes: # extra network attributes
+  kind: CNN # the kind of neural network (CNN, RNN, ...)
+  training_dataset: ImageNet # dataset used to for training
+  manifest_author: abduld
