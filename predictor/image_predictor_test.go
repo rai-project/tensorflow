@@ -90,7 +90,7 @@ func TestNewImageClassificationPredictor(t *testing.T) {
 
 func TestImageClassification(t *testing.T) {
 	tf.Register()
-	model, err := tf.FrameworkManifest.FindModel("Inception_Caffe:1.0")
+	model, err := tf.FrameworkManifest.FindModel("Inception_v1:1.0")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
 
