@@ -1,4 +1,4 @@
-name: SqueezeNet_Caffe # name of your model
+name: SqueezeNet_v1_Caffe # name of your model
 framework:
   name: TensorFlow # framework for the model
   version: 1.12 # framework version contraint

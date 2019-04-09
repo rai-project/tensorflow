@@ -1,10 +1,10 @@
-name: ResNet152_Caffe # name of your model
+name: ResNet152_v1_Caffe # name of your model
 framework:
   name: TensorFlow # framework for the model
   version: 1.12 # framework version contraint
 version: 1.0 # version information in semantic version format
 container: # containers used to perform model prediction
-           # multiple platforms can be specified
+  # multiple platforms can be specified
   amd64:
     gpu: raiproject/carml-tensorflow:amd64-cpu
     cpu: raiproject/carml-tensorflow:amd64-gpu
@@ -29,9 +29,9 @@ inputs:
     # description of the first input
     description: the input image
     parameters: # type parameters
-      layer_name: "data"
-      layout: "HWC"
-      color_mode: "BGR"
+      layer_name: 'data'
+      layout: 'HWC'
+      color_mode: 'BGR'
       dimensions: [3, 224, 224]
       mean: [123.68, 116.779, 103.939]
 output:
@@ -41,15 +41,16 @@ output:
   description: the output label
   parameters:
     # type parameters
-    layer_name: "prob"
+    layer_name: 'prob'
     features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset.txt
     features_checksum: 4d234b5833aca44928065a180db3016a
 model: # specifies model graph and weights resources
   base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/
   graph_path: resnet152_caffe_1.0/frozen_model.pb
-  is_archive: false # if true, then the base_url is a url to an archive
-                    # the graph_path and weights_path then denote the
-                    # file names of the graph and weights within the archive
+  is_archive:
+    false # if true, then the base_url is a url to an archive
+    # the graph_path and weights_path then denote the
+    # file names of the graph and weights within the archive
   graph_checksum: 2e3dc41ccb90248a141255f02967faa4
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)

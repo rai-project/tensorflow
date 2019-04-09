@@ -1,8 +1,8 @@
-name: SqueezeNet_Caffe # name of your model
+name: SqueezeNet_v1.1_Caffe # name of your model
 framework:
   name: TensorFlow # framework for the model
   version: 1.12 # framework version contraint
-version: 1.1 # version information in semantic version format
+version: 1.0 # version information in semantic version format
 container: # containers used to perform model prediction
   # multiple platforms can be specified
   amd64:

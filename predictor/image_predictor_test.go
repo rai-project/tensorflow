@@ -90,7 +90,7 @@ func TestNewImageClassificationPredictor(t *testing.T) {
 
 func TestImageClassification(t *testing.T) {
 	tf.Register()
-	model, err := tf.FrameworkManifest.FindModel("BVLC_Reference_RCNN_ILSVRC13_Caffe:1.0")
+	model, err := tf.FrameworkManifest.FindModel("Inception_Caffe:1.0")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
 
@@ -400,7 +400,7 @@ func max(x, y int) int {
 
 func TestSemanticSegmentation(t *testing.T) {
 	tf.Register()
-	model, err := tf.FrameworkManifest.FindModel("deeplabv3_mobilenetv2_pascal_voc:1.0")
+	model, err := tf.FrameworkManifest.FindModel("DeepLabv3_PASCAL_VOC_Train_Aug:1.0")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
 
