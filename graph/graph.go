@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/k0kubun/pp"
 	tf "github.com/rai-project/tensorflow"
 	// tf "github.com/tensorflow/tensorflow/tensorflow/go"
 )
@@ -36,6 +37,35 @@ var Categories = map[string]string{
 	"FusedBatchNorm":                   "Normalization",
 }
 
+type opInfo struct {
+	Name   string `json:"name,omitempty"`
+	Schema struct {
+		Attributes []struct {
+			AllowedValues interface{} `json:"allowedValues,omitempty"`
+			Name          string      `json:"name,omitempty"`
+			Type          interface{} `json:"type,omitempty"`
+			Default       interface{} `json:"default,omitempty"`
+			Description   string      `json:"description,omitempty"`
+		} `json:"attributes,omitempty"`
+		Description string `json:"description,omitempty"`
+		Inputs      []struct {
+			Description string `json:"description,omitempty"`
+			IsRef       bool   `json:"isRef,omitempty"`
+			Name        string `json:"name,omitempty"`
+			TypeAttr    string `json:"typeAttr,omitempty"`
+		} `json:"inputs,omitempty"`
+		Outputs []struct {
+			Description string `json:"description,omitempty"`
+			IsRef       bool   `json:"isRef,omitempty"`
+			Name        string `json:"name,omitempty"`
+			TypeAttr    string `json:"typeAttr,omitempty"`
+		} `json:"outputs,omitempty"`
+		Summary string `json:"summary,omitempty"`
+	} `json:"schema,omitempty"`
+}
+
+var OpInfo = []opInfo{}
+
 type Graph struct {
 	*tf.GraphDef
 }
@@ -59,13 +89,38 @@ func (g *Graph) MarshalJSON() ([]byte, error) {
 		nd.Attr = map[string]*tf.AttrValue{}
 		if cat, ok := Categories[nd.GetName()]; ok {
 			nd.Attr["category"] = &tf.AttrValue{
-				Value: &tf.AttrValue_S{
-					S: []byte(cat),
+				Value: &tf.AttrValue_Placeholder{
+					Placeholder: cat,
 				},
+			}
+		}
+		if OpInfo != nil {
+			for _, op := range OpInfo {
+				if op.Name == nd.GetOp() {
+					bts, err := json.Marshal(op)
+					if err != nil {
+						continue
+					}
+					nd.Attr["op_info"] = &tf.AttrValue{
+						Value: &tf.AttrValue_Placeholder{
+							Placeholder: string(bts),
+						},
+					}
+					break
+				}
 			}
 		}
 	}
 	return json.Marshal(g.GraphDef)
+}
+
+func init() {
+	metadata := MustAsset("_fixtures/tf-metadata.json")
+	err := json.Unmarshal(metadata, &OpInfo)
+	if err != nil {
+		pp.Println(err.Error())
+		OpInfo = nil
+	}
 }
 
 func main() {
