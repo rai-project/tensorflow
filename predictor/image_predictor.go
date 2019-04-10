@@ -152,8 +152,8 @@ func (p *ImagePredictor) Download(ctx context.Context, model dlframework.ModelMa
 }
 
 func (p *ImagePredictor) download(ctx context.Context) error {
-	span, ctx := opentracing.StartSpanFromContext(
-		ctx,
+	span, ctx := tracer.StartSpanFromContext(ctx,
+		tracer.APPLICATION_TRACE,
 		"download",
 		opentracing.Tags{
 			"graph_url":           p.GetGraphUrl(),

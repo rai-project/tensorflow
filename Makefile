@@ -20,6 +20,7 @@ generate-proto:
     proto/attr_value.proto \
     proto/checkpointable_object_graph.proto \
     proto/cluster.proto \
+    proto/event.proto \
     proto/config.proto \
     proto/control_flow.proto \
     proto/cost_graph.proto \
