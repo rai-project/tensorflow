@@ -24,7 +24,7 @@ inputs: # model inputs
       element_type: uint8
       input_layer: 'image_tensor'
       layout: HWC
-      color_mode: RGBs
+      color_mode: RGB
 output:
   type: boundingbox
   description: the output bounding box # a description of the output parameter
