@@ -1,10 +1,8 @@
-package main
+package graph
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
-	"os"
 
 	"github.com/k0kubun/pp"
 	tf "github.com/rai-project/tensorflow"
@@ -121,16 +119,4 @@ func init() {
 		pp.Println(err.Error())
 		OpInfo = nil
 	}
-}
-
-func main() {
-	g, err := New(os.Args[1])
-	if err != nil {
-		panic(err)
-	}
-	bts, err := g.MarshalJSON()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(string(bts))
 }
