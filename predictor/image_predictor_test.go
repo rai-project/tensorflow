@@ -332,7 +332,7 @@ func TestInstanceSegmentation(t *testing.T) {
 
 func TestObjectDetection(t *testing.T) {
 	tf.Register()
-	model, err := tf.FrameworkManifest.FindModel("SSD_MobileNet_v2_Quantized_300x300_COCO:1.0")
+	model, err := tf.FrameworkManifest.FindModel("SSD_MobileNet_v2_COCO:1.0")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
 
