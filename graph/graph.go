@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"io/ioutil"
 
+	"github.com/Unknwon/com"
 	"github.com/k0kubun/pp"
+	"github.com/pkg/errors"
 	tf "github.com/rai-project/tensorflow"
 	// tf "github.com/tensorflow/tensorflow/tensorflow/go"
 )
@@ -69,7 +71,9 @@ type Graph struct {
 }
 
 func New(path string) (*Graph, error) {
-
+	if !com.IsFile(path) {
+		return nil, errors.Errorf("the file %v was not found", path)
+	}
 	model, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err

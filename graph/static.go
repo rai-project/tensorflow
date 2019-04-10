@@ -4,7 +4,7 @@
 // _fixtures/tf-metadata.json
 // DO NOT EDIT!
 
-package main
+package graph
 
 import (
 	"bytes"
