@@ -28,9 +28,10 @@ inputs:
     parameters: # type parameters
       layer_name: 'data'
       layout: 'HWC'
-      color_mode: 'BGR'
+      # color_mode: 'BGR'
       dimensions: [3, 224, 224]
-      mean: [123.68, 116.779, 103.939]
+      # mean: [123.68, 116.779, 103.939]
+      # scale: 128
 output:
   # the type of the output
   type: feature

@@ -14,29 +14,43 @@ description: >
   An image-classification convolutional network.
   VGG19 uses a network with 19 layers of 3x3 convolution filters.
   VGG19 achieves 71.1% top-1 and 89.8% top-5 accuracy on the ImageNet challenge dataset in 2015.
+  This model is from TensorFlow Models Slim (vgg_16_2016_08_28.tar.gz).
 references:
   - https://arxiv.org/pdf/1409.1556.pdf
-license: TODO
+  - https://github.com/tensorflow/models/tree/master/research/slim
+license: unrestricted
+# inputs to the model
 inputs:
+  # first input type for the model
   - type: image
+    # description of the first input
     description: the input image
-    parameters:
-      layer_name: "input"
+    parameters: # type parameters
+      element_type: float32
+      input_layer: 'input'
+      layout: 'HWC'
+      color_mode: 'RGB'
       dimensions: [3, 224, 224]
       mean: [123.68, 116.779, 103.939]
 output:
-  type: feature
-  description: an output image net label
-  parameters:
-    # type parameters
-    layer_name: "vgg_19/fc8/squeezed"
+  # the type of the output
+  type: classification
+  # a description of the output parameter
+  description: the output label
+  parameters: # type parameters
+    element_type: float32
+    probabilities_layer: 'vgg_19/fc8/squeezed'
     features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset.txt
     features_checksum: 4d234b5833aca44928065a180db3016a
 model:
   base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/graphs
   graph_path: vgg_19_frozen.pb
   graph_checksum: 9b09d4bdc8fcee61678ec44107d92190
-  is_archive: false
-attributes:
-  manifest_author: abduld
-  training_dataset: ImageNet
+  is_archive:
+    false # if true, then the base_url is a url to an archive
+    # the graph_path and weights_path then denote the
+    # file names of the graph and weights within the archive
+attributes: # extra network attributes
+  kind: CNN # the kind of neural network (CNN, RNN, ...)
+  training_dataset: ImageNet # dataset used to for training
+  manifest_author: Cheng Li

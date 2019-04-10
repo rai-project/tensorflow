@@ -1,10 +1,9 @@
-name: Inception_v1 # name of your model
+name: ResNet_v1_152
 framework:
-  name: TensorFlow # framework for the model
-  version: 1.12 # framework version contraint
-version: 1.0 # version information in semantic version format
-container: # containers used to perform model prediction
-  # multiple platforms can be specified
+  name: TensorFlow
+  version: 1.12
+version: 1.0
+container:
   amd64:
     gpu: raiproject/carml-tensorflow:amd64-cpu
     cpu: raiproject/carml-tensorflow:amd64-gpu
@@ -12,13 +11,11 @@ container: # containers used to perform model prediction
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  Inception v1 architecture, implemented in the winning ILSVRC 2014 submission GoogLeNet.
-  Intorduced in Going deeper with convolutions, Szegedy et al. (2014)
-  This model is from TensorFlow Models Slim (inception_v1_2016_08_28.tar.gz).
-references: # references to papers / websites / etc.. describing the model
-  - http://arxiv.org/abs/1512.00567
+  An image-classification network built of layers that learn residual functions w.r.t layer inputs.
+  This model is from TensorFlow Models Slim (resnet_v1_152_2016_08_28.tar.gz)
+references:
+  - https://arxiv.org/pdf/1512.03385.pdf
   - https://github.com/tensorflow/models/tree/master/research/slim
-# license of the model
 license: unrestricted
 # inputs to the model
 inputs:
@@ -32,22 +29,21 @@ inputs:
       layout: 'HWC'
       color_mode: 'RGB'
       dimensions: [3, 224, 224]
-      mean: [128, 128, 128]
-      scale: 128
+      mean: [123.68, 116.779, 103.939]
 output:
   # the type of the output
   type: classification
   # a description of the output parameter
   description: the output label
   parameters: # type parameters
-    element_type: float32
-    probabilities_layer: 'InceptionV1/Logits/Predictions/Reshape_1'
-    features_url: https://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset1.txt
-    features_checksum: 6c05083991207dea5c37f2d271014fad
-model: # specifies model graph and weights resources
-  base_url: http://s3.amazonaws.com/store.carml.org/models/tensorflow/graphs/
-  graph_path: inception_v1_frozen.pb
-  graph_checksum: da5144c55d2fb47cfd1b80e177230269
+    element_type: float32s
+    probabilities_layer: 'resnet_v1_152/predictions/Reshape_1'
+    features_url: http://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset.txt
+    features_checksum: 4d234b5833aca44928065a180db3016a
+model:
+  base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/graphs
+  graph_path: resnet_v1_152_frozen.pb
+  graph_checksum: cf460292f3c82b73e35a0fc9ebaa69c4
   is_archive:
     false # if true, then the base_url is a url to an archive
     # the graph_path and weights_path then denote the

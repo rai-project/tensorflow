@@ -1,10 +1,9 @@
-name: Inception_v1 # name of your model
+name: Inception_v4
 framework:
-  name: TensorFlow # framework for the model
-  version: 1.12 # framework version contraint
-version: 1.0 # version information in semantic version format
-container: # containers used to perform model prediction
-  # multiple platforms can be specified
+  name: TensorFlow
+  version: 1.12
+version: 1.0
+container:
   amd64:
     gpu: raiproject/carml-tensorflow:amd64-cpu
     cpu: raiproject/carml-tensorflow:amd64-gpu
@@ -12,13 +11,10 @@ container: # containers used to perform model prediction
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  Inception v1 architecture, implemented in the winning ILSVRC 2014 submission GoogLeNet.
-  Intorduced in Going deeper with convolutions, Szegedy et al. (2014)
-  This model is from TensorFlow Models Slim (inception_v1_2016_08_28.tar.gz).
-references: # references to papers / websites / etc.. describing the model
+  This model is from TensorFlow Models Slim (inception_v4_2016_09_09.tar.gz).
+references:
   - http://arxiv.org/abs/1512.00567
   - https://github.com/tensorflow/models/tree/master/research/slim
-# license of the model
 license: unrestricted
 # inputs to the model
 inputs:
@@ -31,7 +27,7 @@ inputs:
       input_layer: 'input'
       layout: 'HWC'
       color_mode: 'RGB'
-      dimensions: [3, 224, 224]
+      dimensions: [3, 299, 299]
       mean: [128, 128, 128]
       scale: 128
 output:
@@ -41,13 +37,13 @@ output:
   description: the output label
   parameters: # type parameters
     element_type: float32
-    probabilities_layer: 'InceptionV1/Logits/Predictions/Reshape_1'
+    probabilities_layer: 'InceptionV4/Logits/Predictions'
     features_url: https://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset1.txt
     features_checksum: 6c05083991207dea5c37f2d271014fad
 model: # specifies model graph and weights resources
   base_url: http://s3.amazonaws.com/store.carml.org/models/tensorflow/graphs/
-  graph_path: inception_v1_frozen.pb
-  graph_checksum: da5144c55d2fb47cfd1b80e177230269
+  graph_path: inception_v4_frozen.pb
+  graph_checksum: 3322bc1ca7f9cc753e6c70c2177319ac
   is_archive:
     false # if true, then the base_url is a url to an archive
     # the graph_path and weights_path then denote the

@@ -1,8 +1,8 @@
-name: Inception
+name: Inception_v2
 framework:
   name: TensorFlow
   version: 1.12
-version: 2.0
+version: 1.0
 container:
   amd64:
     gpu: raiproject/carml-tensorflow:amd64-cpu
@@ -12,30 +12,43 @@ container:
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
   Inception-v2 introduced Factorization(factorize convolutions into smaller convolutions) and some minor change into Inception-v1.
+  This model is from TensorFlow Models Slim (inception_v2_2016_08_28.tar.gz).
 references:
   - http://arxiv.org/abs/1512.00567
+  - https://github.com/tensorflow/models/tree/master/research/slim
 license: TODO
 inputs:
+  # first input type for the model
   - type: image
+    # description of the first input
     description: the input image
-    parameters:
-      layer_name: 'input'
+    parameters: # type parameters
+      element_type: float32
+      input_layer: 'input'
+      layout: 'HWC'
+      color_mode: 'RGB'
       dimensions: [3, 224, 224]
       mean: [128, 128, 128]
       scale: 128
 output:
-  type: feature
-  description: an output image net label
-  parameters:
-    # type parameters
-    layer_name: 'InceptionV2/Predictions/Reshape_1'
+  # the type of the output
+  type: classification
+  # a description of the output parameter
+  description: the output label
+  parameters: # type parameters
+    element_type: float32
+    probabilities_layer: 'InceptionV2/Predictions/Reshape_1'
     features_url: https://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset1.txt
     features_checksum: 6c05083991207dea5c37f2d271014fad
 model:
-  graph_path: http://s3.amazonaws.com/store.carml.org/models/tensorflow/graphs/inception_v2_frozen.pb
+  base_url: http://s3.amazonaws.com/store.carml.org/models/tensorflow/graphs/
+  graph_path: inception_v2_frozen.pb
   graph_checksum: f357c54648189679b5c1af1df348d8cf
-  is_archive: false
+  is_archive:
+    false # if true, then the base_url is a url to an archive
+    # the graph_path and weights_path then denote the
+    # file names of the graph and weights within the archive
 attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: ImageNet # dataset used to for training
-  manifest_author: abduld
+  manifest_author: Cheng Li
