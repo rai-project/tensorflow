@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"runtime"
 
+	"github.com/k0kubun/pp"
 	opentracing "github.com/opentracing/opentracing-go"
 	olog "github.com/opentracing/opentracing-go/log"
 	"github.com/pkg/errors"
@@ -219,6 +220,7 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 	if graphPath == "" {
 		return errors.New("graph path is empty")
 	}
+	pp.Println(graphPath)
 	model, err := ioutil.ReadFile(graphPath)
 	if err != nil {
 		return errors.Wrapf(err, "cannot read %s", graphPath)

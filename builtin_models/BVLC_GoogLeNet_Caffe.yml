@@ -40,7 +40,7 @@ inputs:
     parameters: # type parameters
       element_type: float32
       layer_name: 'data'
-      layout: 'HWC'
+      layout: HWC
       color_mode: 'BGR'
       dimensions: [3, 224, 224]
       mean: [123, 117, 104]

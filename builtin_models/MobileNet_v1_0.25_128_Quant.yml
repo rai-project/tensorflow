@@ -19,26 +19,26 @@ description: >
   reduce inference cost on mobile devices.
   This network consists of 224 layers and achieves 70.9 top-1 and 89.9 top-5 accuracy.
 references: # references to papers / websites / etc.. describing the model
-- https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet_v1.md
-- http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_128_quant.tgz
-- https://arxiv.org/pdf/1704.04861.pdf
-- https://github.com/keras-team/keras-applications/blob/master/keras_applications/mobilenet.py
+  - https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet_v1.md
+  - http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_128_quant.tgz
+  - https://arxiv.org/pdf/1704.04861.pdf
+  - https://github.com/keras-team/keras-applications/blob/master/keras_applications/mobilenet.py
 # license of the model
 license: unrestricted
 # inputs to the model
 inputs:
   # first input type for the model
-- type: image
+  - type: image
     # description of the first input
-  description: the input image
-  parameters:   # type parameters
-    element_type: float32
-    input_layer: input
-    layout: HWC
-    color_mode: RGB
-    dimensions: [3, 128, 128]
-    mean: [128, 128, 128]
-    scale: 128
+    description: the input image
+    parameters: # type parameters
+      element_type: float32
+      input_layer: 'input'
+      layout: HWC
+      color_mode: RGB
+      dimensions: [3, 128, 128]
+      mean: [128, 128, 128]
+      scale: 128
 output:
   # the type of the output
   type: classification
@@ -53,7 +53,8 @@ model: # specifies model graph and weights resources
   base_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_128_quant.tgz
   graph_path: mobilenet_v1_0.25_128_quant_frozen.pb
   graph_checksum: f2f15e647262bb62f80a870b82f6c490
-  is_archive: true # if true, then the base_url is a url to an archive
+  is_archive:
+    true # if true, then the base_url is a url to an archive
     # the graph_path and weights_path then denote the
     # file names of the graph and weights within the archive
 attributes: # extra network attributes

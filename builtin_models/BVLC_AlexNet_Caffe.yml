@@ -37,7 +37,7 @@ inputs:
     parameters: # type parameters
       element_type: float32
       input_layer: 'data'
-      layout: 'HWC'
+      layout: HWC
       color_mode: 'BGR'
       dimensions: [3, 227, 227]
       mean: [123, 117, 104]

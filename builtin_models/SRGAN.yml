@@ -23,6 +23,8 @@ inputs: # model inputs
     parameters:
       element_type: float32
       input_layer: 'input_image'
+      layout: HWC
+      color_mode: RGB
       mean: [127.5, 127.5, 127.5]
       scale: 127.5
 output:

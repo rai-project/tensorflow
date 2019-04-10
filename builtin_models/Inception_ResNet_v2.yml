@@ -28,8 +28,8 @@ inputs:
     parameters: # type parameters
       element_type: float32
       input_layer: 'input'
-      layout: 'HWC'
-      color_mode: 'RGB'
+      layout: HWC
+      color_mode: RGB
       dimensions: [3, 299, 299]
       mean: [128, 128, 128]
       scale: 128

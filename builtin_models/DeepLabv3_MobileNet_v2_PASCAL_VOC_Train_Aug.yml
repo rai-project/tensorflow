@@ -23,6 +23,8 @@ inputs: # model inputs
     parameters:
       element_type: uint8
       input_layer: 'ImageTensor'
+      layout: HWC
+      color_mode: RGB
       max_dimension: 513
       keep_aspect_ratio: true
 output:
@@ -45,4 +47,3 @@ attributes: # extra model attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: PASCAL VOC 2012 # dataset used to for training
   manifest_author: Cheng Li
-  

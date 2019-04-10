@@ -15,14 +15,16 @@ description: >
   in Context) dataset. Use faster_rcnn_resnet50_lowproposals_coco_2018_01_28 from
   TensorFlow detection model zoo.
 references: # references to papers / websites / etc.. describing the model
-- https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
+  - https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
 license: Apache License, Version 2.0 # license of the model
 inputs: # model inputs
-- type: image   # first input modality
-  description: the input image   # description of the first input
-  parameters:
-    element_type: uint8
-    input_layer: image_tensor
+  - type: image # first input modality
+    description: the input image # description of the first input
+    parameters:
+      element_type: uint8
+      input_layer: 'image_tensor'
+      layout: HWC
+      color_mode: RGB
 output:
   type: boundingbox
   description: the output bounding box # a description of the output parameter
@@ -36,7 +38,8 @@ output:
 model: # specifies model graph and weights sources
   base_url:
   graph_path: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/faster_rcnn_resnet50_lowproposals_coco_2018_01_28/frozen_inference_graph.pb
-  is_archive: false # if true, then the base_url is a url to an archive
+  is_archive:
+    false # if true, then the base_url is a url to an archive
     # the graph_path and weights_path then denote the
     # file names of the graph and weights within the archive
   graph_checksum: dc38b8692f73d6985a2c638b41ca2f16

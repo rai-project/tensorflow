@@ -15,14 +15,16 @@ description: >
   in Context) dataset. Use ssd_mobilenet_v1_ppn_shared_box_predictor_300x300_coco14_sync_2018_07_03
   from TensorFlow detection model zoo.
 references: # references to papers / websites / etc.. describing the model
-- https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
+  - https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
 license: Apache License, Version 2.0 # license of the model
 inputs: # model inputs
-- type: image   # first input modality
-  description: the input image   # description of the first input
-  parameters:
-    element_type: uint8
-    input_layer: image_tensor
+  - type: image # first input modality
+    description: the input image # description of the first input
+    parameters:
+      element_type: uint8
+      input_layer: 'image_tensor'
+      layout: HWC
+      color_mode: RGB
 output:
   type: boundingbox
   description: the output bounding box # a description of the output parameter
@@ -36,7 +38,8 @@ output:
 model: # specifies model graph and weights sources
   base_url:
   graph_path: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/ssd_mobilenet_v1_ppn_shared_box_predictor_300x300_coco14_sync_2018_07_03/frozen_inference_graph.pb
-  is_archive: false # if true, then the base_url is a url to an archive
+  is_archive:
+    false # if true, then the base_url is a url to an archive
     # the graph_path and weights_path then denote the
     # file names of the graph and weights within the archive
   graph_checksum: 157acb6f72f214655252d59d5040be54

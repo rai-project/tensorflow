@@ -1,4 +1,4 @@
-name: SSD_ResNet50_FPN_COCO # name of your model
+name: SSD_ResNet50_FPN_Shared_Box_Predictor_640x640_COCO14_Sync # name of your model
 framework:
   name: TensorFlow # framework for the model
   version: 1.12 # framework version contraint
@@ -22,6 +22,8 @@ inputs: # model inputs
     parameters:
       element_type: uint8
       input_layer: 'image_tensor'
+      layout: HWC
+      color_mode: RGB
 output:
   type: boundingbox
   description: the output bounding box # a description of the output parameter
@@ -39,7 +41,7 @@ model: # specifies model graph and weights sources
     false # if true, then the base_url is a url to an archive
     # the graph_path and weights_path then denote the
     # file names of the graph and weights within the archive
-  graph_checksum: 8b6edeb143566f830e35765438b452ff
+  graph_checksum: 753c589fa596c855e42cf82eb463c637
 attributes: # extra model attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: COCO # dataset used to for training
