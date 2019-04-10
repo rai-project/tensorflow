@@ -163,7 +163,7 @@ docker run -d -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 -p5775:5775/udp -p6831:6831/udp
 
 ```
 docker run -d -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 -p5775:5775/udp -p6831:6831/udp -p6832:6832/udp \
-  -p5778:5778 -p16686:16686 -p14268:14268 -p9411:9411 MLModelScope/jaeger:ppc64le-latest
+  -p5778:5778 -p16686:16686 -p14268:14268 -p9411:9411 carml/jaeger:ppc64le-latest
 ```
 
 The trace server runs on http://localhost:16686
@@ -179,7 +179,7 @@ docker run -p 8500:8500 -p 8600:8600 -d consul
 - On ppc64le (e.g. minsky) machines, start [consul](https://hub.docker.com/_/consul/) by
 
 ```
-docker run -p 8500:8500 -p 8600:8600 -d MLModelScope/consul:ppc64le-latest
+docker run -p 8500:8500 -p 8600:8600 -d carml/consul:ppc64le-latest
 ```
 
 The registry server runs on http://localhost:8500
@@ -195,7 +195,7 @@ docker run -p 27017:27017 --restart always -d mongo:3.0
 You can also mount the database volume to a local directory using
 
 ```
-docker run -p 27017:27017 --restart always -d  -v $HOME/data/MLModelScope/mongo:/data/db mongo:3.0
+docker run -p 27017:27017 --restart always -d  -v $HOME/data/carml/mongo:/data/db mongo:3.0
 ```
 
 ## Usage
