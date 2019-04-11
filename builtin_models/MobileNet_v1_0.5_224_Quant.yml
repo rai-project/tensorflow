@@ -61,3 +61,5 @@ attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: ImageNet # dataset used to for training
   manifest_author: Jingning Tang
+  top1: 60.7
+  top5: 83.2
