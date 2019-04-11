@@ -73,6 +73,7 @@ type TensorInfo struct {
 	DataTypeByteCount int64   `json:"data_type_byte_count,omitempty"`
 	ByteCount         int64   `json:"byte_count,omitempty"`
 	Dims              []int64 `json:"dims,omitempty"`
+	OpName            string  `json:"op_name,omitempty"`
 }
 
 type Graph struct {
@@ -139,6 +140,7 @@ func (g *Graph) MarshalJSON() ([]byte, error) {
 				DataTypeByteCount: byteCount,
 				Dims:              dims,
 				ByteCount:         prod(dims) * byteCount,
+				OpName:            nd.GetOp(),
 			})
 
 			attr.Value.(*tf.AttrValue_Tensor).Tensor.TensorContent = nil
