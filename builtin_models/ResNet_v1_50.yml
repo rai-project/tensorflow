@@ -53,3 +53,5 @@ attributes: # extra network attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
   training_dataset: ImageNet # dataset used to for training
   manifest_author: Cheng Li
+  top1: 75.2
+  top5: 92.2
