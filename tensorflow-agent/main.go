@@ -9,14 +9,17 @@ import (
 
 	"github.com/Unknwon/com"
 	"github.com/pkg/errors"
+	"github.com/rai-project/config"
 	dlcmd "github.com/rai-project/dlframework/framework/cmd"
 	cmd "github.com/rai-project/dlframework/framework/cmd/server"
 	common "github.com/rai-project/dlframework/framework/predictor"
+	"github.com/rai-project/logger"
 	"github.com/rai-project/tensorflow"
 	graph "github.com/rai-project/tensorflow/graph"
 	_ "github.com/rai-project/tensorflow/predictor"
 	predictor "github.com/rai-project/tensorflow/predictor"
 	"github.com/rai-project/tracer"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -25,6 +28,7 @@ var (
 	modelVersion string
 	hostName, _  = os.Hostname()
 	framework    = tensorflow.FrameworkManifest
+	log          *logrus.Entry
 )
 
 func graphConvert(c *cobra.Command, args []string) error {
@@ -86,7 +90,12 @@ var graphCmd = &cobra.Command{
 			for _, model := range models {
 				modelName = model.Name
 				modelVersion = model.Version
-				graphConvert(c, args)
+				err := graphConvert(c, args)
+				if err != nil {
+					log.WithField("model_name", modelName).
+						WithField("model_version", modelVersion).
+						Error("failed to convert graph")
+				}
 				pb.Increment()
 			}
 			pb.Finish()
@@ -97,6 +106,9 @@ var graphCmd = &cobra.Command{
 }
 
 func init() {
+	config.AfterInit(func() {
+		log = logger.New().WithField("pkg", "tensorflow-agent")
+	})
 	graphCmd.PersistentFlags().StringVar(&modelName, "model_name", "MobileNet_v1_1.0_224", "the name of the model to use for conversion")
 	graphCmd.PersistentFlags().StringVar(&modelVersion, "model_version", "1.0", "the version of the model to use for conversion")
 }

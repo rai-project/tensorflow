@@ -151,6 +151,7 @@ func (g *Graph) MarshalJSON() ([]byte, error) {
 		for _, attr := range nd.Attr {
 			if s, ok := attr.Value.(*tf.AttrValue_Tensor); ok {
 				s.Tensor.TensorContent = nil
+				s.Tensor.FloatVal = nil
 			}
 			if s, ok := attr.Value.(*tf.AttrValue_List); ok {
 				s.List = nil
@@ -182,7 +183,14 @@ func (g *Graph) MarshalJSON() ([]byte, error) {
 				}
 			}
 		}
+
+		// for debugging
+		// if _, err := json.Marshal(nd); err != nil {
+		// 	pp.Println(nd)
+		// 	return nil, err
+		// }
 	}
+
 	return json.Marshal(&struct {
 		*tf.GraphDef
 		TensorInfos []TensorInfo `json:"tensor_infos,omitempty"`
