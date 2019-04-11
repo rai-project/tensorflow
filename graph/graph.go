@@ -3,6 +3,7 @@ package graph
 import (
 	"encoding/json"
 	"io/ioutil"
+	"sync"
 
 	"github.com/Unknwon/com"
 	"github.com/k0kubun/pp"
@@ -66,8 +67,18 @@ type opInfo struct {
 
 var OpInfo = []opInfo{}
 
+type TensorInfo struct {
+	Name              string  `json:"name,omitempty"`
+	DataType          string  `json:"data_type,omitempty"`
+	DataTypeByteCount int64   `json:"data_type_byte_count,omitempty"`
+	ByteCount         int64   `json:"byte_count,omitempty"`
+	Dims              []int64 `json:"dims,omitempty"`
+}
+
 type Graph struct {
 	*tf.GraphDef
+	TensorInfos []TensorInfo `json:"tensor_infos,omitempty"`
+	NumBytes    int64        `json:"num_parameters,omitempty"`
 }
 
 func New(path string) (*Graph, error) {
@@ -83,12 +94,67 @@ func New(path string) (*Graph, error) {
 	err = graph.Unmarshal(model)
 
 	return &Graph{
-		GraphDef: graph}, err
+		GraphDef:    graph,
+		TensorInfos: []TensorInfo{},
+	}, err
+}
+
+func tensorShape(tensor *tf.TensorShapeProto) []int64 {
+	res := make([]int64, len(tensor.Dim))
+	for ii, dim := range tensor.Dim {
+		res[ii] = dim.Size_
+	}
+	return res
+}
+
+func prod(lst []int64) int64 {
+	accum := int64(1)
+	for _, elem := range lst {
+		accum *= elem
+	}
+	return accum
 }
 
 func (g *Graph) MarshalJSON() ([]byte, error) {
+	initOpInfo()
 	for _, nd := range g.Node {
-		nd.Attr = map[string]*tf.AttrValue{}
+		currentNumParameters := int64(0)
+		for name, attr := range nd.Attr {
+			if name != "value" {
+				continue
+			}
+			tensor := attr.Value.(*tf.AttrValue_Tensor).Tensor
+			g.NumBytes += int64(len(tensor.TensorContent))
+
+			dtype := DataType(tensor.Dtype)
+			byteCount := int64(dtype.ByteCount())
+
+			dims := tensorShape(tensor.TensorShape)
+			g.TensorInfos = append(g.TensorInfos, TensorInfo{
+				Name:              nd.GetName(),
+				DataType:          dtype.String(),
+				DataTypeByteCount: byteCount,
+				Dims:              dims,
+				ByteCount:         prod(dims) * byteCount,
+			})
+
+			attr.Value.(*tf.AttrValue_Tensor).Tensor.TensorContent = nil
+
+			break
+		}
+
+		for _, attr := range nd.Attr {
+			if s, ok := attr.Value.(*tf.AttrValue_Tensor); ok {
+				s.Tensor.TensorContent = nil
+			}
+			if s, ok := attr.Value.(*tf.AttrValue_List); ok {
+				s.List = nil
+			}
+		}
+
+		g.NumBytes += currentNumParameters
+
+		// nd.Attr = map[string]*tf.AttrValue{}
 		if cat, ok := Categories[nd.GetName()]; ok {
 			nd.Attr["category"] = &tf.AttrValue{
 				Value: &tf.AttrValue_Placeholder{
@@ -113,14 +179,25 @@ func (g *Graph) MarshalJSON() ([]byte, error) {
 			}
 		}
 	}
-	return json.Marshal(g.GraphDef)
+	return json.Marshal(&struct {
+		*tf.GraphDef
+		TensorInfos []TensorInfo `json:"tensor_infos,omitempty"`
+		NumBytes    int64        `json:"num_parameters,omitempty"`
+	}{
+		g.GraphDef,
+		g.TensorInfos,
+		g.NumBytes,
+	})
 }
 
-func init() {
-	metadata := MustAsset("_fixtures/tf-metadata.json")
-	err := json.Unmarshal(metadata, &OpInfo)
-	if err != nil {
-		pp.Println(err.Error())
-		OpInfo = nil
-	}
+func initOpInfo() {
+	var once sync.Once
+	once.Do(func() {
+		metadata := MustAsset("_fixtures/tf-metadata.json")
+		err := json.Unmarshal(metadata, &OpInfo)
+		if err != nil {
+			pp.Println(err.Error())
+			OpInfo = nil
+		}
+	})
 }
