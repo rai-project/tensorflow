@@ -119,6 +119,9 @@ func (g *Graph) MarshalJSON() ([]byte, error) {
 	initOpInfo()
 	for _, nd := range g.Node {
 		currentNumParameters := int64(0)
+		if nd.Attr == nil {
+			nd.Attr = map[string]*tf.AttrValue{}
+		}
 		for name, attr := range nd.Attr {
 			if name != "value" {
 				continue
@@ -154,7 +157,6 @@ func (g *Graph) MarshalJSON() ([]byte, error) {
 
 		g.NumBytes += currentNumParameters
 
-		// nd.Attr = map[string]*tf.AttrValue{}
 		if cat, ok := Categories[nd.GetName()]; ok {
 			nd.Attr["category"] = &tf.AttrValue{
 				Value: &tf.AttrValue_Placeholder{
