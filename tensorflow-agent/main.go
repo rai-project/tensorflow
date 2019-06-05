@@ -15,9 +15,8 @@ import (
 	common "github.com/rai-project/dlframework/framework/predictor"
 	"github.com/rai-project/logger"
 	"github.com/rai-project/tensorflow"
-	graph "github.com/rai-project/tensorflow/graph"
-	_ "github.com/rai-project/tensorflow/predictor"
-	predictor "github.com/rai-project/tensorflow/predictor"
+	"github.com/rai-project/tensorflow/graph"
+	"github.com/rai-project/tensorflow/predictor"
 	"github.com/rai-project/tracer"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -80,7 +79,7 @@ func graphConvert(c *cobra.Command, args []string) error {
 }
 
 var graphCmd = &cobra.Command{
-	Use:   "model_graph",
+	Use:   "graph",
 	Short: "Converts the frozen graph into a model graph summary",
 	RunE: func(c *cobra.Command, args []string) error {
 		tracer.SetLevel(tracer.NO_TRACE)
