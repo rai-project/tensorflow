@@ -9,6 +9,8 @@
 
 ## Installation
 
+Install go if you have not done so. Please follow [Go Installation](https://docs.mlmodelscope.org/installation/source/golang).
+
 Download and install the MLModelScope TensorFlow Agent:
 
 ```
@@ -18,9 +20,38 @@ go get -v github.com/rai-project/tensorflow
 
 The agent requires The TensorFlow C library and other Go packages.
 
-#### The TensorFlow C library
+### Go packages
+
+You can install the dependency through `go get`.
+
+```
+cd $GOPATH/src/github.com/rai-project/tensorflow
+go get -u -v ./...
+```
+
+Or use [Dep](https://github.com/golang/dep).
+
+```
+dep ensure -v
+```
+
+This installs the dependency in `vendor/`.
+
+Note: The CGO interface passes go pointers to the C API. This is an error by the CGO runtime. Disable the error by placing
+
+```
+export GODEBUG=cgocheck=0
+```
+
+in your `~/.bashrc` or `~/.zshrc` file and then run either `source ~/.bashrc` or `source ~/.zshrc`
+
+
+### The TensorFlow C library
 
 The TensorFlow C library is required for the TensorFlow Go package.
+
+If you use TensorFlow Docker Images (e.g. NVIDIA GPU CLOUD (NGC)), skip this step.
+
 You can download pre-built TensorFlow C library from [Install TensorFlow for C](https://www.tensorflow.org/install/lang_c).
 
 Extract the downloaded archive to `/opt/tensorflow/`.
@@ -49,34 +80,8 @@ You can test the installed TensorFlow C library using an [examle C program](http
 
 To build the TensorFlow C library from source, refer to [TensorFlow in Go](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/go#building-the-tensorflow-c-library-from-source) .
 
-#### Go packages
 
-You can install the dependency through `go get`.
-
-```
-cd $GOPATH/src/github.com/rai-project/tensorflow
-go get -u -v ./...
-```
-
-Or use [Dep](https://github.com/golang/dep).
-
-```
-dep ensure -v
-```
-
-This installs the dependency in `vendor/`.
-
-#### CGO Pointer Errors
-
-The CGO interface passes go pointers to the C API. This is an error by the CGO runtime. Disable the error by placing
-
-```
-export GODEBUG=cgocheck=0
-```
-
-in your `~/.bashrc` or `~/.zshrc` file and then run either `source ~/.bashrc` or `source ~/.zshrc`
-
-#### libjpeg-turbo
+### libjpeg-turbo
 
 [libjpeg-turbo](https://github.com/libjpeg-turbo/libjpeg-turbo) is a JPEG image codec that uses SIMD instructions (MMX, SSE2, AVX2, NEON, AltiVec) to accelerate baseline JPEG compression and decompression. It outperforms libjpeg by a significant amount.
 
@@ -104,7 +109,7 @@ brew install jpeg-turbo
 MLModelScope relies on a few external services.
 These services provide tracing, registry, and database servers.
 
-#### Installing Docker
+### Installing Docker
 
 Refer to [Install Docker](https://docs.docker.com/install/).
 
@@ -117,7 +122,7 @@ sudo usermod -aG docker $USER
 
 On macOS, [intsall Docker Destop](https://docs.docker.com/docker-for-mac/install/)
 
-#### Configuration
+### Configuration
 
 You must have a `carml` config file called `.carml_config.yml` under your home directory. An example config file `carml_config.yml.example` is in [github.com/rai-project/MLModelScope](https://github.com/rai-project/MLModelScope) . You can move it to `~/.carml_config.yml`.
 
@@ -150,7 +155,9 @@ logger:
     - syslog
 ```
 
-#### Starting Trace Server
+### Starting Trace Server
+
+This service is required.
 
 - On x86 (e.g. intel) machines, start [jaeger](http://jaeger.readthedocs.io/en/latest/getting_started/) by
 
@@ -168,7 +175,9 @@ docker run -d -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 -p5775:5775/udp -p6831:6831/udp
 
 The trace server runs on http://localhost:16686
 
-#### Starting Registry Server
+### Starting Registry Server
+
+This service is not required if using TensorFlow-agent for local evaluation.
 
 - On x86 (e.g. intel) machines, start [consul](https://hub.docker.com/_/consul/) by
 
@@ -184,7 +193,9 @@ docker run -p 8500:8500 -p 8600:8600 -d carml/consul:ppc64le-latest
 
 The registry server runs on http://localhost:8500
 
-#### Starting Database Server
+### Starting Database Server
+
+This service is not required if not using database to publish evaluation results.
 
 - On x86 (e.g. intel) machines, start [mongodb](https://hub.docker.com/_/mongo/) by
 
@@ -198,29 +209,64 @@ You can also mount the database volume to a local directory using
 docker run -p 27017:27017 --restart always -d  -v $HOME/data/carml/mongo:/data/db mongo:3.0
 ```
 
+## Use within TensorFlow Docker Images
+
+Continue if you have
+
+* installed all the dependencies
+* downloaded carml_config_example.yml to $HOME as .carml_config.yml
+* launched docker external services on the host machine of the docker container you are going to use
+
+, otherwise read above
+
+An example of using NGC TensorFlow docker image: 
+
+```
+nvidia-docker run -it --network host \
+-v $GOPATH:/workspace/go1.12/global \
+-v $GOROOT:/workspace/go1.12_root \
+-v ~/.carml_config.yml:/root/.carml_config.yml \
+nvcr.io/nvidia/tensorflow:19.05-py2
+```
+
+Within the container, set up the environment so that the agent can find the TensorFlow C library.
+
+```
+export GOPATH=/workspace/go1.12/global
+export GOROOT=/workspace/go1.12_root
+export PATH=$GOROOT/bin:$PATH
+
+ln -s /usr/local/lib/tensorflow/libtensorflow_cc.so /usr/local/lib/tensorflow/libtensorflow.so
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/tensorflow
+export CGO_LDFLAGS="${CGO_LDFLAGS} -L /usr/local/lib/tensorflow/"
+
+cd $GOPATH/src/github.com/rai-project/tensorflow/tensorflow-agent
+```
+
+
 ## Usage
 
-Build TensorFlow agent with GPU enabled
+Build the TensorFlow agent with GPU enabled
 ```
 cd $GOPATH/src/github.com/rai-project/tensorflow/tensorflow-agent
 go build tensorflow-agent/main.go
 ```
 
-Build TensorFlow agent without GPU or libjpeg-turbo
+Build the TensorFlow agent without GPU or libjpeg-turbo
 ```
 cd $GOPATH/src/github.com/rai-project/tensorflow/tensorflow-agent
 go build -tags="nogpu nolibjpeg" 
 ```
 
-#### Use the agent with the [MLModelScope Web UI](https://github.com/rai-project/mlmodelscope)
+### Use the agent with the [MLModelScope Web UI](https://github.com/rai-project/mlmodelscope)
 
 ```
-./tensorfow-agent -l -d -v
+./tensorfow-agent serve -l -d -v
 ```
 
 Refer to [TODO] to run the web UI to interact with the agent.
 
-#### Use the agent through command line
+### Use the agent through command line
 
 Run ```./tensorfow-agent -h``` to list the available commands.
 
@@ -237,9 +283,6 @@ An example run is
 
 Refer to [TODO] to run the web UI to interact with the agent.
 
-#### Use the agent through Docker container
-
-TODO
 
 ## Notes on installing TensorFlow from source (ignore this if you are a user)
 
