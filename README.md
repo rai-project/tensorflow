@@ -94,8 +94,8 @@ Linux
 ```
   export TURBO_VER=2.0.2
   cd /tmp
-  wget https://cfhcable.dl.sourceforge.net/project/libjpeg-turbo/$TURBO_VER/libjpeg-turbo-official_$TURBO_VER_amd64.deb
-  sudo dpkg -i libjpeg-turbo-official_$TURBO_VER_amd64.deb
+  wget https://cfhcable.dl.sourceforge.net/project/libjpeg-turbo/${TURBO_VER}/libjpeg-turbo-official_${TURBO_VER}_amd64.deb
+  sudo dpkg -i libjpeg-turbo-official_${TURBO_VER}_amd64.deb
 ```
 
 macOS
@@ -249,7 +249,7 @@ cd $GOPATH/src/github.com/rai-project/tensorflow/tensorflow-agent
 Build the TensorFlow agent with GPU enabled
 ```
 cd $GOPATH/src/github.com/rai-project/tensorflow/tensorflow-agent
-go build tensorflow-agent/main.go
+go build ./main.go
 ```
 
 Build the TensorFlow agent without GPU or libjpeg-turbo
@@ -261,16 +261,16 @@ go build -tags="nogpu nolibjpeg"
 ### Use the agent with the [MLModelScope Web UI](https://github.com/rai-project/mlmodelscope)
 
 ```
-./tensorfow-agent serve -l -d -v
+./tensorflow-agent serve -l -d -v
 ```
 
 Refer to [TODO] to run the web UI to interact with the agent.
 
 ### Use the agent through command line
 
-Run ```./tensorfow-agent -h``` to list the available commands.
+Run ```./tensorflow-agent -h``` to list the available commands.
 
-Run ```./tensorfow-agent info models``` to list the available models.
+Run ```./tensorflow-agent info models``` to list the available models.
 
 Run ```./tensorflow-agent predict``` to evaluate a model. This runs the default evuation. 
 ```./tensorflow-agent predict -h``` shows the available flags you can set.

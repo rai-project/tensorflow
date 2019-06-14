@@ -25,5 +25,5 @@ jobs:
     dependsOn:
       - CPU
       - GPU
-    # steps:
-    #   - script: 'curl -X POST https://hooks.microbadger.com/images/carml/go-mxnet/1MrtzLGOTLhD_lTAZ2Ksy0HP-nI='
+    steps:
+      - script: 'curl -X POST https://hooks.microbadger.com/images/carml/tensorflow/rUwtpIDS_Lq5zy8ocJDOtZMJUf4='
