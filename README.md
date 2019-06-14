@@ -1,7 +1,7 @@
 # MLModelScope TensorFlow Agent
 
 [![Build Status](https://travis-ci.org/rai-project/tensorflow.svg?branch=master)](https://travis-ci.org/rai-project/tensorflow)
-[![Build Status](https://dev.azure.com/dakkak/rai/_apis/build/status/tensorflow)](https://dev.azure.com/dakkak/rai/_build/latest?definitionId=14)
+[![Build Status](https://dev.azure.com/dakkak/rai/_apis/build/status/rai-project.tensorflow?branchName=master)](https://dev.azure.com/dakkak/rai/_build/latest?definitionId=22&branchName=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/rai-project/tensorflow)](https://goreportcard.com/report/github.com/rai-project/tensorflow)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
