@@ -388,7 +388,7 @@ func TestObjectDetection(t *testing.T) {
 		return
 	}
 
-	assert.InDelta(t, float32(0.936415), pred[0][0].GetProbability(), 0.001)
+	assert.InDelta(t, float32(0.95834976), pred[0][0].GetProbability(), 0.001)
 }
 
 func max(x, y int) int {
