@@ -30,9 +30,9 @@ func normalizeImageHWC(in0 image.Image, mean []float32, scale float32) ([]float3
 				offset := y*in.Stride + x*3
 				rgb := in.Pix[offset : offset+3]
 				r, g, b := rgb[0], rgb[1], rgb[2]
-				out[offset+0] = (float32(r) - mean[0]) / scale
-				out[offset+1] = (float32(g) - mean[1]) / scale
-				out[offset+2] = (float32(b) - mean[2]) / scale
+				out[offset+0] = (float32(r) - mean[0]) / scale[0]
+				out[offset+1] = (float32(g) - mean[1]) / scale[1]
+				out[offset+2] = (float32(b) - mean[2]) / scale[2]
 			}
 		}
 	case *types.BGRImage:
@@ -41,9 +41,9 @@ func normalizeImageHWC(in0 image.Image, mean []float32, scale float32) ([]float3
 				offset := y*in.Stride + x*3
 				bgr := in.Pix[offset : offset+3]
 				b, g, r := bgr[0], bgr[1], bgr[2]
-				out[offset+0] = (float32(b) - mean[0]) / scale
-				out[offset+1] = (float32(g) - mean[1]) / scale
-				out[offset+2] = (float32(r) - mean[2]) / scale
+				out[offset+0] = (float32(b) - mean[0]) / scale[0]
+				out[offset+1] = (float32(g) - mean[1]) / scale[1]
+				out[offset+2] = (float32(r) - mean[2]) / scale[2]
 			}
 		}
 	default:
@@ -62,9 +62,9 @@ func normalizeImageCHW(in *types.RGBImage, mean []float32, scale float32) ([]flo
 			offset := y*in.Stride + x*3
 			rgb := in.Pix[offset : offset+3]
 			r, g, b := rgb[0], rgb[1], rgb[2]
-			out[y*width+x] = (float32(r) - mean[0]) / scale
-			out[width*height+y*width+x] = (float32(g) - mean[1]) / scale
-			out[2*width*height+y*width+x] = (float32(b) - mean[2]) / scale
+			out[y*width+x] = (float32(r) - mean[0]) / scale[0]
+			out[width*height+y*width+x] = (float32(g) - mean[1]) / scale[1]
+			out[2*width*height+y*width+x] = (float32(b) - mean[2]) / scale[2]
 		}
 	}
 	return out, nil
