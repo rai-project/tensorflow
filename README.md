@@ -27,7 +27,7 @@ go get -v github.com/rai-project/tensorflow
 
 The agent requires The TensorFlow C library and other Go packages.
 
-### Go packages
+### Go Packages
 
 You can install the dependency through `go get`.
 
@@ -53,7 +53,7 @@ export GODEBUG=cgocheck=0
 in your `~/.bashrc` or `~/.zshrc` file and then run either `source ~/.bashrc` or `source ~/.zshrc`
 
 
-### The TensorFlow C library
+### The TensorFlow C Library
 
 The TensorFlow C library is required for the TensorFlow Go package.
 
@@ -88,7 +88,7 @@ You can test the installed TensorFlow C library using an [examle C program](http
 To build the TensorFlow C library from source, refer to [TensorFlow in Go](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/go#building-the-tensorflow-c-library-from-source) .
 
 
-### libjpeg-turbo
+### Use libjpeg-turbo for Image Preprocessing
 
 [libjpeg-turbo](https://github.com/libjpeg-turbo/libjpeg-turbo) is a JPEG image codec that uses SIMD instructions (MMX, SSE2, AVX2, NEON, AltiVec) to accelerate baseline JPEG compression and decompression. It outperforms libjpeg by a significant amount.
 
@@ -111,7 +111,7 @@ macOS
 brew install jpeg-turbo
 ```
 
-## External ervices
+## External Ervices
 
 MLModelScope relies on a few external services.
 These services provide tracing, registry, and database servers.
@@ -265,7 +265,7 @@ cd $GOPATH/src/github.com/rai-project/tensorflow/tensorflow-agent
 go build -tags="nogpu nolibjpeg" 
 ```
 
-### Use the agent with the [MLModelScope Web UI](https://github.com/rai-project/mlmodelscope)
+### Use the Agent with the [MLModelScope Web UI](https://github.com/rai-project/mlmodelscope)
 
 ```
 ./tensorflow-agent serve -l -d -v
@@ -273,7 +273,7 @@ go build -tags="nogpu nolibjpeg"
 
 Refer to [TODO] to run the web UI to interact with the agent.
 
-### Use the agent through command line
+### Use the Agent through Command Line
 
 Run ```./tensorflow-agent -h``` to list the available commands.
 
@@ -290,16 +290,15 @@ An example run is
 
 Refer to [TODO] to run the web UI to interact with the agent.
 
-
 ## Notes on installing TensorFlow from source (ignore this if you are a user)
 
-#### Install Bazel
+### Install Bazel
 
 - [Installing Bazel on Ubuntu](https://docs.bazel.build/versions/master/install-ubuntu.html)
 
 - [Installing Bazel on macOS](https://docs.bazel.build/versions/master/install-os-x.html#install-on-mac-os-x-homebrew)
 
-#### Build
+### Build
 
 Build TensorFlow 1.13.1 with the following scripts.
 
@@ -320,7 +319,7 @@ cp ${GOPATH}/src/github.com/tensorflow/tensorflow/bazel-bin/tensorflow/libtensor
 
 Need to put the directory that contains `libtensorflow_framework.so` and `libtensorflow.so` into `$PATH`.
 
-#### PowerPC
+### PowerPC
 
 For TensorFlow compilation, here are the recommended tensorflow-configure settings:
 
@@ -351,10 +350,3 @@ export TF_NEED_VERBS=0
 export TF_NEED_GDR=0
 export TF_NEED_S3=0
 ```
-
-#### Issues
-
-- Install tensorflow 1.12 with CUDA 10.0
-
-Currently there's issue using bazel 0.19.1 to build TensorFlow 1.12 with CUDA 10.0.
-Build from source -> build the pip package -> GPU support -> bazel build -> ERROR: Config value cuda is not defined in any .rc file https://github.com/tensorflow/tensorflow/issues/23401
