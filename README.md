@@ -1,11 +1,18 @@
 # MLModelScope TensorFlow Agent
 
 [![Build Status](https://travis-ci.org/rai-project/tensorflow.svg?branch=master)](https://travis-ci.org/rai-project/tensorflow)
-[![Build Status](https://dev.azure.com/dakkak/rai/_apis/build/status/tensorflow)](https://dev.azure.com/dakkak/rai/_build/latest?definitionId=14)
+[![Build Status](https://dev.azure.com/dakkak/rai/_apis/build/status/rai-project.tensorflow?branchName=master)](https://dev.azure.com/dakkak/rai/_build/latest?definitionId=22&branchName=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/rai-project/tensorflow)](https://goreportcard.com/report/github.com/rai-project/tensorflow)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 [![](https://images.microbadger.com/badges/version/carml/tensorflow:ppc64le-gpu-latest.svg)](https://microbadger.com/images/carml/tensorflow:ppc64le-gpu-latest> 'Get your own version badge on microbadger.com') [![](https://images.microbadger.com/badges/version/carml/tensorflow:ppc64le-cpu-latest.svg)](https://microbadger.com/images/carml/tensorflow:ppc64le-cpu-latest 'Get your own version badge on microbadger.com') [![](https://images.microbadger.com/badges/version/carml/tensorflow:amd64-cpu-latest.svg)](https://microbadger.com/images/carml/tensorflow:amd64-cpu-latest 'Get your own version badge on microbadger.com') [![](https://images.microbadger.com/badges/version/carml/tensorflow:amd64-gpu-latest.svg)](https://microbadger.com/images/carml/tensorflow:amd64-gpu-latest 'Get your own version badge on microbadger.com')
+
+This is the TensorFlow agent for [MLModelScope](mlmodelscope.org), an open-source framework and hardware agnostic, extensible and customizable platform for evaluating and profiling ML models across datasets / frameworks / systems, and within AI application pipelines.
+
+Currently it has most of the models from TensorFlow Model Zoo built in, including Image Classification, Object Detection, Instance Segmentation, Semantic Segmentation, Image Enhancement. More built-in models are comming. 
+One can evaluate the **~80** models on any systems of insterest with either local TensorFlow installation or TensorFlow docker images. 
+
+Check out [MLModelScope](mlmodelscope.org) and welcome to contribute.
 
 ## Installation
 
@@ -104,7 +111,7 @@ macOS
 brew install jpeg-turbo
 ```
 
-## External services
+## External ervices
 
 MLModelScope relies on a few external services.
 These services provide tracing, registry, and database servers.

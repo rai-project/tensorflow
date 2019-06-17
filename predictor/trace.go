@@ -7,7 +7,6 @@ import (
 	"time"
 
 	opentracing "github.com/opentracing/opentracing-go"
-
 	proto "github.com/rai-project/tensorflow"
 	"github.com/rai-project/tracer"
 )

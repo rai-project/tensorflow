@@ -19,7 +19,7 @@ import (
 	gotensor "gorgonia.org/tensor"
 )
 
-func normalizeImageHWC(in0 image.Image, mean []float32, scale float32) ([]float32, error) {
+func normalizeImageHWC(in0 image.Image, mean []float32, scale []float32) ([]float32, error) {
 	height := in0.Bounds().Dy()
 	width := in0.Bounds().Dx()
 	out := make([]float32, 3*height*width)
@@ -30,9 +30,9 @@ func normalizeImageHWC(in0 image.Image, mean []float32, scale float32) ([]float3
 				offset := y*in.Stride + x*3
 				rgb := in.Pix[offset : offset+3]
 				r, g, b := rgb[0], rgb[1], rgb[2]
-				out[offset+0] = (float32(r) - mean[0]) / scale
-				out[offset+1] = (float32(g) - mean[1]) / scale
-				out[offset+2] = (float32(b) - mean[2]) / scale
+				out[offset+0] = (float32(r) - mean[0]) / scale[0]
+				out[offset+1] = (float32(g) - mean[1]) / scale[1]
+				out[offset+2] = (float32(b) - mean[2]) / scale[2]
 			}
 		}
 	case *types.BGRImage:
@@ -41,9 +41,9 @@ func normalizeImageHWC(in0 image.Image, mean []float32, scale float32) ([]float3
 				offset := y*in.Stride + x*3
 				bgr := in.Pix[offset : offset+3]
 				b, g, r := bgr[0], bgr[1], bgr[2]
-				out[offset+0] = (float32(b) - mean[0]) / scale
-				out[offset+1] = (float32(g) - mean[1]) / scale
-				out[offset+2] = (float32(r) - mean[2]) / scale
+				out[offset+0] = (float32(b) - mean[0]) / scale[0]
+				out[offset+1] = (float32(g) - mean[1]) / scale[1]
+				out[offset+2] = (float32(r) - mean[2]) / scale[2]
 			}
 		}
 	default:
@@ -53,22 +53,6 @@ func normalizeImageHWC(in0 image.Image, mean []float32, scale float32) ([]float3
 	return out, nil
 }
 
-func normalizeImageCHW(in *types.RGBImage, mean []float32, scale float32) ([]float32, error) {
-	height := in.Bounds().Dy()
-	width := in.Bounds().Dx()
-	out := make([]float32, 3*height*width)
-	for y := 0; y < height; y++ {
-		for x := 0; x < width; x++ {
-			offset := y*in.Stride + x*3
-			rgb := in.Pix[offset : offset+3]
-			r, g, b := rgb[0], rgb[1], rgb[2]
-			out[y*width+x] = (float32(r) - mean[0]) / scale
-			out[width*height+y*width+x] = (float32(g) - mean[1]) / scale
-			out[2*width*height+y*width+x] = (float32(b) - mean[2]) / scale
-		}
-	}
-	return out, nil
-}
 func TestNewImageClassificationPredictor(t *testing.T) {
 	tf.Register()
 	model, err := tf.FrameworkManifest.FindModel("MobileNet_v1_1.0_224:1.0")
@@ -202,7 +186,7 @@ func TestImageEnhancement(t *testing.T) {
 	}
 
 	input := make([]*gotensor.Dense, batchSize)
-	imgFloats, err := normalizeImageHWC(img, []float32{127.5, 127.5, 127.5}, 127.5)
+	imgFloats, err := normalizeImageHWC(img, []float32{127.5, 127.5, 127.5}, []float32{127.5, 127.5, 127.5})
 	if err != nil {
 		panic(err)
 	}
@@ -388,7 +372,7 @@ func TestObjectDetection(t *testing.T) {
 		return
 	}
 
-	assert.InDelta(t, float32(0.936415), pred[0][0].GetProbability(), 0.001)
+	assert.InDelta(t, float32(0.95834976), pred[0][0].GetProbability(), 0.001)
 }
 
 func max(x, y int) int {

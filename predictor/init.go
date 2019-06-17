@@ -17,6 +17,6 @@ var (
 
 func init() {
 	config.AfterInit(func() {
-		log = logger.New().WithField("pkg", "tensorflow/predict")
+		log = logger.New().WithField("pkg", "tensorflow/predictor")
 	})
 }

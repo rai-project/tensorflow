@@ -1,2 +1,5 @@
 tensorflow-agent
 experiments
+*.json
+*.html
+results
