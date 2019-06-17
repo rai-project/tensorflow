@@ -117,10 +117,6 @@
   version = "1.13.0"
 
 [[override]]
-  name = "github.com/grpc-ecosystem/go-grpc-middleware"
-  revision = "27f3801344b24dd6e9c608692368947f674a8298"
-
-[[override]]
   name = "github.com/russross/blackfriday"
   version = "=1.5.2"
 

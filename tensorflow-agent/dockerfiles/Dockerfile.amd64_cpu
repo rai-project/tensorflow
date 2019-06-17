@@ -61,9 +61,7 @@ RUN pip install -U setuptools && \
   wheel
 
 # get rai-project/tensorflow repository
-# ENV PKG github.com/rai-project/tensorflow
-# Testing on the fork
-ENV PKG github.com/yhchang3/tensorflow
+ENV PKG github.com/rai-project/tensorflow
 WORKDIR $GOPATH/src/$PKG
 
 RUN git clone --depth=1 --branch=master https://${PKG}.git . && \
