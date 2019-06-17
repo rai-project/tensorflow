@@ -1,3 +1,3 @@
-# builtin_models
+# Deprecated Models
 
-Run `make generate` in `TensorFlow` or `make generate-tensorflow` in the root `TensorFlow` (`..`) after updating model descriptions.
+This folder contains deprecated models converted from Caffe. For reference only.
