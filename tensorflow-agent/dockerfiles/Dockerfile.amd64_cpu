@@ -43,7 +43,7 @@ RUN add-apt-repository ppa:webupd8team/java &&\
   rm -rf /var/lib/apt/lists/*
 
 # Install bazel
-ENV BAZEL_VERSION 0.18.0
+ENV BAZEL_VERSION 0.19.2
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends \
    bash-completion \

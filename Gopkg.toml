@@ -117,6 +117,10 @@
   version = "1.13.0"
 
 [[override]]
+  name = "github.com/russross/blackfriday"
+  version = "=1.5.2"
+
+[[override]]
   branch = "master"
   name = "github.com/apache/thrift"
 
