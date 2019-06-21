@@ -25,6 +25,7 @@ type ImagePredictor struct {
 	common.ImagePredictor
 	tfGraph   *tf.Graph
 	tfSession *Session
+	cu        *cupti.CUPTI
 }
 
 func (p *ImagePredictor) GetInputLayerName(reader io.Reader, layer string) (string, error) {
@@ -266,6 +267,11 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 	p.tfGraph = graph
 	p.tfSession = session
 
+	err = p.cuptiStart(ctx)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -278,21 +284,48 @@ func (p *ImagePredictor) runOptions() *proto.RunOptions {
 	return nil
 }
 
-func (p *ImagePredictor) cuptiStart(ctx context.Context) (*cupti.CUPTI, error) {
-	if !p.UseGPU() || p.TraceLevel() < tracer.HARDWARE_TRACE {
-		return nil, nil
+func (p *ImagePredictor) cuptiStart(ctx context.Context) error {
+	if p.TraceLevel() < tracer.HARDWARE_TRACE {
+		return nil
 	}
-	cu, err := cupti.New(cupti.Context(ctx), cupti.SamplingPeriod(0))
+	// cu, err := cupti.New(cupti.Context(ctx), cupti.SamplingPeriod(0))
+
+	cu, err := cupti.New(
+		cupti.Context(ctx),
+		cupti.Activities(nil),
+		cupti.Callbacks([]string{
+			"CUPTI_DRIVER_TRACE_CBID_cuLaunchKernel",
+			"CUPTI_RUNTIME_TRACE_CBID_cudaLaunch_v3020",
+			"CUPTI_RUNTIME_TRACE_CBID_cudaLaunchKernel_v7000",
+			// "CUPTI_CBID_NVTX_nvtxRangeStartA",
+			// "CUPTI_CBID_NVTX_nvtxRangeStartEx",
+			// "CUPTI_CBID_NVTX_nvtxRangeEnd",
+			// "CUPTI_CBID_NVTX_nvtxRangePushA",
+			// "CUPTI_CBID_NVTX_nvtxRangePushEx",
+			// "CUPTI_CBID_NVTX_nvtxRangePop",
+		}),
+		cupti.Metrics(
+			[]string{
+				// "flop_count_sp",
+				// "dram_read_bytes",
+				// "dram_write_bytes",
+			},
+		),
+		cupti.Events(
+			[]string{},
+		))
+
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return cu, nil
+	p.cu = cu
+	return nil
 }
 
-func (p *ImagePredictor) cuptiClose(cu *cupti.CUPTI) {
-	if cu == nil {
+func (p *ImagePredictor) cuptiClose() {
+	if p.cu == nil {
 		return
 	}
-	cu.Wait()
-	cu.Close()
+	p.cu.Wait()
+	p.cu.Close()
 }

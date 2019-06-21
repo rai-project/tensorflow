@@ -107,11 +107,6 @@ func (p *ObjectDetectionPredictor) Predict(ctx context.Context, data interface{}
 
 	sessionSpan, ctx := tracer.StartSpanFromContext(ctx, tracer.MODEL_TRACE, "c_predict")
 
-	cu, err := p.cuptiStart(ctx)
-	if err != nil {
-		return err
-	}
-
 	fetches, err := session.Run(ctx,
 		map[tf.Output]*tf.Tensor{
 			graph.Operation(p.inputLayer).Output(0): tensor,
@@ -125,7 +120,7 @@ func (p *ObjectDetectionPredictor) Predict(ctx context.Context, data interface{}
 		p.runOptions(),
 	)
 
-	p.cuptiClose(cu)
+	p.cuptiClose()
 
 	sessionSpan.Finish()
 
