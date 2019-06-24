@@ -220,10 +220,12 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 	if graphPath == "" {
 		return errors.New("graph path is empty")
 	}
+
 	model, err := ioutil.ReadFile(graphPath)
 	if err != nil {
 		return errors.Wrapf(err, "cannot read %s", graphPath)
 	}
+
 	// Construct an in-memory graph from the serialized form.
 	graph := tf.NewGraph()
 	if err := graph.Import(model, ""); err != nil {
@@ -267,11 +269,6 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 	p.tfGraph = graph
 	p.tfSession = session
 
-	err = p.cuptiStart(ctx)
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -294,7 +291,7 @@ func (p *ImagePredictor) cuptiStart(ctx context.Context) error {
 		cupti.Context(ctx),
 		cupti.Activities(nil),
 		cupti.Callbacks([]string{
-			"CUPTI_DRIVER_TRACE_CBID_cuLaunchKernel",
+			// "CUPTI_DRIVER_TRACE_CBID_cuLaunchKernel",
 			"CUPTI_RUNTIME_TRACE_CBID_cudaLaunch_v3020",
 			"CUPTI_RUNTIME_TRACE_CBID_cudaLaunchKernel_v7000",
 			// "CUPTI_CBID_NVTX_nvtxRangeStartA",
@@ -306,14 +303,19 @@ func (p *ImagePredictor) cuptiStart(ctx context.Context) error {
 		}),
 		cupti.Metrics(
 			[]string{
-				// "flop_count_sp",
-				// "dram_read_bytes",
+				"flop_count_sp",
+				"dram_read_bytes",
 				// "dram_write_bytes",
 			},
 		),
 		cupti.Events(
-			[]string{},
-		))
+			[]string{
+				// "inst_executed",
+				// "warps_launched",
+			},
+		),
+		cupti.SamplingPeriod(0),
+	)
 
 	if err != nil {
 		return err
@@ -328,4 +330,5 @@ func (p *ImagePredictor) cuptiClose() {
 	}
 	p.cu.Wait()
 	p.cu.Close()
+	p.cu = nil
 }

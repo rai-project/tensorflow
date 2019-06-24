@@ -94,6 +94,11 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interfa
 
 	sessionSpan, ctx := tracer.StartSpanFromContext(ctx, tracer.MODEL_TRACE, "c_predict")
 
+	err = p.cuptiStart(ctx)
+	if err != nil {
+		return err
+	}
+
 	fetches, err := session.Run(ctx,
 		map[tf.Output]*tf.Tensor{
 			graph.Operation(p.inputLayer).Output(0): tensor,
