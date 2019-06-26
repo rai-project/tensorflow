@@ -31,7 +31,6 @@ import (
 	"unsafe"
 
 	protobuf "github.com/golang/protobuf/proto"
-
 	proto "github.com/rai-project/tensorflow"
 )
 
@@ -163,13 +162,15 @@ func (s *Session) Run(ctx context.Context, feeds map[Output]*Tensor, fetches []O
 			return nil, err
 		}
 
-		runOptsBuf.length = C.size_t(len(buf))
-		runOptsBuf.data = C.malloc(runOptsBuf.length)
-		if runOptsBuf.data == nil {
-			return nil, fmt.Errorf("unable to allocate memory")
+		if len(buf) > 0 {
+			runOptsBuf.length = C.size_t(len(buf))
+			runOptsBuf.data = C.malloc(runOptsBuf.length)
+			if runOptsBuf.data == nil {
+				return nil, fmt.Errorf("unable to allocate memory")
+			}
+			defer C.free(runOptsBuf.data)
+			C.memcpy(runOptsBuf.data, unsafe.Pointer(&buf[0]), runOptsBuf.length)
 		}
-		defer C.free(runOptsBuf.data)
-		C.memcpy(runOptsBuf.data, unsafe.Pointer(&buf[0]), runOptsBuf.length)
 	}
 
 	runMetaData = C.TF_NewBuffer()

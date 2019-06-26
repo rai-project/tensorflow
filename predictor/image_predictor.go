@@ -303,8 +303,8 @@ func (p *ImagePredictor) cuptiStart(ctx context.Context) error {
 		}),
 		cupti.Metrics(
 			[]string{
-				"flop_count_sp",
-				"dram_read_bytes",
+				// "flop_count_sp",
+				// "dram_read_bytes",
 				// "dram_write_bytes",
 			},
 		),
@@ -312,6 +312,10 @@ func (p *ImagePredictor) cuptiStart(ctx context.Context) error {
 			[]string{
 				// "inst_executed",
 				// "warps_launched",
+				// "l2_subp0_read_sector_misses",
+				// "l2_subp1_read_sector_misses",
+				// "l2_subp0_write_sector_misses",
+				// "l2_subp0_write_sector_misses",
 			},
 		),
 		cupti.SamplingPeriod(0),
@@ -320,6 +324,7 @@ func (p *ImagePredictor) cuptiStart(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+
 	p.cu = cu
 	return nil
 }
