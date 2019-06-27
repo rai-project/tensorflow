@@ -46,7 +46,7 @@ ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$LD_LIBRARY_PATH
 ENV CGO_LDFLAGS="${CGO_LDFLAGS} -L /usr/local/lib/tensorflow/"
 
 # get rai-project/tensorflow repository
-ENV PKG github.com/yhchang3/tensorflow
+ENV PKG github.com/rai-project/tensorflow
 WORKDIR $GOPATH/src/$PKG
 
 RUN go get -u github.com/golang/dep/cmd/dep
