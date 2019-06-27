@@ -47,7 +47,7 @@ BUILD_ARGS = --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
          --build-arg ARCH=$(ARCH) \
        --build-arg FRAMEWORK_VERSION="v1.13.1"
 
-docker_build: docker_build_cpu docker_build_gpu
+docker_build: docker_build_cpu docker_build_gpu docker_build_gpu_ngc
 
 docker_build_cpu: # Build CPU Docker image
 	@docker build $(BUILD_ARGS) \
@@ -59,13 +59,21 @@ docker_build_gpu: # Build GPU Docker image
 		-f Dockerfile.$(ARCH)_gpu \
 		-t $(DOCKER_IMAGE):$(ARCH)-gpu-$(DOCKER_TAG) .
 
+docker_build_gpu_ngc: # Build GPU Docker image with NGC
+	@docker build $(BUILD_ARGS) \
+		-f Dockerfile.$(ARCH)_gpu_ngc \
+		-t $(DOCKER_IMAGE):$(ARCH)-gpu-ngc-$(DOCKER_TAG) .
+
 docker_pull_cpu:
 	docker pull carml/base:$(ARCH)-cpu-latest
 
 docker_pull_gpu:
 	docker pull carml/base:$(ARCH)-gpu-latest
 
-docker_pull: docker_pull_cpu docker_pull_gpu
+docker_pull_gpu_ngc:
+	docker pull nvcr.io/nvidia/tensorflow:19.05-py2
+
+docker_pull: docker_pull_cpu docker_pull_gpu docker_pull_gpu_ngc
 
 docker_push_cpu: # Tag image as latest and Push to Dockerhub
 	docker tag $(DOCKER_IMAGE):$(ARCH)-cpu-$(DOCKER_TAG) $(DOCKER_IMAGE):$(ARCH)-cpu-latest
@@ -77,7 +85,13 @@ docker_push_gpu: # Tag image as latest and Push to DockerHub
 	docker push $(DOCKER_IMAGE):$(ARCH)-gpu-$(DOCKER_TAG)
 	docker push $(DOCKER_IMAGE):$(ARCH)-gpu-latest
 
-docker_push: docker_push_cpu docker_push_gpu
+docker_push_gpu_ngc: # Tag image as latest and Push to DockerHub
+	docker tag $(DOCKER_IMAGE):$(ARCH)-gpu-ngc-$(DOCKER_TAG) $(DOCKER_IMAGE):$(ARCH)-gpu-ngc-latest
+	docker push $(DOCKER_IMAGE):$(ARCH)-gpu-ngc-$(DOCKER_TAG)
+	docker push $(DOCKER_IMAGE):$(ARCH)-gpu-ngc-latest
+
+
+docker_push: docker_push_cpu docker_push_gpu docker_push_gpu_ngc
 
 output:
 	@echo Docker Image: $(DOCKER_IMAGE):$(DOCKER_TAG)
