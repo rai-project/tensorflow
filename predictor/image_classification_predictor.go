@@ -108,6 +108,7 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interfa
 		},
 		nil,
 		p.runOptions(),
+		p.GetGraphPath(),
 	)
 
 	p.cuptiClose()

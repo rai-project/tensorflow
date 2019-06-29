@@ -8,28 +8,39 @@ import (
 
 	opentracing "github.com/opentracing/opentracing-go"
 	proto "github.com/rai-project/tensorflow"
+	graph "github.com/rai-project/tensorflow/graph"
 	"github.com/rai-project/tracer"
 )
 
 type traceNode struct {
 	device string
 	node   *proto.NodeExecStats
+	opName string
 }
 
 type Trace struct {
 	nodes []traceNode
 }
 
-func NewTrace(data *proto.StepStats) (*Trace, error) {
+func NewTrace(data *proto.StepStats, graphPath string) (*Trace, error) {
 	if len(data.GetDevStats()) == 0 {
 		return nil, errors.New("no device stats available")
 	}
 	nodes := []traceNode{}
+	g, err := graph.New(graphPath)
+	if err != nil {
+		return nil, err
+	}
 	for _, dev := range data.GetDevStats() {
 		for _, nd := range dev.GetNodeStats() {
+			opName, err := g.LookUpNodeOperatorName(nd.GetNodeName())
+			if err != nil {
+				return nil, err
+			}
 			nodes = append(nodes, traceNode{
 				device: dev.GetDevice(),
 				node:   nd,
+				opName: opName,
 			})
 		}
 	}
@@ -47,16 +58,22 @@ func NewTrace(data *proto.StepStats) (*Trace, error) {
 func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption) error {
 	for layerSequenceIndex, tr := range t.nodes {
 		device := tr.device
+		opName := tr.opName
 		node := tr.node
 		startTime := time.Unix(0, node.GetAllStartMicros()*int64(time.Microsecond))
 		endTime := time.Unix(0, (node.GetAllStartMicros()+node.GetAllEndRelMicros())*int64(time.Microsecond))
-		if endTime.Sub(startTime) <= 10*time.Microsecond {
-			continue
-		}
+
+		// skip if the span is too small
+		// if endTime.Sub(startTime) <= 10*time.Microsecond {
+		// 	continue
+		// }
+
 		tags := opentracing.Tags{
-			"trace_source":   "framework",
-			"framework_name": "tensorflow",
-			"device":         device,
+			"trace_source":         "framework",
+			"framework_name":       "tensorflow",
+			"layer_sequence_index": layerSequenceIndex,
+			"op_name":              opName,
+			"device":               device,
 			// "all_start_micros":    node.GetAllStartMicros(),
 			// "all_end_rel_micros":  node.GetAllEndRelMicros(),
 			// "op_start_rel_micros": node.GetOpStartRelMicros(),
@@ -66,8 +83,8 @@ func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption
 			"thread_id":        node.GetThreadId(),
 			// "start_time":          startTime,
 			// "end_time":            endTime,
-			"layer_sequence_index": layerSequenceIndex,
 		}
+
 		if len(node.GetOutput()) != 0 {
 			shapes := make([][]int64, len(node.GetOutput()))
 			for jj, o := range node.GetOutput() {
@@ -84,6 +101,7 @@ func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption
 			}
 			tags["shape"] = shapes
 		}
+
 		memStatsTags := opentracing.Tags{}
 		if node.GetMemoryStats() != nil {
 			stats := node.GetMemoryStats()

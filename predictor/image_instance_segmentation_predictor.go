@@ -125,8 +125,8 @@ func (p *InstanceSegmentationPredictor) Predict(ctx context.Context, data interf
 		},
 		nil,
 		p.runOptions(),
+		p.GetGraphPath(),
 	)
-
 	p.cuptiClose()
 
 	sessionSpan.Finish()

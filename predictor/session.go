@@ -137,7 +137,7 @@ func (s *Session) ListDevices() ([]Device, error) {
 // the fetches argument. If fetches is set to nil, the returned Tensor fetches
 // is empty.
 
-func (s *Session) Run(ctx context.Context, feeds map[Output]*Tensor, fetches []Output, targets []*Operation, runOpts *proto.RunOptions) ([]*Tensor, error) {
+func (s *Session) Run(ctx context.Context, feeds map[Output]*Tensor, fetches []Output, targets []*Operation, runOpts *proto.RunOptions, graphPath string) ([]*Tensor, error) {
 	s.mu.Lock()
 	if s.c == nil {
 		s.mu.Unlock()
@@ -200,7 +200,7 @@ func (s *Session) Run(ctx context.Context, feeds map[Output]*Tensor, fetches []O
 	}
 
 	if runOpts != nil {
-		tracer, err := NewTrace(meta.StepStats)
+		tracer, err := NewTrace(meta.StepStats, graphPath)
 		if err != nil {
 		 return nil, err
 		}

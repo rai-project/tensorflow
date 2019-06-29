@@ -118,8 +118,8 @@ func (p *ObjectDetectionPredictor) Predict(ctx context.Context, data interface{}
 		},
 		nil,
 		p.runOptions(),
+		p.GetGraphPath(),
 	)
-
 	p.cuptiClose()
 
 	sessionSpan.Finish()

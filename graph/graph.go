@@ -9,7 +9,6 @@ import (
 	"github.com/k0kubun/pp"
 	"github.com/pkg/errors"
 	tf "github.com/rai-project/tensorflow"
-	// tf "github.com/tensorflow/tensorflow/tensorflow/go"
 )
 
 var Categories = map[string]string{
@@ -94,29 +93,11 @@ func New(path string) (*Graph, error) {
 	graph := &tf.GraphDef{}
 	err = graph.Unmarshal(model)
 
-	return &Graph{
+	g := &Graph{
 		GraphDef:    graph,
 		TensorInfos: []TensorInfo{},
-	}, err
-}
-
-func tensorShape(tensor *tf.TensorShapeProto) []int64 {
-	res := make([]int64, len(tensor.Dim))
-	for ii, dim := range tensor.Dim {
-		res[ii] = dim.Size_
 	}
-	return res
-}
 
-func prod(lst []int64) int64 {
-	accum := int64(1)
-	for _, elem := range lst {
-		accum *= elem
-	}
-	return accum
-}
-
-func (g *Graph) MarshalJSON() ([]byte, error) {
 	initOpInfo()
 	for _, nd := range g.Node {
 		currentNumParameters := int64(0)
@@ -191,6 +172,23 @@ func (g *Graph) MarshalJSON() ([]byte, error) {
 		// }
 	}
 
+	return g, err
+}
+
+func (g *Graph) LookUpNodeOperatorName(name string) (string, error) {
+	if name == "_SOURCE" {
+		return "Constant", nil
+	}
+	for _, ti := range g.TensorInfos {
+		if ti.Name == name {
+			return ti.OpName, nil
+		}
+	}
+	pp.Println(name)
+	return "", errors.New("node not found")
+}
+
+func (g *Graph) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&struct {
 		*tf.GraphDef
 		TensorInfos []TensorInfo `json:"tensor_infos,omitempty"`
@@ -212,4 +210,20 @@ func initOpInfo() {
 			OpInfo = nil
 		}
 	})
+}
+
+func tensorShape(tensor *tf.TensorShapeProto) []int64 {
+	res := make([]int64, len(tensor.Dim))
+	for ii, dim := range tensor.Dim {
+		res[ii] = dim.Size_
+	}
+	return res
+}
+
+func prod(lst []int64) int64 {
+	accum := int64(1)
+	for _, elem := range lst {
+		accum *= elem
+	}
+	return accum
 }

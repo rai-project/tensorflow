@@ -104,6 +104,7 @@ func (p *SemanticSegmentationPredictor) Predict(ctx context.Context, data interf
 		},
 		nil,
 		p.runOptions(),
+		p.GetGraphPath(),
 	)
 
 	p.cuptiClose()
