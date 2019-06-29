@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"regexp"
+	"strings"
 	"time"
 
 	opentracing "github.com/opentracing/opentracing-go"
@@ -13,9 +15,10 @@ import (
 )
 
 type traceNode struct {
-	device string
-	node   *proto.NodeExecStats
-	opName string
+	device         string
+	node           *proto.NodeExecStats
+	timelineOpName string
+	graphOpName    string
 }
 
 type Trace struct {
@@ -33,20 +36,42 @@ func NewTrace(data *proto.StepStats, graphPath string) (*Trace, error) {
 	}
 	for _, dev := range data.GetDevStats() {
 		for _, nd := range dev.GetNodeStats() {
-			opName, err := g.LookUpNodeOperatorName(nd.GetNodeName())
-			if err != nil {
-				return nil, err
+			timelineOpName, _, _ := parseOpLabel(nd.GetTimelineLabel())
+			if timelineOpName == "Const" {
+				continue
 			}
-			nodes = append(nodes, traceNode{
-				device: dev.GetDevice(),
-				node:   nd,
-				opName: opName,
-			})
+			traceNode := traceNode{
+				device:         dev.GetDevice(),
+				node:           nd,
+				timelineOpName: timelineOpName,
+			}
+			if timelineOpName != "Const" {
+				graphOpName, err := g.LookUpNodeOperatorName(nd.GetNodeName())
+				if err == nil {
+					traceNode.graphOpName = graphOpName
+				}
+			}
+			nodes = append(nodes, traceNode)
 		}
 	}
 	return &Trace{
 		nodes: nodes,
 	}, nil
+}
+
+func parseOpLabel(name string) (op string, inputs []string, output string) {
+	re := regexp.MustCompile(`(?m)(.*) = (.*)\((.*)\)`)
+	allMatches := re.FindAllStringSubmatch(name, -1)
+	if len(allMatches) != 1 {
+		return
+	}
+	matches := allMatches[0]
+	if len(matches) != 4 {
+		return
+	}
+	output, op, sinputs := matches[1], matches[2], matches[3]
+	inputs = strings.Split(sinputs, ",")
+	return
 }
 
 // Notes about start and end time from the NodeExecStats proto:
@@ -58,7 +83,8 @@ func NewTrace(data *proto.StepStats, graphPath string) (*Trace, error) {
 func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption) error {
 	for layerSequenceIndex, tr := range t.nodes {
 		device := tr.device
-		opName := tr.opName
+		graphOpName := tr.graphOpName
+		timelineOpName := tr.timelineOpName
 		node := tr.node
 		startTime := time.Unix(0, node.GetAllStartMicros()*int64(time.Microsecond))
 		endTime := time.Unix(0, (node.GetAllStartMicros()+node.GetAllEndRelMicros())*int64(time.Microsecond))
@@ -72,7 +98,8 @@ func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption
 			"trace_source":         "framework",
 			"framework_name":       "tensorflow",
 			"layer_sequence_index": layerSequenceIndex,
-			"op_name":              opName,
+			"op_name":              timelineOpName,
+			"static_op_name":       graphOpName,
 			"device":               device,
 			// "all_start_micros":    node.GetAllStartMicros(),
 			// "all_end_rel_micros":  node.GetAllEndRelMicros(),

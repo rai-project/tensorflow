@@ -3,6 +3,7 @@ package graph
 import (
 	"encoding/json"
 	"io/ioutil"
+	"strings"
 	"sync"
 
 	"github.com/Unknwon/com"
@@ -176,15 +177,18 @@ func New(path string) (*Graph, error) {
 }
 
 func (g *Graph) LookUpNodeOperatorName(name string) (string, error) {
-	if name == "_SOURCE" {
+	if strings.HasPrefix(name, "_") {
 		return "Constant", nil
 	}
-	for _, ti := range g.TensorInfos {
-		if ti.Name == name {
-			return ti.OpName, nil
+	for _, nd := range g.Node {
+		if nd.Name == name {
+			// pp.Println("found name = ", name, "   ", "opname = ", nd.Name)
+			return nd.Op, nil
 		}
 	}
-	pp.Println(name)
+	if false {
+		pp.Println("node operator for " + name + " not found")
+	}
 	return "", errors.New("node not found")
 }
 
