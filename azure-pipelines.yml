@@ -21,9 +21,21 @@ jobs:
           make docker_pull_gpu
           make docker_build_gpu
           while $(make docker_push_gpu); do :; done
+  - job: GPU_NGC
+    timeoutInMinutes: 0
+    pool:
+      vmImage: "Ubuntu 16.04"
+    steps:
+      - bash: |
+          docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
+          cd tensorflow-agent/dockerfiles
+          make docker_pull_gpu_ngc
+          make docker_build_gpu_ngc
+          while $(make docker_push_gpu_ngc); do :; done
   - job: Update_Microbadger
     dependsOn:
       - CPU
       - GPU
+      - GPU_NGC
     steps:
       - script: 'curl -X POST https://hooks.microbadger.com/images/carml/tensorflow/rUwtpIDS_Lq5zy8ocJDOtZMJUf4='

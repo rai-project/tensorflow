@@ -443,7 +443,6 @@
     "pkg/jsonmessage",
     "pkg/longpath",
     "pkg/mount",
-    "pkg/parsers",
     "pkg/pools",
     "pkg/progress",
     "pkg/signal",
@@ -758,8 +757,7 @@
     "util/metautils",
   ]
   pruneopts = "T"
-  revision = "c250d6563d4d4c20252cd865923440e829844f4e"
-  version = "v1.0.0"
+  revision = "27f3801344b24dd6e9c608692368947f674a8298"
 
 [[projects]]
   digest = "0:"
@@ -891,11 +889,27 @@
 
 [[projects]]
   branch = "master"
+  digest = "0:"
+  name = "github.com/iancoleman/strcase"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "e506e3ef73653e84c592ba44aab577a46678f68c"
+
+[[projects]]
+  branch = "master"
   digest = "1:e345ab0697f8f63d0ff3cc4c4c90fa470fa79c8d3c0b461a1d16df2f5b0c1fd1"
   name = "github.com/ianlancetaylor/cgosymbolizer"
   packages = ["."]
   pruneopts = "T"
   revision = "f5072df9c550dc687157e5d7efb50825cdf8f0eb"
+
+[[projects]]
+  branch = "master"
+  digest = "0:"
+  name = "github.com/ianlancetaylor/demangle"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "5e5cf60278f657d30daa329dd0e7e893b6b8f027"
 
 [[projects]]
   digest = "0:"
@@ -1243,14 +1257,7 @@
 [[projects]]
   digest = "0:"
   name = "github.com/openzipkin/zipkin-go-opentracing"
-  packages = [
-    ".",
-    "flag",
-    "thrift/gen-go/scribe",
-    "thrift/gen-go/zipkincore",
-    "types",
-    "wire",
-  ]
+  packages = ["."]
   pruneopts = "T"
   revision = "f0f479ad013a498e4cbfb369414e5d3880903779"
   version = "v0.3.5"
@@ -1466,7 +1473,7 @@
     "types",
   ]
   pruneopts = "T"
-  revision = "bf8cc4932e8bb2d8dbcc975fbe82f982ea087420"
+  revision = "99efb6c3ab4930b53c2199ae619b01c2762005dd"
 
 [[projects]]
   branch = "master"
@@ -1664,6 +1671,18 @@
   packages = ["."]
   pruneopts = "T"
   revision = "1d9901ca382bfae82f47b1ddb5fb67a019d254e8"
+
+[[projects]]
+  branch = "master"
+  digest = "0:"
+  name = "github.com/rai-project/tensorflow"
+  packages = [
+    ".",
+    "graph",
+    "predictor",
+  ]
+  pruneopts = "T"
+  revision = "cdd95d5de4078839d7cf3151e8a83ea746540790"
 
 [[projects]]
   branch = "master"
@@ -2615,6 +2634,9 @@
     "github.com/rai-project/image/types",
     "github.com/rai-project/logger",
     "github.com/rai-project/nvidia-smi",
+    "github.com/rai-project/tensorflow",
+    "github.com/rai-project/tensorflow/graph",
+    "github.com/rai-project/tensorflow/predictor",
     "github.com/rai-project/tracer",
     "github.com/rai-project/tracer/jaeger",
     "github.com/sirupsen/logrus",
