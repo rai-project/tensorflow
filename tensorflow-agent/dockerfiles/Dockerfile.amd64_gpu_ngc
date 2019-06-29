@@ -1,0 +1,65 @@
+FROM nvcr.io/nvidia/tensorflow:19.05-py2
+
+# Build-time metadata as defined at http://label-schema.org
+ARG BUILD_DATE
+ARG VCS_REF
+ARG VCS_URL
+ARG VERSION
+ARG ARCH
+ARG FRAMEWORK_VERSION
+LABEL org.carml.tensorflow.build-date=$BUILD_DATE \
+  org.carml.tensorflow.name="tensorflow agent" \
+  org.carml.tensorflow.description="" \
+  org.carml.tensorflow.url="https://www.carml.org/" \
+  org.carml.tensorflow.vcs-ref=$VCS_REF \
+  org.carml.tensorflow.vcs-url=$VCS_URL \
+  org.carml.tensorflow.vendor="MLModelScope" \
+  org.carml.tensorflow.arch=$ARCH \
+  org.carml.tensorflow.version=$VERSION \
+  org.carml.tensorflow.framework_version=$FRAMEWORK_VERSION \
+  org.carml.tensorflow.schema-version="1.0"
+
+########## INSTALLATION STEPS ###################
+
+SHELL ["/bin/bash","-c"]
+
+ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$LD_LIBRARY_PATH
+
+# install pre-requisites
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    bison && \
+    rm -rf /var/lib/apt/lists/*
+
+# install gvm
+RUN bash < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
+
+RUN echo '[[ -s "/root/.gvm/scripts/gvm" ]] && source "/root/.gvm/scripts/gvm"' > /etc/bash.bashrc
+
+# install Go
+RUN gvm install go1.12 -B && gvm use go1.12 --default
+
+ENV GOPATH=/root/.gvm/pkgsets/go1.12/global
+ENV GOROOT=/root/.gvm/gos/go1.12
+ENV PATH=$GOROOT/bin:$PATH
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/tensorflow
+ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$LD_LIBRARY_PATH
+ENV CGO_LDFLAGS="${CGO_LDFLAGS} -L /usr/local/lib/tensorflow/"
+
+# get rai-project/tensorflow repository
+ENV PKG github.com/rai-project/tensorflow
+WORKDIR $GOPATH/src/$PKG
+
+RUN go get -u github.com/golang/dep/cmd/dep
+
+RUN git clone --depth=1 --branch=master https://${PKG}.git . && \
+    dep ensure -vendor-only -v
+
+RUN ln -s /usr/local/lib/tensorflow/libtensorflow_cc.so /usr/local/lib/tensorflow/libtensorflow.so && \
+    ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 
+
+RUN cd tensorflow-agent && go build -tags="nolibjpeg" && \
+    cd .. && rm -fr vendor
+
+RUN cd tensorflow-agent && ./tensorflow-agent -h
+
+#ENTRYPOINT ["tensorflow-agent"]
