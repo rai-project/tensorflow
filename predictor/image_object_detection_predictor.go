@@ -86,9 +86,6 @@ func (self *ObjectDetectionPredictor) Load(ctx context.Context, modelManifest dl
 
 // Predict ...
 func (p *ObjectDetectionPredictor) Predict(ctx context.Context, data interface{}, opts ...options.Option) error {
-	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "predict")
-	defer span.Finish()
-
 	if data == nil {
 		return errors.New("input data nil")
 	}

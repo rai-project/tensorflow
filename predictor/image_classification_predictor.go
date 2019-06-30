@@ -73,9 +73,6 @@ func (self *ImageClassificationPredictor) Load(ctx context.Context, modelManifes
 
 // Predict ...
 func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interface{}, opts ...options.Option) error {
-	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "predict")
-	defer span.Finish()
-
 	if data == nil {
 		return errors.New("input data nil")
 	}

@@ -74,9 +74,6 @@ func (self *SemanticSegmentationPredictor) Load(ctx context.Context, modelManife
 
 // Predict ...
 func (p *SemanticSegmentationPredictor) Predict(ctx context.Context, data interface{}, opts ...options.Option) error {
-	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "predict")
-	defer span.Finish()
-
 	if data == nil {
 		return errors.New("input data nil")
 	}

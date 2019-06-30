@@ -75,8 +75,6 @@ func (self *ImageEnhancementPredictor) Load(ctx context.Context, modelManifest d
 // Predict ...
 func (p *ImageEnhancementPredictor) Predict(ctx context.Context, data interface{}, opts ...options.Option) error {
 	p.images = makeUniformImage()
-	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "predict")
-	defer span.Finish()
 
 	if data == nil {
 		return errors.New("input data nil")

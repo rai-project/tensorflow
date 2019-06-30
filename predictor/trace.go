@@ -25,6 +25,7 @@ type Trace struct {
 	nodes []traceNode
 }
 
+// https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/client/timeline.py
 func NewTrace(data *proto.StepStats, graphPath string) (*Trace, error) {
 	if len(data.GetDevStats()) == 0 {
 		return nil, errors.New("no device stats available")
@@ -45,11 +46,9 @@ func NewTrace(data *proto.StepStats, graphPath string) (*Trace, error) {
 				node:           nd,
 				timelineOpName: timelineOpName,
 			}
-			if timelineOpName != "Const" {
-				graphOpName, err := g.LookUpNodeOperatorName(nd.GetNodeName())
-				if err == nil {
-					traceNode.graphOpName = graphOpName
-				}
+			graphOpName, err := g.LookUpNodeOperatorName(nd.GetNodeName())
+			if err == nil {
+				traceNode.graphOpName = graphOpName
 			}
 			nodes = append(nodes, traceNode)
 		}
