@@ -5,6 +5,7 @@ import (
 	"io"
 	"io/ioutil"
 	"runtime"
+	"strings"
 
 	opentracing "github.com/opentracing/opentracing-go"
 	olog "github.com/opentracing/opentracing-go/log"
@@ -285,42 +286,12 @@ func (p *ImagePredictor) cuptiStart(ctx context.Context) error {
 	if p.TraceLevel() < tracer.HARDWARE_TRACE {
 		return nil
 	}
-	// cu, err := cupti.New(cupti.Context(ctx), cupti.SamplingPeriod(0))
+	metrics := strings.Split(p.ImagePredictor.GPUMetrics(), ",")
 
-	cu, err := cupti.New(
-		cupti.Context(ctx),
-		cupti.Activities(nil),
-		cupti.Callbacks([]string{
-			// "CUPTI_DRIVER_TRACE_CBID_cuLaunchKernel",
-			"CUPTI_RUNTIME_TRACE_CBID_cudaLaunch_v3020",
-			"CUPTI_RUNTIME_TRACE_CBID_cudaLaunchKernel_v7000",
-			// "CUPTI_CBID_NVTX_nvtxRangeStartA",
-			// "CUPTI_CBID_NVTX_nvtxRangeStartEx",
-			// "CUPTI_CBID_NVTX_nvtxRangeEnd",
-			// "CUPTI_CBID_NVTX_nvtxRangePushA",
-			// "CUPTI_CBID_NVTX_nvtxRangePushEx",
-			// "CUPTI_CBID_NVTX_nvtxRangePop",
-		}),
-		cupti.Metrics(
-			[]string{
-				// "flop_count_sp",
-				// "dram_read_bytes",
-				// "dram_write_bytes",
-			},
-		),
-		cupti.Events(
-			[]string{
-				// "inst_executed",
-				// "warps_launched",
-				// "l2_subp0_read_sector_misses",
-				// "l2_subp1_read_sector_misses",
-				// "l2_subp0_write_sector_misses",
-				// "l2_subp0_write_sector_misses",
-			},
-		),
+	cu, err := cupti.New(cupti.Context(ctx),
 		cupti.SamplingPeriod(0),
+		cupti.Metrics(metrics),
 	)
-
 	if err != nil {
 		return err
 	}
