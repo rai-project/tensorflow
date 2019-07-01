@@ -149,15 +149,15 @@
   name = "github.com/apache/thrift"
   packages = ["lib/go/thrift"]
   pruneopts = "T"
-  revision = "823474ec89355f72d3f0720ae5dacc2036d41c03"
+  revision = "c2c1e1d709e65d37359cefeb5dc068913f83021b"
 
 [[projects]]
   digest = "0:"
   name = "github.com/apex/log"
   packages = ["."]
   pruneopts = "T"
-  revision = "941dea75d3ebfbdd905a5d8b7b232965c5e5c684"
-  version = "v1.1.0"
+  revision = "295021f518f737dd0bfdca2c98136517703196b9"
+  version = "v1.1.1"
 
 [[projects]]
   branch = "master"
@@ -216,8 +216,8 @@
     "service/sts",
   ]
   pruneopts = "T"
-  revision = "f93aa42e3b85ff7cc865c95357006d68ad1b3b63"
-  version = "v1.20.3"
+  revision = "e8609b5f90982d7e69f00c611dd4e8a6c05e2f98"
+  version = "v1.20.12"
 
 [[projects]]
   branch = "master"
@@ -288,8 +288,20 @@
   name = "github.com/cheggaaa/pb"
   packages = ["."]
   pruneopts = "T"
-  revision = "c112833d014c77e8bde723fd0158e3156951639f"
-  version = "v2.0.6"
+  revision = "e86121687b85ad27fc88e0faf6b3eec6f33ca346"
+  version = "v3.0.0"
+
+[[projects]]
+  branch = "master"
+  digest = "0:"
+  name = "github.com/chenjiandongx/go-echarts"
+  packages = [
+    "datasets",
+    "datatypes",
+    "templates",
+  ]
+  pruneopts = "T"
+  revision = "9dff74f0b810e90e542d01e141ecb989e64a8552"
 
 [[projects]]
   digest = "1:7471447f18b90de5d6adfd51fe8ced6be2dc160d264ccbcd6fcefbd4b79f639e"
@@ -347,8 +359,8 @@
   name = "github.com/coreos/go-semver"
   packages = ["semver"]
   pruneopts = "T"
-  revision = "e214231b295a8ea9479f11b70b35d5acf3556d9b"
-  version = "v0.3.0"
+  revision = "8ab6407b697782a06568d4b7f1db25550ec2e4c6"
+  version = "v0.2.0"
 
 [[projects]]
   digest = "0:"
@@ -358,8 +370,8 @@
     "journal",
   ]
   pruneopts = "T"
-  revision = "95778dfbb74eb7e4dbaf43bf7d71809650ef8076"
-  version = "v19"
+  revision = "e64a0ec8b42a61e2a9801dc1d0abe539dea79197"
+  version = "v20"
 
 [[projects]]
   digest = "0:"
@@ -411,7 +423,7 @@
     "registry/api/errcode",
   ]
   pruneopts = "T"
-  revision = "dcfe05ce6cff995f419f8df37b59987257ffb8c1"
+  revision = "be07be99045e304898724e8a8c21aaefbfdc8446"
 
 [[projects]]
   branch = "master"
@@ -453,7 +465,7 @@
     "pkg/term/windows",
   ]
   pruneopts = "T"
-  revision = "384c782721c7d0865b7d40ce7ca402022c690058"
+  revision = "e105a74c54193e0ebdeddd93afc8746c33aeca73"
 
 [[projects]]
   branch = "master"
@@ -599,6 +611,14 @@
   revision = "3f4151ce318958e8b922bd908b74cdbc6619cabf"
 
 [[projects]]
+  digest = "0:"
+  name = "github.com/getlantern/deepcopy"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "b923171e8640f94369e21e324b1b0465cb82ec9f"
+  version = "v1"
+
+[[projects]]
   digest = "1:4062bc6de62d73e2be342243cf138cf499b34d558876db8d9430e2149388a4d8"
   name = "github.com/go-logfmt/logfmt"
   packages = ["."]
@@ -635,6 +655,33 @@
   pruneopts = "T"
   revision = "b32fa301c9fe55953584134cb6853a13c87ec0a1"
   version = "v0.16.0"
+
+[[projects]]
+  digest = "0:"
+  name = "github.com/gobuffalo/envy"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "043cb4b8af871b49563291e32c66bb84378a60ac"
+  version = "v1.7.0"
+
+[[projects]]
+  digest = "0:"
+  name = "github.com/gobuffalo/packd"
+  packages = [
+    ".",
+    "internal/takeon/github.com/markbates/errx",
+  ]
+  pruneopts = "T"
+  revision = "54ea459691466cfb630ccc276723fe3963f3e9d5"
+  version = "v0.3.0"
+
+[[projects]]
+  digest = "0:"
+  name = "github.com/gobuffalo/packr"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "9eb7a3d310e89e471c2cdf1ea3ec8d7fc1ab969c"
+  version = "v2.5.2"
 
 [[projects]]
   digest = "0:"
@@ -714,6 +761,14 @@
   revision = "f884aa71402950fb2796dbea0d5aa9ef9cfad8ca"
 
 [[projects]]
+  digest = "0:"
+  name = "github.com/google/flatbuffers"
+  packages = ["go"]
+  pruneopts = "T"
+  revision = "bf9eb67ab9371755c6bcece13cadc7693bcbf264"
+  version = "1.11.0"
+
+[[projects]]
   digest = "1:a98aaa0376806017a5d6f88cb8c3b8206943bd16585f58b394ac62d6e8abbc73"
   name = "github.com/google/go-querystring"
   packages = ["query"]
@@ -757,7 +812,8 @@
     "util/metautils",
   ]
   pruneopts = "T"
-  revision = "27f3801344b24dd6e9c608692368947f674a8298"
+  revision = "c250d6563d4d4c20252cd865923440e829844f4e"
+  version = "v1.0.0"
 
 [[projects]]
   digest = "0:"
@@ -769,8 +825,8 @@
     "utilities",
   ]
   pruneopts = "T"
-  revision = "cd0c8ef3533e9c04e6520cac37a81fe262fb0b34"
-  version = "v1.9.2"
+  revision = "d54b3615f714b03edde6d9206fa0476a9169c966"
+  version = "v1.9.3"
 
 [[projects]]
   digest = "1:c33811d02ae5dcc6a274bcf53ecd3a55f370b084d1467e4bd3a8752d76b754b0"
@@ -790,8 +846,8 @@
   name = "github.com/hashicorp/consul"
   packages = ["api"]
   pruneopts = "T"
-  revision = "40cec98468b829e5cdaacb0629b3e23a028db688"
-  version = "v1.5.1"
+  revision = "a82e6a7fd33a0d05b9b871bcaf1d7595c9b8dedc"
+  version = "v1.5.2"
 
 [[projects]]
   digest = "0:"
@@ -810,7 +866,7 @@
     "helper/url",
   ]
   pruneopts = "T"
-  revision = "f9ec369200fd2163b8f452e5e45696d83ae3f4b6"
+  revision = "da0323b9545e4b9d821e9c7d8ed4429e41d997ed"
 
 [[projects]]
   digest = "0:"
@@ -882,14 +938,6 @@
 [[projects]]
   branch = "master"
   digest = "0:"
-  name = "github.com/iancoleman/orderedmap"
-  packages = ["."]
-  pruneopts = "T"
-  revision = "ac98e3ecb4b017efb5c5d0fc075c2ded1f5d500d"
-
-[[projects]]
-  branch = "master"
-  digest = "0:"
   name = "github.com/iancoleman/strcase"
   packages = ["."]
   pruneopts = "T"
@@ -944,6 +992,14 @@
 
 [[projects]]
   digest = "0:"
+  name = "github.com/joho/godotenv"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "23d116af351c84513e1946b527c88823e476be13"
+  version = "v1.3.0"
+
+[[projects]]
+  digest = "0:"
   name = "github.com/json-iterator/go"
   packages = ["."]
   pruneopts = "T"
@@ -963,8 +1019,8 @@
   name = "github.com/k0kubun/pp"
   packages = ["."]
   pruneopts = "T"
-  revision = "b13c7f285d1c1e9b577c072aea899a548dc1b718"
-  version = "v2.4.0"
+  revision = "3d73dea227e0711e38b911ffa6fbafc8ff6b2991"
+  version = "v3.0.1"
 
 [[projects]]
   branch = "master"
@@ -1052,7 +1108,7 @@
     "jwriter",
   ]
   pruneopts = "T"
-  revision = "94de47d64c6323a57053b3dd1c97f250cee92741"
+  revision = "b2ccc519800e761ac8000b95e5d57c80a897ff9e"
 
 [[projects]]
   digest = "1:b168836ecd85a2d138391dbc464d2442ea9400c29cc0636f2c6056b996692e29"
@@ -1210,7 +1266,7 @@
     "libcontainer/user",
   ]
   pruneopts = "T"
-  revision = "6cc515888830787a93d82138821f0309ad970640"
+  revision = "6cccc1760d57d9e1bc856b96eeb7ee02b7b8101d"
 
 [[projects]]
   branch = "master"
@@ -1257,7 +1313,14 @@
 [[projects]]
   digest = "0:"
   name = "github.com/openzipkin/zipkin-go-opentracing"
-  packages = ["."]
+  packages = [
+    ".",
+    "flag",
+    "thrift/gen-go/scribe",
+    "thrift/gen-go/zipkincore",
+    "types",
+    "wire",
+  ]
   pruneopts = "T"
   revision = "f0f479ad013a498e4cbfb369414e5d3880903779"
   version = "v0.3.5"
@@ -1310,8 +1373,8 @@
     "internal/xxh32",
   ]
   pruneopts = "T"
-  revision = "d705d4371bfccdf47f10e45584e896026c83616f"
-  version = "v2.2.3"
+  revision = "057d66e894a4e55853274a3bbbf7de02ba639e43"
+  version = "v2.2.4"
 
 [[projects]]
   digest = "0:"
@@ -1343,7 +1406,7 @@
   name = "github.com/rai-project/archive"
   packages = ["."]
   pruneopts = "T"
-  revision = "cc2e0c7b1a1ba70d3bb18959b080e61403a6f48b"
+  revision = "a46ad1a3ed060943212a84839b64ecb223893224"
 
 [[projects]]
   digest = "0:"
@@ -1386,7 +1449,7 @@
     "mongodb",
   ]
   pruneopts = "T"
-  revision = "a70a841ebb9f84ce06250648683bbf31b4f2df7a"
+  revision = "5ed2dcaaf8e2b866d4d1b18fd05b9501b830f358"
 
 [[projects]]
   branch = "master"
@@ -1400,7 +1463,7 @@
     "vision/support/object_detection",
   ]
   pruneopts = "T"
-  revision = "27d72f869bedad4e1ad33afb27843b3fbc658b5a"
+  revision = "d45f5eda6c34db1a2ae1e9d3f620d77fa1f35b54"
 
 [[projects]]
   branch = "master"
@@ -1418,7 +1481,7 @@
     "steps",
   ]
   pruneopts = "T"
-  revision = "fe5843443e4c3e61c4a19325bfd520592eaea16e"
+  revision = "7149254a3c4391044fa93b7aad599fc2e357200a"
 
 [[projects]]
   branch = "master"
@@ -1450,7 +1513,7 @@
   name = "github.com/rai-project/downloadmanager"
   packages = ["."]
   pruneopts = "T"
-  revision = "7c710272035fcda57054a22e6632306e929018dc"
+  revision = "ba1da121542db77fc12e929de694d3defb5b44f7"
 
 [[projects]]
   branch = "master"
@@ -1462,7 +1525,7 @@
     "eventflow",
   ]
   pruneopts = "T"
-  revision = "6a869ff2ce55c20d40d8ec703c431cb1f376fe17"
+  revision = "68d5d7a20604380b8b91f1dc72c139a6cacd2a3a"
 
 [[projects]]
   branch = "master"
@@ -1473,7 +1536,15 @@
     "types",
   ]
   pruneopts = "T"
-  revision = "99efb6c3ab4930b53c2199ae619b01c2762005dd"
+  revision = "7e5d2e545092130992a7b27366762662d76fcb55"
+
+[[projects]]
+  branch = "master"
+  digest = "0:"
+  name = "github.com/rai-project/go-echarts"
+  packages = ["charts"]
+  pruneopts = "T"
+  revision = "d7df90ec3e6a3937e1e4dcf05984e67b1b205587"
 
 [[projects]]
   branch = "master"
@@ -1509,7 +1580,7 @@
     "types",
   ]
   pruneopts = "T"
-  revision = "533098f70eb82c387de4f365d597076ff81095bc"
+  revision = "407d61a969a0c32ee0703e38839828f0b10cdd12"
 
 [[projects]]
   branch = "master"
@@ -1675,18 +1746,6 @@
 [[projects]]
   branch = "master"
   digest = "0:"
-  name = "github.com/rai-project/tensorflow"
-  packages = [
-    ".",
-    "graph",
-    "predictor",
-  ]
-  pruneopts = "T"
-  revision = "cdd95d5de4078839d7cf3151e8a83ea746540790"
-
-[[projects]]
-  branch = "master"
-  digest = "0:"
   name = "github.com/rai-project/tracer"
   packages = [
     ".",
@@ -1703,7 +1762,7 @@
     "zipkin",
   ]
   pruneopts = "T"
-  revision = "0d16eb0efbd757703e43c8a305cff50516f1996d"
+  revision = "74cf1022e702b8060d2af4459de9a9d9fd0adf1c"
 
 [[projects]]
   branch = "master"
@@ -1711,6 +1770,7 @@
   name = "github.com/rai-project/utils"
   packages = [
     ".",
+    "browser",
     "promise",
   ]
   pruneopts = "T"
@@ -1758,6 +1818,18 @@
 
 [[projects]]
   digest = "0:"
+  name = "github.com/rogpeppe/go-internal"
+  packages = [
+    "modfile",
+    "module",
+    "semver",
+  ]
+  pruneopts = "T"
+  revision = "438578804ca6f31be148c27683afc419ce47c06e"
+  version = "v1.3.0"
+
+[[projects]]
+  digest = "0:"
   name = "github.com/russross/blackfriday"
   packages = ["."]
   pruneopts = "T"
@@ -1800,8 +1872,8 @@
     "mem",
   ]
   pruneopts = "T"
-  revision = "5335e3fd506df4cb63de0a8239c7461d23063be6"
-  version = "v2.19.05"
+  revision = "4c8b404ee5c53b04b04f34b1744a26bf5d2910de"
+  version = "v2.19.6"
 
 [[projects]]
   digest = "0:"
@@ -1906,8 +1978,8 @@
     "tensorflow/go/op",
   ]
   pruneopts = "T"
-  revision = "6612da89516247503f03ef76e974b51a434fb52e"
-  version = "v1.13.1"
+  revision = "87989f69597d6b2d60de8f112e1e3cea23be7298"
+  version = "v1.14.0"
 
 [[projects]]
   branch = "master"
@@ -1930,8 +2002,8 @@
   name = "github.com/tidwall/gjson"
   packages = ["."]
   pruneopts = "T"
-  revision = "eee0b6226f0d1db2675a176fdfaa8419bcad4ca8"
-  version = "v1.2.1"
+  revision = "d7c940e59395fdcaff4584cb442b2e7808f6711e"
+  version = "v1.3.0"
 
 [[projects]]
   branch = "master"
@@ -2247,7 +2319,7 @@
     "openpgp/s2k",
   ]
   pruneopts = "T"
-  revision = "ea8f1a30c4438cc8b13f05538385ad8dc6049b43"
+  revision = "4def268fd1a49955bfb3dda92fe3db4f924f2285"
 
 [[projects]]
   branch = "master"
@@ -2255,11 +2327,12 @@
   name = "golang.org/x/image"
   packages = [
     "bmp",
+    "ccitt",
     "tiff",
     "tiff/lzw",
   ]
   pruneopts = "T"
-  revision = "92942e4437e2b065806587df0f5d8afa565a8567"
+  revision = "7e034cad644213bc79b336b52fce73624259aeca"
 
 [[projects]]
   branch = "master"
@@ -2282,7 +2355,7 @@
     "websocket",
   ]
   pruneopts = "T"
-  revision = "d28f0bde5980168871434b95cfc858db9f2a7a99"
+  revision = "da137c7871d730100384dbcf36e6f8fa493aef5b"
 
 [[projects]]
   branch = "master"
@@ -2318,7 +2391,7 @@
     "windows",
   ]
   pruneopts = "T"
-  revision = "516e3c20635fbe39539f7ed361a15c51fec29cd8"
+  revision = "04f50cda93cbb67f2afa353c52f342100e80e625"
 
 [[projects]]
   digest = "0:"
@@ -2375,7 +2448,7 @@
     "mat",
   ]
   pruneopts = "T"
-  revision = "5dc218f8657935c93e751c9a4f2ca5ba62c5d7ad"
+  revision = "536a303fd62fe10303f5c75bf644af9f54e90c25"
 
 [[projects]]
   digest = "0:"
@@ -2393,8 +2466,8 @@
     "transport/http/internal/propagation",
   ]
   pruneopts = "T"
-  revision = "aac82e61c0c8fe133c297b4b59316b9f481e1f0a"
-  version = "v0.6.0"
+  revision = "02490b97dff7cfde1995bd77de808fd27053bc87"
+  version = "v0.7.0"
 
 [[projects]]
   digest = "0:"
@@ -2429,7 +2502,7 @@
     "protobuf/field_mask",
   ]
   pruneopts = "T"
-  revision = "a7e196e89fd3a3c4d103ca540bd5dac3a736e375"
+  revision = "eb59cef1c072c61ea4f7623910448d5e9c6a4455"
 
 [[projects]]
   digest = "0:"
@@ -2473,30 +2546,6 @@
   version = "v1.21.1"
 
 [[projects]]
-  digest = "1:15eb06ede732b6de69b8bfa51b29960b352934a602f3a6470c2b04cda9ca6ad4"
-  name = "gopkg.in/VividCortex/ewma.v1"
-  packages = ["."]
-  pruneopts = "T"
-  revision = "b24eb346a94c3ba12c1da1e564dbac1b498a77ce"
-  version = "v1.1.1"
-
-[[projects]]
-  digest = "0:"
-  name = "gopkg.in/cheggaaa/pb.v2"
-  packages = ["termutil"]
-  pruneopts = "T"
-  revision = "c112833d014c77e8bde723fd0158e3156951639f"
-  version = "v2.0.6"
-
-[[projects]]
-  digest = "1:865079840386857c809b72ce300be7580cb50d3d3129ce11bf9aa6ca2bc1934a"
-  name = "gopkg.in/fatih/color.v1"
-  packages = ["."]
-  pruneopts = "T"
-  revision = "5b77d2a35fb0ede96d138fc9a99f5c9b6aef11b4"
-  version = "v1.7.0"
-
-[[projects]]
   digest = "1:e72266fe8f18b56d1150d83ac28d14220052507904daf1e02677a765d2770005"
   name = "gopkg.in/gemnasium/logrus-airbrake-hook.v3"
   packages = ["."]
@@ -2518,30 +2567,6 @@
   pruneopts = "T"
   revision = "884d31b8cad6a1ec877f2400d555924cea03bbea"
   version = "v9.29.0"
-
-[[projects]]
-  digest = "1:b168836ecd85a2d138391dbc464d2442ea9400c29cc0636f2c6056b996692e29"
-  name = "gopkg.in/mattn/go-colorable.v0"
-  packages = ["."]
-  pruneopts = "T"
-  revision = "167de6bfdfba052fa6b2d3664c8f5272e23c9072"
-  version = "v0.0.9"
-
-[[projects]]
-  digest = "0:"
-  name = "gopkg.in/mattn/go-isatty.v0"
-  packages = ["."]
-  pruneopts = "T"
-  revision = "1311e847b0cb909da63b5fecfb5370aa66236465"
-  version = "v0.0.8"
-
-[[projects]]
-  digest = "0:"
-  name = "gopkg.in/mattn/go-runewidth.v0"
-  packages = ["."]
-  pruneopts = "T"
-  revision = "3ee7d812e62a0804a7d0a324e0249ca2db3476d3"
-  version = "v0.0.4"
 
 [[projects]]
   branch = "v2"
@@ -2566,16 +2591,18 @@
   version = "v2.2.2"
 
 [[projects]]
-  digest = "1:8631a953401e1d83c4190c743e816cef9273dad111908b5e4406bb7d24c3a17f"
+  digest = "0:"
   name = "gorgonia.org/tensor"
   packages = [
     ".",
     "internal/execution",
+    "internal/serialization/fb",
+    "internal/serialization/pb",
     "internal/storage",
   ]
   pruneopts = "T"
-  revision = "2ab2564f998fe504b94a1679c1c95277cdedea47"
-  version = "v0.8.1"
+  revision = "8eeece33868236224d51e7362e36a68642870bd2"
+  version = "v0.9.0-beta"
 
 [[projects]]
   branch = "master"
@@ -2634,9 +2661,6 @@
     "github.com/rai-project/image/types",
     "github.com/rai-project/logger",
     "github.com/rai-project/nvidia-smi",
-    "github.com/rai-project/tensorflow",
-    "github.com/rai-project/tensorflow/graph",
-    "github.com/rai-project/tensorflow/predictor",
     "github.com/rai-project/tracer",
     "github.com/rai-project/tracer/jaeger",
     "github.com/sirupsen/logrus",
