@@ -53,7 +53,7 @@ RUN ln -s /usr/local/lib/tensorflow/libtensorflow_cc.so /usr/local/lib/tensorflo
 RUN go get -u github.com/golang/dep/cmd/dep
 
 # get rai-project/tensorflow repository
-ENV PKG github.com/yhchang3/tensorflow
+ENV PKG github.com/rai-project/tensorflow
 WORKDIR $GOPATH/src/$PKG
 
 RUN git clone --depth=1 --branch=master https://${PKG}.git . && \
