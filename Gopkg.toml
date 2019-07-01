@@ -128,6 +128,10 @@
   branch = "master"
   name = "github.com/VividCortex/robustly"
 
+[[override]]
+  name = "github.com/grpc-ecosystem/go-grpc-middleware"
+  revision = "27f3801344b24dd6e9c608692368947f674a8298"
+
 [prune]
   go-tests = true
 
