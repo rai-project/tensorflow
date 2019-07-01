@@ -21,11 +21,6 @@ LABEL org.carml.tensorflow.build-date=$BUILD_DATE \
 
 ########## INSTALLATION STEPS ###################
 
-# install pre-requisites
-#RUN apt-get update -y && apt-get install -y --no-install-recommends \
-#    bison && \
-#    rm -rf /var/lib/apt/lists/*
-
 # Install Go
 ENV GIMME_GO_VERSION "1.12"
 ENV GIMME_OS "linux"
