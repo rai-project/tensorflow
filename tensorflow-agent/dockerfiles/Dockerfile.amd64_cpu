@@ -70,8 +70,8 @@ RUN git clone --depth=1 --branch=master https://${PKG}.git . && \
 
 RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   export GCC_HOST_COMPILER_PATH=/usr/bin/gcc && \
-  export PYTHON_BIN_PATH=/usr/bin/python && \
-  export USE_DEFAULT_PYTHON_LIB_PATH=1 && \
+  export PYTHON_BIN_PATH=/usr/bin/python3.6 && \
+  export PYTHON_LIB_PATH=/usr/lib/python3.6/dist-packages && \
   export TF_NEED_GCP=1 && \
   export TF_NEED_HDFS=1 && \
   export TF_NEED_JEMALLOC=1 && \
