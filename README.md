@@ -92,7 +92,11 @@ To build the TensorFlow C library from source, refer to [TensorFlow in Go](https
 
 [libjpeg-turbo](https://github.com/libjpeg-turbo/libjpeg-turbo) is a JPEG image codec that uses SIMD instructions (MMX, SSE2, AVX2, NEON, AltiVec) to accelerate baseline JPEG compression and decompression. It outperforms libjpeg by a significant amount.
 
-The default is to use libjpeg-turb, to opt-out, use build tag `nolibjpeg`.
+You need libjpeg installed.  
+```
+sudo apt-get install libjpeg-dev  
+```
+The default is to use libjpeg-turbo, to opt-out, use build tag `nolibjpeg`.
 
 To install libjpeg-turbo, refer to [libjpeg-turbo](https://github.com/libjpeg-turbo/libjpeg-turbo/releases).
 
@@ -229,7 +233,7 @@ Continue if you have
 An example of using NGC TensorFlow docker image: 
 
 ```
-nvidia-docker run -it --network host \
+nvidia-docker run -it --privileged=true --network host \
 -v $GOPATH:/workspace/go1.12/global \
 -v $GOROOT:/workspace/go1.12_root \
 -v ~/.carml_config.yml:/root/.carml_config.yml \
@@ -247,7 +251,8 @@ ln -s /usr/local/lib/tensorflow/libtensorflow_cc.so /usr/local/lib/tensorflow/li
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/tensorflow
 export CGO_LDFLAGS="${CGO_LDFLAGS} -L /usr/local/lib/tensorflow/"
 
-cd $GOPATH/src/github.com/rai-project/tensorflow/tensorflow-agent
+cd $GOPATH/src/github.com/rai-project/tensorflow/tensorflow-agent  
+export GODEBUG=cgocheck=0
 ```
 
 
