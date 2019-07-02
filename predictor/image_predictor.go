@@ -286,7 +286,10 @@ func (p *ImagePredictor) cuptiStart(ctx context.Context) error {
 	if p.TraceLevel() < tracer.HARDWARE_TRACE {
 		return nil
 	}
-	metrics := strings.Split(p.ImagePredictor.GPUMetrics(), ",")
+	metrics := []string{}
+	if p.ImagePredictor.GPUMetrics() != "" {
+		metrics = strings.Split(p.ImagePredictor.GPUMetrics(), ",")
+	}
 
 	cu, err := cupti.New(cupti.Context(ctx),
 		cupti.SamplingPeriod(0),
