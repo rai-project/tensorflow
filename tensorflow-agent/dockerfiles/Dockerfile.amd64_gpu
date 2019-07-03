@@ -96,7 +96,7 @@ RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
   export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH} && \
   tensorflow/tools/ci_build/builds/configured GPU \
-  bazel build -c opt --local_resources=32000,8,1.0 --config=cuda --define=grpc_no_ares=true //tensorflow:libtensorflow.so
+  bazel build -c opt --local_resources=32000,8,1.0 --config=cuda --config=nonccl --define=grpc_no_ares=true //tensorflow:libtensorflow.so
 
 RUN	export LD_LIBRARY_PATH=${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow:${LD_LIBRARY_PATH} && \
   ls -la ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow && \
