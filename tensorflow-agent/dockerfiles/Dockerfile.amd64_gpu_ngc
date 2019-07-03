@@ -59,7 +59,8 @@ WORKDIR $GOPATH/src/$PKG
 RUN git clone --depth=1 --branch=master https://${PKG}.git . && \
     dep ensure -vendor-only -v
 
-RUN cd tensorflow-agent && go build -tags="nolibjpeg" && \
+RUN cd tensorflow-agent && go install -tags="nolibjpeg" && \
     cd .. && rm -fr vendor
 
-#ENTRYPOINT ["tensorflow-agent"]
+ENTRYPOINT ["tensorflow-agent"]
+
