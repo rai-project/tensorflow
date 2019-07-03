@@ -258,6 +258,15 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 			},
 		}
 	}
+	if enableOptimizations {
+		sessionConfig.GraphOptions = tensorflow.GraphOptions{
+			OptimizerOptions: &tensorflow.OptimizerOptions{
+				DoFunctionInlining: false,
+				GlobalJitLevel:     OptimizerOptions_OFF,
+				OptLevel:           tensorflow.OptimizerOptions_L0,
+			},
+		}
+	}
 	sessionOpts := &SessionOptions{}
 	if buf, err := sessionConfig.Marshal(); err == nil {
 		sessionOpts.Config = buf
