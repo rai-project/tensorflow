@@ -47,7 +47,7 @@ RUN add-apt-repository ppa:webupd8team/java &&\
   rm -rf /var/lib/apt/lists/*
 
 # Install bazel
-ENV BAZEL_VERSION 0.19.2
+ENV BAZEL_VERSION 0.24.1
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends \
    bash-completion \
@@ -75,8 +75,8 @@ RUN git clone --depth=1 --branch=master https://${PKG}.git . && \
 
 RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   export GCC_HOST_COMPILER_PATH=/usr/bin/gcc && \
-  export PYTHON_BIN_PATH=/usr/bin/python && \
-  export USE_DEFAULT_PYTHON_LIB_PATH=1 && \
+  export PYTHON_BIN_PATH=/usr/bin/python3.6 && \
+  export PYTHON_LIB_PATH=/usr/lib/python3.6/dist-packages && \
   export TF_NEED_GCP=1 && \
   export TF_NEED_HDFS=1 && \
   export TF_NEED_JEMALLOC=1 && \
@@ -96,7 +96,7 @@ RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
   export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH} && \
   tensorflow/tools/ci_build/builds/configured GPU \
-  bazel build -c opt --local_resources=32000,8,1.0 --config=cuda --incompatible_remove_native_http_archive=false --define=grpc_no_ares=true //tensorflow:libtensorflow.so
+  bazel build -c opt --local_resources=32000,8,1.0 --config=cuda --define=grpc_no_ares=true //tensorflow:libtensorflow.so
 
 RUN	export LD_LIBRARY_PATH=${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow:${LD_LIBRARY_PATH} && \
   ls -la ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow && \

@@ -812,8 +812,7 @@
     "util/metautils",
   ]
   pruneopts = "T"
-  revision = "c250d6563d4d4c20252cd865923440e829844f4e"
-  version = "v1.0.0"
+  revision = "27f3801344b24dd6e9c608692368947f674a8298"
 
 [[projects]]
   digest = "0:"
@@ -1313,14 +1312,7 @@
 [[projects]]
   digest = "0:"
   name = "github.com/openzipkin/zipkin-go-opentracing"
-  packages = [
-    ".",
-    "flag",
-    "thrift/gen-go/scribe",
-    "thrift/gen-go/zipkincore",
-    "types",
-    "wire",
-  ]
+  packages = ["."]
   pruneopts = "T"
   revision = "f0f479ad013a498e4cbfb369414e5d3880903779"
   version = "v0.3.5"
@@ -1742,6 +1734,18 @@
   packages = ["."]
   pruneopts = "T"
   revision = "1d9901ca382bfae82f47b1ddb5fb67a019d254e8"
+
+[[projects]]
+  branch = "master"
+  digest = "0:"
+  name = "github.com/rai-project/tensorflow"
+  packages = [
+    ".",
+    "graph",
+    "predictor",
+  ]
+  pruneopts = "T"
+  revision = "b92e42aa59035aca3fc01a6efd2648da0dcd253e"
 
 [[projects]]
   branch = "master"
@@ -2661,6 +2665,9 @@
     "github.com/rai-project/image/types",
     "github.com/rai-project/logger",
     "github.com/rai-project/nvidia-smi",
+    "github.com/rai-project/tensorflow",
+    "github.com/rai-project/tensorflow/graph",
+    "github.com/rai-project/tensorflow/predictor",
     "github.com/rai-project/tracer",
     "github.com/rai-project/tracer/jaeger",
     "github.com/sirupsen/logrus",

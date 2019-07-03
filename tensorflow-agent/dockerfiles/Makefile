@@ -71,7 +71,7 @@ docker_pull_gpu:
 	docker pull carml/base:$(ARCH)-gpu-latest
 
 docker_pull_gpu_ngc:
-	docker pull nvcr.io/nvidia/tensorflow:19.05-py2
+	docker pull nvcr.io/nvidia/tensorflow:19.06-py3
 
 docker_pull: docker_pull_cpu docker_pull_gpu docker_pull_gpu_ngc
 

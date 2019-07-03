@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/tensorflow:19.05-py2
+FROM nvcr.io/nvidia/tensorflow:19.06-py3
 
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE
@@ -21,45 +21,45 @@ LABEL org.carml.tensorflow.build-date=$BUILD_DATE \
 
 ########## INSTALLATION STEPS ###################
 
-SHELL ["/bin/bash","-c"]
+# Install Go
+ENV GIMME_GO_VERSION "1.12"
+ENV GIMME_OS "linux"
+ENV GIMME_ARCH $ARCH
 
-ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$LD_LIBRARY_PATH
+LABEL org.golang.version=$GIMME_GO_VERSION
+LABEL org.golang.os=$GIMME_OS
+LABEL org.golang.arch=$GIMME_ARCH
 
-# install pre-requisites
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    bison && \
-    rm -rf /var/lib/apt/lists/*
+ADD https://raw.githubusercontent.com/travis-ci/gimme/master/gimme /usr/bin/gimme
+RUN chmod +x /usr/bin/gimme
+RUN gimme
 
-# install gvm
-RUN bash < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
+ENV GOROOT "/root/.gimme/versions/go${GIMME_GO_VERSION}.${GIMME_OS}.${GIMME_ARCH}"
+ENV PATH ${GOROOT}/bin:${PATH}
 
-RUN echo '[[ -s "/root/.gvm/scripts/gvm" ]] && source "/root/.gvm/scripts/gvm"' > /etc/bash.bashrc
+ENV GOPATH "/go"
+ENV PATH $GOPATH/bin:$PATH
 
-# install Go
-RUN gvm install go1.12 -B && gvm use go1.12 --default
-
-ENV GOPATH=/root/.gvm/pkgsets/go1.12/global
-ENV GOROOT=/root/.gvm/gos/go1.12
-ENV PATH=$GOROOT/bin:$PATH
+#Setup Environment
+ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/tensorflow
 ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$LD_LIBRARY_PATH
 ENV CGO_LDFLAGS="${CGO_LDFLAGS} -L /usr/local/lib/tensorflow/"
+
+RUN ln -s /usr/local/lib/tensorflow/libtensorflow_cc.so /usr/local/lib/tensorflow/libtensorflow.so && \
+    ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1
+
+# Install Go packages
+RUN go get -u github.com/golang/dep/cmd/dep
 
 # get rai-project/tensorflow repository
 ENV PKG github.com/rai-project/tensorflow
 WORKDIR $GOPATH/src/$PKG
 
-RUN go get -u github.com/golang/dep/cmd/dep
-
 RUN git clone --depth=1 --branch=master https://${PKG}.git . && \
     dep ensure -vendor-only -v
 
-RUN ln -s /usr/local/lib/tensorflow/libtensorflow_cc.so /usr/local/lib/tensorflow/libtensorflow.so && \
-    ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 
-
 RUN cd tensorflow-agent && go build -tags="nolibjpeg" && \
     cd .. && rm -fr vendor
-
-RUN cd tensorflow-agent && ./tensorflow-agent -h
 
 #ENTRYPOINT ["tensorflow-agent"]
