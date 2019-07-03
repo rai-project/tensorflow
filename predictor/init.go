@@ -17,7 +17,7 @@ var (
 )
 
 func init() {
-  enableOptimizations = cast.ToBool(os.Getenv("CARML_TF_ENABLE_OPTIMIZATION")) == true
+	enableOptimizations = cast.ToBool(os.Getenv("CARML_TF_ENABLE_OPTIMIZATION")) == true
 	config.AfterInit(func() {
 		log = logger.New().WithField("pkg", "tensorflow/predictor")
 	})
