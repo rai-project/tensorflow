@@ -1,5 +1,5 @@
 tensorflow-agent
-experiments
+experiments*
 *.json
 *.html
 results
