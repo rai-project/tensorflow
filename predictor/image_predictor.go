@@ -283,7 +283,7 @@ func (p *ImagePredictor) runOptions() *proto.RunOptions {
 }
 
 func (p *ImagePredictor) cuptiStart(ctx context.Context) error {
-	if p.TraceLevel() < tracer.HARDWARE_TRACE {
+	if p.TraceLevel() < tracer.SYSTEM_LIBRARY_TRACE {
 		return nil
 	}
 	metrics := []string{}
