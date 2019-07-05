@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"strings"
 
+	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
 	"github.com/rai-project/config"
 	"github.com/rai-project/dlframework"
@@ -90,7 +91,10 @@ func (p *SemanticSegmentationPredictor) Predict(ctx context.Context, data interf
 		return err
 	}
 
-	sessionSpan, ctx := tracer.StartSpanFromContext(ctx, tracer.MODEL_TRACE, "c_predict")
+	sessionSpan, ctx := tracer.StartSpanFromContext(ctx, tracer.MODEL_TRACE, "c_predict",
+		opentracing.Tags{
+			"evaluation_trace_level": p.TraceLevel(),
+		})
 
 	fetches, err := session.Run(ctx,
 		map[tf.Output]*tf.Tensor{
