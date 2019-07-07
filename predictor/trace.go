@@ -160,7 +160,7 @@ func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption
 			if err != nil {
 				break
 			}
-			memAllocTags = opentracing.Tags{
+			tensorTags = opentracing.Tags{
 				"tensor": string(bts),
 			}
 		}
@@ -172,7 +172,7 @@ func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption
 			if err != nil {
 				break
 			}
-			memAllocTags = opentracing.Tags{
+			outputTags = opentracing.Tags{
 				"output": string(bts),
 			}
 		}
