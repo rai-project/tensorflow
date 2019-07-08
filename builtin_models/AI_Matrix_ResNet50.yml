@@ -11,7 +11,7 @@ container:
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  AI Matrix Densenet121.
+  AI Matrix ResNet50.
 references:
   - https://github.com/alibaba/ai-matrix/tree/master/macro_benchmark/CNN_Tensorflow
   - https://arxiv.org/abs/1409.4842
