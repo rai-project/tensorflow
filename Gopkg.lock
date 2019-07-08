@@ -455,7 +455,6 @@
     "pkg/jsonmessage",
     "pkg/longpath",
     "pkg/mount",
-    "pkg/parsers",
     "pkg/pools",
     "pkg/progress",
     "pkg/signal",
@@ -1744,6 +1743,18 @@
 [[projects]]
   branch = "master"
   digest = "0:"
+  name = "github.com/rai-project/tensorflow"
+  packages = [
+    ".",
+    "graph",
+    "predictor",
+  ]
+  pruneopts = "T"
+  revision = "ab0b18437eae0d1b90caa5adfb7dd138d5d6d18d"
+
+[[projects]]
+  branch = "master"
+  digest = "0:"
   name = "github.com/rai-project/tracer"
   packages = [
     ".",
@@ -2726,6 +2737,9 @@
     "github.com/rai-project/image/types",
     "github.com/rai-project/logger",
     "github.com/rai-project/nvidia-smi",
+    "github.com/rai-project/tensorflow",
+    "github.com/rai-project/tensorflow/graph",
+    "github.com/rai-project/tensorflow/predictor",
     "github.com/rai-project/tracer",
     "github.com/rai-project/tracer/jaeger",
     "github.com/sirupsen/logrus",
