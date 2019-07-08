@@ -1,4 +1,4 @@
-name: AI_Matrix_GoogleNet
+name: AI_Matrix_ResNet152
 framework:
   name: TensorFlow
   version: 1.12
@@ -29,7 +29,6 @@ inputs:
       color_mode: RGB
       dimensions: [3, 224, 224]
       mean: [123.68, 116.779, 103.939]
-      scale: 58.824
 output:
   # the type of the output
   type: classification
