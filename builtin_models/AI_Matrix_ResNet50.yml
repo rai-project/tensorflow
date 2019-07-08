@@ -28,7 +28,6 @@ inputs:
       layout: CHW
       color_mode: RGB
       dimensions: [3, 224, 224]
-      mean: [123.68, 116.779, 103.939]
 
 output:
   # the type of the output
