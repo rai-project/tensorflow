@@ -1,0 +1,56 @@
+name: AI_Matrix_GoogleNet
+framework:
+  name: TensorFlow
+  version: 1.12
+version: 1.0
+container:
+  amd64:
+    gpu: raiproject/carml-tensorflow:amd64-cpu
+    cpu: raiproject/carml-tensorflow:amd64-gpu
+  ppc64le:
+    cpu: raiproject/carml-tensorflow:ppc64le-gpu
+    gpu: raiproject/carml-tensorflow:ppc64le-gpu
+description: >
+  AI Matrix Densenet121.
+references:
+  - https://github.com/alibaba/ai-matrix/tree/master/macro_benchmark/CNN_Tensorflow
+  - https://arxiv.org/abs/1409.4842
+license: unrestricted
+# inputs to the model
+inputs:
+  # first input type for the model
+  - type: image
+    # description of the first input
+    description: the input image
+    parameters: # type parameters
+      element_type: float32
+      input_layer: 'Images'
+      layout: CHW
+      color_mode: RGB
+      dimensions: [3, 224, 224]
+      mean: [123.68, 116.779, 103.939]
+      scale: 58.824
+output:
+  # the type of the output
+  type: classification
+  # a description of the output parameter
+  description: the output label
+  parameters: # type parameters
+    element_type: float32
+    probabilities_layer: 'logits'
+    features_url: https://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset.txt
+    features_checksum: 4d234b5833aca44928065a180db3016a
+model:
+  base_url: https://zenodo.org/record/3269944/files/
+  graph_path: Resnet152-NCWH.pb
+  graph_checksum: f3c0052de27ebfee8795d01755667f23
+  is_archive:
+    false # if true, then the base_url is a url to an archive
+    # the graph_path and weights_path then denote the
+    # file names of the graph and weights within the archive
+attributes: # extra network attributes
+  kind: CNN # the kind of neural network (CNN, RNN, ...)
+  training_dataset: ImageNet # dataset used to for training
+  manifest_author: Cheng Li
+  top1: 75.93
+  top5: 93.00
