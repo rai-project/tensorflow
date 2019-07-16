@@ -34,7 +34,7 @@ output:
     probabilities_layer: detection_scores
     classes_layer: detection_classes
     features_url: https://s3.amazonaws.com/store.carml.org/synsets/coco/coco_labels_paper.txt
-    features_checksum: 4418c85d01e6c82ff6849b8239759438
+    features_checksum: a830abf70aabcb873475cbf57e3ce380
 model: # specifies model graph and weights sources
   base_url:
   graph_path: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/faster_rcnn_resnet50_lowproposals_coco_2018_01_28/frozen_inference_graph.pb

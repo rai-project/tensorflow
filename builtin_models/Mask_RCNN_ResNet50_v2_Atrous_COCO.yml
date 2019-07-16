@@ -34,7 +34,7 @@ output:
     classes_layer: 'detection_classes'
     masks_layer: 'detection_masks'
     features_url: https://s3.amazonaws.com/store.carml.org/synsets/coco/coco_labels_paper.txt
-    features_checksum: 4418c85d01e6c82ff6849b8239759438
+    features_checksum: a830abf70aabcb873475cbf57e3ce380
 model: # specifies model graph and weights sources
   base_url:
   graph_path: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/mask_rcnn_resnet50_atrous_coco_2018_01_28/frozen_inference_graph.pb

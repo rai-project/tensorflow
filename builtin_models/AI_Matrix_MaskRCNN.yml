@@ -34,7 +34,7 @@ output:
     classes_layer: 'detection_classes'
     masks_layer: 'detection_masks'
     features_url: https://s3.amazonaws.com/store.carml.org/synsets/coco/coco_labels_paper.txt
-    features_checksum: 4418c85d01e6c82ff6849b8239759438
+    features_checksum: a830abf70aabcb873475cbf57e3ce380
 model:
   base_url: https://zenodo.org/record/3273293/files
   graph_path: Mask-RCNN.pb
