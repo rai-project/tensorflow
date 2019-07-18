@@ -251,8 +251,9 @@ ln -s /usr/local/lib/tensorflow/libtensorflow_cc.so /usr/local/lib/tensorflow/li
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/tensorflow
 export CGO_LDFLAGS="${CGO_LDFLAGS} -L /usr/local/lib/tensorflow/"
 
+export PATH=$PATH:$(go env GOPATH)/bin  
+export GODEBUG=cgocheck=0  
 cd $GOPATH/src/github.com/rai-project/tensorflow/tensorflow-agent  
-export GODEBUG=cgocheck=0
 ```
 
 
