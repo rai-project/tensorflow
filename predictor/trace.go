@@ -141,30 +141,6 @@ func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption
 			}
 		}
 
-		memAllocTags := opentracing.Tags{}
-		if node.GetMemory() != nil {
-			stats := node.GetMemory()
-			bts, err := json.Marshal(stats)
-			if err != nil {
-				break
-			}
-			memAllocTags = opentracing.Tags{
-				"memory": string(bts),
-			}
-		}
-
-		tensorTags := opentracing.Tags{}
-		if node.GetReferencedTensor() != nil {
-			stats := node.GetReferencedTensor()
-			bts, err := json.Marshal(stats)
-			if err != nil {
-				break
-			}
-			tensorTags = opentracing.Tags{
-				"tensor": string(bts),
-			}
-		}
-
 		outputTags := opentracing.Tags{}
 		if node.GetOutput() != nil {
 			stats := node.GetOutput()
@@ -177,6 +153,31 @@ func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption
 			}
 		}
 
+		memAllocTags := opentracing.Tags{}
+		if node.GetMemory() != nil {
+			stats := node.GetMemory()
+			bts, err := json.Marshal(stats)
+			if err != nil {
+				break
+			}
+			memAllocTags = opentracing.Tags{
+				"memory": string(bts),
+			}
+		}
+
+		// NOT USED, SAME INFO IN OUTPUT
+		// tensorTags := opentracing.Tags{}
+		// if node.GetReferencedTensor() != nil {
+		// 	stats := node.GetReferencedTensor()
+		// 	bts, err := json.Marshal(stats)
+		// 	if err != nil {
+		// 		break
+		// 	}
+		// 	tensorTags = opentracing.Tags{
+		// 		"tensor": string(bts),
+		// 	}
+		// }
+
 		s, _ := tracer.StartSpanFromContext(
 			ctx,
 			tracer.FRAMEWORK_TRACE,
@@ -184,9 +185,9 @@ func (t *Trace) Publish(ctx context.Context, opts ...opentracing.StartSpanOption
 			opentracing.StartTime(startTime),
 			tags,
 			memStatsTags,
-			memAllocTags,
-			tensorTags,
 			outputTags,
+			memAllocTags,
+			// tensorTags,
 		)
 		if s == nil {
 			log.WithField("node_name", node.GetNodeName()).
