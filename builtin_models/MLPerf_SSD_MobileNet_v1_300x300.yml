@@ -1,4 +1,4 @@
-name: SSD_MobileNet_v1_COCO # name of your model
+name: MLPerf_SSD_MobileNet_v1_300x300 # name of your model
 framework:
   name: TensorFlow # framework for the model
   version: 1.12 # framework version contraint
@@ -11,9 +11,10 @@ container: # containers used to perform model evaluation
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  TensorFlow Object Detection model, which is trained on the COCO (Common Objects in Context) dataset.
+  MLPerf_SSD_MobileNet_300x300.
   Use ssd_mobilenet_v1_coco_2018_01_28 from TensorFlow detection model zoo.
 references: # references to papers / websites / etc.. describing the model
+  - https://github.com/mlperf/inference/tree/master/v0.5/classification_and_detection
   - https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
 license: Apache License, Version 2.0 # license of the model
 inputs: # model inputs
@@ -28,7 +29,7 @@ output:
   type: boundingbox
   description: the output bounding box # a description of the output parameter
   parameters:
-    element_type: float32
+    element_type: uint8
     boxes_layer: 'detection_boxes'
     probabilities_layer: 'detection_scores'
     classes_layer: 'detection_classes'

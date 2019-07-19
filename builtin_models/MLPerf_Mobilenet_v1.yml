@@ -1,0 +1,58 @@
+name: MLPerf_Mobilenet_v1
+framework:
+  name: TensorFlow
+  version: 1.12
+version: 1.0
+container:
+  amd64:
+    gpu: raiproject/carml-tensorflow:amd64-cpu
+    cpu: raiproject/carml-tensorflow:amd64-gpu
+  ppc64le:
+    cpu: raiproject/carml-tensorflow:ppc64le-gpu
+    gpu: raiproject/carml-tensorflow:ppc64le-gpu
+description: >
+  MLPerf_Mobilenet_v1_1.0_224.
+  Use mobilenet_v1_2018_08_02/mobilenet_v1_1.0_224.tgz from TensorFlow detection model zoo.
+references:
+  - https://arxiv.org/pdf/1704.04861.pdf
+  - https://github.com/mlperf/inference/tree/master/v0.5/classification_and_detection
+  - https://github.com/mlperf/training/tree/master/image_classification
+  - https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet_v1.md
+license: unrestricted
+# inputs to the model
+inputs:
+  # first input type for the model
+  - type: image
+    # description of the first input
+    description: the input image
+    parameters: # type parameters
+      element_type: float32
+      input_layer: 'input'
+      layout: HWC
+      color_mode: RGB
+      dimensions: [3, 224, 224]
+      mean: [128, 128, 128]
+      scale: 128
+output:
+  # the type of the output
+  type: classification
+  # a description of the output parameter
+  description: the output label
+  parameters: # type parameters
+    element_type: float32
+    probabilities_layer: MobilenetV1/Predictions/Reshape_1
+    features_url: https://s3.amazonaws.com/store.carml.org/synsets/imagenet/synset1.txt
+    features_checksum: 6c05083991207dea5c37f2d271014fad
+model:
+  base_url: https://zenodo.org/record/2271498/files/mobilenet_v1_1.0_224.tgz
+  graph_path: mobilenet_v1_1.0_224_frozen.pb
+  graph_checksum: d5f69cef81ad8afb335d9727a17c462a
+  is_archive:
+    true # if true, then the base_url is a url to an archive
+    # the graph_path and weights_path then denote the
+    # file names of the graph and weights within the archive
+attributes: # extra network attributes
+  kind: CNN # the kind of neural network (CNN, RNN, ...)
+  training_dataset: ImageNet # dataset used to for training
+  manifest_author: Cheng Li
+  top1: 71.23

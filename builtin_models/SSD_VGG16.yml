@@ -35,7 +35,7 @@ output:
     features_checksum: 4418c85d01e6c82ff6849b8239759438
 model: # specifies model graph and weights sources
   base_url:
-  graph_path: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/ssd_mobilenet_v2_coco_2018_03_29/frozen_inference_graph.pb
+  graph_path: https://zenodo.org/record/3344525/files/ssd-vgg16-frozen-model.pb
   is_archive:
     false # if true, then the base_url is a url to an archive
     # the graph_path and weights_path then denote the

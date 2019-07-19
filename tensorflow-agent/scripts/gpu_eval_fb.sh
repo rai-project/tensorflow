@@ -15,6 +15,9 @@ if [ -f tensorflow-agent ]; then
 fi
 go build -tags=nolibjpeg
 
+./tensorflow-agent predict urls --model_name=$MODELNAME --duplicate_input=$DUPLICATE_INPUT --database_address=$DATABASE_ADDRESS --publish --use_gpu --disable_autotune=true --batch_size=$BATCHSIZE \
+  --trace_level=MODEL_TRACE --database_name=$DATABASE_NAME
+
 # run framework trace to get acurate layer latency
 ./tensorflow-agent predict urls --model_name=$MODELNAME --duplicate_input=$DUPLICATE_INPUT --batch_size=$BATCHSIZE --database_address=$DATABASE_ADDRESS --publish --use_gpu --disable_autotune=true \
   --trace_level=FRAMEWORK_TRACE --database_name=$DATABASE_NAME

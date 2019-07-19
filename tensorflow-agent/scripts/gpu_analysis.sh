@@ -45,4 +45,4 @@ echo "Start to run gpu analysis"
 
 ./tensorflow-agent evaluation gpu_kernel layer_dram_read info --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --batch_size=$BATCHSIZE --sort_output --bar_plot --plot_path="$OUTPUTFOLDER/$MODELNAME/$BATCHSIZE/gpu_kernel_layer_dram_read.html"
 
-./tensorflow-agent evaluation layer_dram_write info --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --batch_size=$BATCHSIZE --sort_output --bar_plot --plot_path="$OUTPUTFOLDER/$MODELNAME/$BATCHSIZE/gpu_kernel_layer_dram_write.html"
+./tensorflow-agent evaluation gpu_kernel layer_dram_write info --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --batch_size=$BATCHSIZE --sort_output --bar_plot --plot_path="$OUTPUTFOLDER/$MODELNAME/$BATCHSIZE/gpu_kernel_layer_dram_write.html"
