@@ -318,8 +318,7 @@ func TestInstanceSegmentation(t *testing.T) {
 
 func TestObjectDetection(t *testing.T) {
 	tf.Register()
-	// model, err := tf.FrameworkManifest.FindModel("SSD_MobileNet_v2_COCO:1.0")
-	model, err := tf.FrameworkManifest.FindModel("AI_Matrix_MaskRCNN:1.0")
+	model, err := tf.FrameworkManifest.FindModel("SSD_MobileNet_v2_COCO:1.0")
 
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
@@ -375,7 +374,6 @@ func TestObjectDetection(t *testing.T) {
 	if err != nil {
 		return
 	}
-
 	assert.InDelta(t, float32(0.95834976), pred[0][0].GetProbability(), 0.001)
 }
 

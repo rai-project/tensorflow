@@ -77,6 +77,17 @@ func (p *ImagePredictor) GetOutputLayerName(reader io.Reader, layer string) (str
 	return name, nil
 }
 
+func (p *ImagePredictor) GetOutputParameter(key string) string {
+	model := p.Model
+	modelOutput := model.GetOutput()
+	typeParameters := modelOutput.GetParameters()
+	value, err := p.GetTypeParameter(typeParameters, key)
+	if err != nil {
+		return ""
+	}
+	return value
+}
+
 func (p *ImagePredictor) Close() error {
 	if p.tfSession != nil {
 		p.tfSession.Close()

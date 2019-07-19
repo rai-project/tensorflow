@@ -92,7 +92,7 @@ func (p *ImageClassificationPredictor) Predict(ctx context.Context, data interfa
 
 	sessionSpan, ctx := tracer.StartSpanFromContext(ctx, tracer.MODEL_TRACE, "c_predict",
 		opentracing.Tags{
-			"evaluation_trace_level":           p.TraceLevel(),
+			"evaluation_trace_level": p.TraceLevel(),
 		})
 
 	err = p.cuptiStart(ctx)

@@ -28,6 +28,7 @@ type ObjectDetectionPredictor struct {
 	boxes              interface{}
 	probabilities      interface{}
 	classes            interface{}
+	mergedOutputs      bool
 }
 
 func NewObjectDetectionPredictor(model dlframework.ModelManifest, opts ...options.Option) (common.Predictor, error) {
@@ -82,6 +83,14 @@ func (self *ObjectDetectionPredictor) Load(ctx context.Context, modelManifest dl
 		return nil, errors.Wrap(err, "failed to get the classes layer name")
 	}
 
+	if p.boxesLayer == "" {
+		return nil, errors.Wrap(err, "boxes_layer in the manifest is empty")
+	}
+
+	if p.probabilitiesLayer == "" || p.classesLayer == "" {
+		p.mergedOutputs = true
+	}
+
 	return p, nil
 }
 
@@ -108,15 +117,18 @@ func (p *ObjectDetectionPredictor) Predict(ctx context.Context, data interface{}
 			"evaluation_trace_level": p.TraceLevel(),
 		})
 
-	fetches, err := session.Run(ctx,
+	fetches := []tf.Output{
+		graph.Operation(p.boxesLayer).Output(0),
+	}
+	if !p.mergedOutputs {
+		fetches = append(fetches, graph.Operation(p.probabilitiesLayer).Output(0))
+		fetches = append(fetches, graph.Operation(p.classesLayer).Output(0))
+	}
+	outputs, err := session.Run(ctx,
 		map[tf.Output]*tf.Tensor{
 			graph.Operation(p.inputLayer).Output(0): tensor,
 		},
-		[]tf.Output{
-			graph.Operation(p.boxesLayer).Output(0),
-			graph.Operation(p.probabilitiesLayer).Output(0),
-			graph.Operation(p.classesLayer).Output(0),
-		},
+		fetches,
 		nil,
 		p.runOptions(),
 		p.GetGraphPath(),
@@ -129,9 +141,11 @@ func (p *ObjectDetectionPredictor) Predict(ctx context.Context, data interface{}
 		return errors.Wrapf(err, "failed to perform session.Run")
 	}
 
-	p.boxes = fetches[0].Value()
-	p.probabilities = fetches[1].Value()
-	p.classes = fetches[2].Value()
+	p.boxes = outputs[0].Value()
+	if !p.mergedOutputs {
+		p.probabilities = outputs[1].Value()
+		p.classes = outputs[2].Value()
+	}
 
 	return nil
 }
@@ -140,6 +154,10 @@ func (p *ObjectDetectionPredictor) Predict(ctx context.Context, data interface{}
 func (p *ObjectDetectionPredictor) ReadPredictedFeatures(ctx context.Context) ([]dlframework.Features, error) {
 	span, ctx := tracer.StartSpanFromContext(ctx, tracer.APPLICATION_TRACE, "read_predicted_features")
 	defer span.Finish()
+
+	if p.mergedOutputs {
+		return []dlframework.Features{}, nil
+	}
 
 	boxes, ok := p.boxes.([][][]float32)
 	if !ok {
