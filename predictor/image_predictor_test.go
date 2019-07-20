@@ -75,8 +75,7 @@ func TestNewImageClassificationPredictor(t *testing.T) {
 
 func TestImageClassification(t *testing.T) {
 	tf.Register()
-	// model, err := tf.FrameworkManifest.FindModel("MobileNet_v1_1.0_224:1.0")
-	model, err := tf.FrameworkManifest.FindModel("MLPerf_Mobilenet_v1_1.0_224:1.0")
+	model, err := tf.FrameworkManifest.FindModel("MobileNet_v1_1.0_224:1.0")
 
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
@@ -319,7 +318,7 @@ func TestInstanceSegmentation(t *testing.T) {
 
 func TestObjectDetection(t *testing.T) {
 	tf.Register()
-	model, err := tf.FrameworkManifest.FindModel("MLPerf_SSD_ResNet34_1200x1200:1.0")
+	model, err := tf.FrameworkManifest.FindModel("SSD_VGG16:1.0")
 
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)

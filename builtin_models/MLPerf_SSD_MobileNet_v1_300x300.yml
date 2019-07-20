@@ -25,11 +25,12 @@ inputs: # model inputs
       input_layer: 'image_tensor'
       layout: HWC
       color_mode: RGB
+      dimensions: [3, 300, 300]
 output:
   type: boundingbox
   description: the output bounding box # a description of the output parameter
   parameters:
-    element_type: uint8
+    element_type: float32
     boxes_layer: 'detection_boxes'
     probabilities_layer: 'detection_scores'
     classes_layer: 'detection_classes'

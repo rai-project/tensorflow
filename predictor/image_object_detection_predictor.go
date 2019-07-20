@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"strings"
 
+	"github.com/k0kubun/pp"
 	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
 	"github.com/rai-project/config"
@@ -124,6 +125,7 @@ func (p *ObjectDetectionPredictor) Predict(ctx context.Context, data interface{}
 		fetches = append(fetches, graph.Operation(p.probabilitiesLayer).Output(0))
 		fetches = append(fetches, graph.Operation(p.classesLayer).Output(0))
 	}
+
 	outputs, err := session.Run(ctx,
 		map[tf.Output]*tf.Tensor{
 			graph.Operation(p.inputLayer).Output(0): tensor,
@@ -138,6 +140,7 @@ func (p *ObjectDetectionPredictor) Predict(ctx context.Context, data interface{}
 	sessionSpan.Finish()
 
 	if err != nil {
+		pp.Println(err)
 		return errors.Wrapf(err, "failed to perform session.Run")
 	}
 

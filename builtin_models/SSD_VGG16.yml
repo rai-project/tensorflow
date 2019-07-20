@@ -11,24 +11,25 @@ container: # containers used to perform model evaluation
     cpu: raiproject/carml-tensorflow:ppc64le-gpu
     gpu: raiproject/carml-tensorflow:ppc64le-gpu
 description: >
-  TensorFlow Object Detection model, which is trained on the COCO (Common Objects in Context) dataset.
+  TensorFlow Object Detection model.
 references: # references to papers / websites / etc.. describing the model
-  - https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
+  - https://github.com/ljanyst/ssd-tensorflow/
 license: Apache License, Version 2.0 # license of the model
 inputs: # model inputs
   - type: image # first input modality
     description: the input image # description of the first input
     parameters:
       element_type: uint8
-      input_layer: 'image_tensor'
+      input_layer: 'image_input'
       layout: HWC
       color_mode: RGB
+      dimensions: [3, 300, 300]
 output:
   type: boundingbox
   description: the output bounding box # a description of the output parameter
   parameters:
     element_type: float32
-    boxes_layer: 'detection_boxes'
+    boxes_layer: 'result/result'
     probabilities_layer:
     classes_layer:
     features_url: https://s3.amazonaws.com/store.carml.org/synsets/coco/coco_labels_paper.txt
@@ -40,8 +41,8 @@ model: # specifies model graph and weights sources
     false # if true, then the base_url is a url to an archive
     # the graph_path and weights_path then denote the
     # file names of the graph and weights within the archive
-  graph_checksum:
+  graph_checksum: 4db0809812e10016f3b76a5c61e856c0
 attributes: # extra model attributes
   kind: CNN # the kind of neural network (CNN, RNN, ...)
-  training_dataset: COCO # dataset used to for training
+  training_dataset: Pascal VOC # dataset used to for training
   manifest_author: Cheng Li

@@ -24,7 +24,9 @@ inputs: # model inputs
       input_layer: 'image'
       layout: HWC
       color_mode: RGB
+      dimensions: [3, 1200, 1200]
       mean: [123.68, 116.78, 103.94]
+      scale: [0.229, 0.224, 0.225]
 output:
   type: boundingbox
   description: the output bounding box # a description of the output parameter
