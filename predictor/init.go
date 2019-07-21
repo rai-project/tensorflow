@@ -12,10 +12,12 @@ import (
 )
 
 var (
-	log *logrus.Entry
+  log *logrus.Entry
+  enableOptimizations bool 
 )
 
 func init() {
+	enableOptimizations = cast.ToBool(os.Getenv("CARML_TF_ENABLE_OPTIMIZATION")) == true
 	config.AfterInit(func() {
 		log = logger.New().WithField("pkg", "tensorflow/predictor")
 	})
