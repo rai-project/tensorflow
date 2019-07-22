@@ -6,18 +6,21 @@ package predictor
 import "C"
 
 import (
+	"os"
+
 	"github.com/rai-project/config"
 	"github.com/rai-project/logger"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/cast"
 )
 
 var (
-  log *logrus.Entry
-  enableOptimizations bool 
+	log                  *logrus.Entry
+	disableOptimizations bool
 )
 
 func init() {
-	enableOptimizations = cast.ToBool(os.Getenv("CARML_TF_ENABLE_OPTIMIZATION")) == true
+	disableOptimizations = cast.ToBool(os.Getenv("CARML_TF_DISABLE_OPTIMIZATION")) == true
 	config.AfterInit(func() {
 		log = logger.New().WithField("pkg", "tensorflow/predictor")
 	})

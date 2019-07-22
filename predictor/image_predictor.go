@@ -269,11 +269,11 @@ func (p *ImagePredictor) loadPredictor(ctx context.Context) error {
 			},
 		}
 	}
-	if enableOptimizations {
-		sessionConfig.GraphOptions = tensorflow.GraphOptions{
+	if disableOptimizations {
+		sessionConfig.GraphOptions = &tensorflow.GraphOptions{
 			OptimizerOptions: &tensorflow.OptimizerOptions{
 				DoFunctionInlining: false,
-				GlobalJitLevel:     OptimizerOptions_OFF,
+				GlobalJitLevel:     tensorflow.OptimizerOptions_OFF,
 				OptLevel:           tensorflow.OptimizerOptions_L0,
 			},
 		}
