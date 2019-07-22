@@ -26,6 +26,6 @@ for ((b = 1; b <= $BATCHSIZE; b *= 2)); do
 done
 
 # run the model analysis
-./tensorflow-agent evaluation model info --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --format=csv,table --output="$OUTPUTFOLDER/$MODELNAME/model"
+./tensorflow-agent evaluation model info --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --sort_output --format=csv,table --output="$OUTPUTFOLDER/$MODELNAME/model"
 
 ./tensorflow-agent evaluation model info --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --bar_plot --plot_path="$OUTPUTFOLDER/$MODELNAME/model.html"
