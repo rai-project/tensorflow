@@ -3,8 +3,7 @@
 DATABASE_ADDRESS=$1
 BATCHSIZE=$2
 MODELNAME=ResNet_v1_50
-NUMPREDS=3
-DUPLICATE_INPUT=$(($NUMPREDS * $BATCHSIZE))
+NUMPREDS=5
 OUTPUTFOLDER=output
 DATABASE_NAME=carml
 
@@ -25,7 +24,7 @@ export CUDA_LAUNCH_BLOCKING=0
 
 # run model trace to get acurate model latency and throughput
 for ((b = 1; b <= $BATCHSIZE; b *= 2)); do
-  ./tensorflow-agent predict urls --model_name=$MODELNAME --duplicate_input=$DUPLICATE_INPUT --database_address=$DATABASE_ADDRESS --publish --use_gpu --disable_autotune=true --batch_size=$b \
+  ./tensorflow-agent predict urls --model_name=$MODELNAME --duplicate_input=$(($NUMPREDS * $b)) --database_address=$DATABASE_ADDRESS --publish --use_gpu --disable_autotune=true --batch_size=$b \
     --trace_level=MODEL_TRACE --database_name=$DATABASE_NAME
 done
 
