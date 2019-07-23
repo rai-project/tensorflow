@@ -23,7 +23,7 @@ export TF_CUDNN_USE_AUTOTUNE=0
 export CARML_TF_DISABLE_OPTIMIZATION=0
 export CUDA_LAUNCH_BLOCKING=0
 
-run model trace to get acurate model latency and throughput
+# run model trace to get acurate model latency and throughput
 for ((b = 1; b <= $BATCHSIZE; b *= 2)); do
   ./tensorflow-agent predict urls --model_name=$MODELNAME --duplicate_input=$DUPLICATE_INPUT --database_address=$DATABASE_ADDRESS --publish --use_gpu --disable_autotune=true --batch_size=$b \
     --trace_level=MODEL_TRACE --database_name=$DATABASE_NAME
