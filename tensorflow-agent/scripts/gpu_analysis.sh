@@ -4,7 +4,7 @@ DATABASE_ADDRESS=$1
 BATCHSIZE=$2
 MODELNAME=MLPerf_ResNet50_v1.5
 OUTPUTFOLDER=output
-DATABASE_NAME=test
+DATABASE_NAME=carml
 
 cd ..
 
@@ -21,9 +21,9 @@ echo "Start to run layer analysis"
 
 ./tensorflow-agent evaluation layer info --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --batch_size=$BATCHSIZE --format=csv,table --output="$OUTPUTFOLDER/$MODELNAME/$BATCHSIZE/layer"
 
-./tensorflow-agent evaluation layer duration --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --batch_size=$BATCHSIZE --bar_plot --plot_path="$OUTPUTFOLDER/$MODELNAME/$BATCHSIZE/layer_duration.html"
+./tensorflow-agent evaluation layer duration --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --batch_size=$BATCHSIZE --bar_plot --plot_path="$OUTPUTFOLDER/$MODELNAME/$BATCHSIZE/layer_duration_bar.html"
 
-./tensorflow-agent evaluation layer duration --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --batch_size=$BATCHSIZE --box_plot --plot_path="$OUTPUTFOLDER/$MODELNAME/$BATCHSIZE/layer_duration.html"
+./tensorflow-agent evaluation layer duration --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --batch_size=$BATCHSIZE --box_plot --plot_path="$OUTPUTFOLDER/$MODELNAME/$BATCHSIZE/layer_duration_box.html"
 
 ./tensorflow-agent evaluation layer memory --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --batch_size=$BATCHSIZE --bar_plot --plot_path="$OUTPUTFOLDER/$MODELNAME/$BATCHSIZE/layer_memory.html"
 
