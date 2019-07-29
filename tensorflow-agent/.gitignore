@@ -5,3 +5,4 @@ experiments*
 results
 main
 output*
+gpu_all.sh
