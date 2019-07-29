@@ -6,3 +6,4 @@ results
 main
 output*
 gpu_all.sh
+cpu_all.sh
