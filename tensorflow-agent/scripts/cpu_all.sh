@@ -22,7 +22,7 @@ declare -a array=(MLPerf_ResNet50_v1.5 MLPerf_SSD_MobileNet_v1_300x300
 
 for i in "${array[@]}"; do
   echo $i
-  ./cpu_eval_ab.sh locahost 16 $i
-  ./cpu_eval_fb.sh locahost 1 $i
-  ./cpu_analysis.sh locahost 1 $i
+  ./cpu_eval_ab.sh localhost 16 $i
+  ./cpu_eval_fb.sh localhost 1 $i
+  ./cpu_analysis.sh localhost 1 $i
 done
