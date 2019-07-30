@@ -233,12 +233,16 @@ Continue if you have
 An example of using NGC TensorFlow docker image: 
 
 ```
-nvidia-docker run -it --privileged=true --network host \
+nvidia-docker run --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 -it --privileged=true --network host \
 -v $GOPATH:/workspace/go1.12/global \
 -v $GOROOT:/workspace/go1.12_root \
 -v ~/.carml_config.yml:/root/.carml_config.yml \
-nvcr.io/nvidia/tensorflow:19.05-py2
+nvcr.io/nvidia/tensorflow:19.06-py2
 ```
+
+NOTE: The SHMEM allocation limit is set to the default of 64MB.  This may be
+   insufficient for TensorFlow.  NVIDIA recommends the use of the following flags:
+   ```nvidia-docker run --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 ...```
 
 Within the container, set up the environment so that the agent can find the TensorFlow C library.
 
