@@ -24,5 +24,10 @@ for i in "${array[@]}"; do
   echo $i
   ./cpu_eval_ab.sh localhost 16 $i
   ./cpu_eval_fb.sh localhost 1 $i
+done
+
+for i in "${array[@]}"; do
+  echo $i
   ./cpu_analysis.sh localhost 1 $i
 done
+

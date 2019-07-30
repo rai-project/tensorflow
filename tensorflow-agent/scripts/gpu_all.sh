@@ -24,5 +24,10 @@ for i in "${array[@]}"; do
   echo $i
   ./gpu_eval_ab.sh localhost 256 $i
   ./gpu_eval_fb.sh localhost 1 $i
+done
+
+for i in "${array[@]}"; do
+  echo $i
   ./gpu_analysis.sh localhost 1 $i
 done
+
