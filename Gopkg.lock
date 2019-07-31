@@ -611,6 +611,22 @@
   revision = "3f4151ce318958e8b922bd908b74cdbc6619cabf"
 
 [[projects]]
+  digest = "0:"
+  name = "github.com/getlantern/deepcopy"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "b923171e8640f94369e21e324b1b0465cb82ec9f"
+  version = "v1"
+
+[[projects]]
+  branch = "master"
+  digest = "0:"
+  name = "github.com/glendc/go-external-ip"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "139229dcdddd5ad18f5c4912fcb905a4079e2a36"
+
+[[projects]]
   digest = "1:4062bc6de62d73e2be342243cf138cf499b34d558876db8d9430e2149388a4d8"
   name = "github.com/go-logfmt/logfmt"
   packages = ["."]
@@ -809,8 +825,8 @@
     "utilities",
   ]
   pruneopts = "T"
-  revision = "d54b3615f714b03edde6d9206fa0476a9169c966"
-  version = "v1.9.3"
+  revision = "ad529a448ba494a88058f9e5be0988713174ac86"
+  version = "v1.9.5"
 
 [[projects]]
   digest = "1:c33811d02ae5dcc6a274bcf53ecd3a55f370b084d1467e4bd3a8752d76b754b0"
@@ -1445,7 +1461,7 @@
     "mongodb",
   ]
   pruneopts = "T"
-  revision = "5ed2dcaaf8e2b866d4d1b18fd05b9501b830f358"
+  revision = "b95d2bc2071b25b8af03e6aaf6cb6bd7dfb5911a"
 
 [[projects]]
   branch = "master"
@@ -1477,7 +1493,7 @@
     "steps",
   ]
   pruneopts = "T"
-  revision = "3aa0d60c65fc280421058b2c3efe0e333d0ca144"
+  revision = "93e476893f9e9d186315a13803106a552030e05f"
 
 [[projects]]
   branch = "master"
@@ -1522,7 +1538,7 @@
     "writer",
   ]
   pruneopts = "T"
-  revision = "c2cd4a2771b6c5a5c526d43e4460391ae74b1a63"
+  revision = "ab44c4c625d8e808111d7c6830c84b7a0e402db9"
 
 [[projects]]
   branch = "master"
@@ -1533,7 +1549,7 @@
     "types",
   ]
   pruneopts = "T"
-  revision = "7e5d2e545092130992a7b27366762662d76fcb55"
+  revision = "f65190570ccb1b85a0cb5f84d7bb7539faf99324"
 
 [[projects]]
   branch = "master"
@@ -1541,7 +1557,7 @@
   name = "github.com/rai-project/go-echarts"
   packages = ["charts"]
   pruneopts = "T"
-  revision = "d7df90ec3e6a3937e1e4dcf05984e67b1b205587"
+  revision = "b17e08e070c7865136b1f5a9fa7b03b88031aae0"
 
 [[projects]]
   branch = "master"
@@ -1670,11 +1686,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:4ff1c979da97b86ccd5f76899bb909bd3e115e1b30752557180903a795bd2d49"
+  digest = "0:"
   name = "github.com/rai-project/nvidia-smi"
   packages = ["."]
   pruneopts = "T"
-  revision = "5f6bbd4268777e33ec51313e4b6c0b89de084cbf"
+  revision = "864eb441c9ae3171601e2e9df942b9ca386612c0"
 
 [[projects]]
   branch = "master"
@@ -1750,7 +1766,7 @@
     "predictor",
   ]
   pruneopts = "T"
-  revision = "ab0b18437eae0d1b90caa5adfb7dd138d5d6d18d"
+  revision = "bcdabc63d33662b5a40457cd13eff30ef4fa1363"
 
 [[projects]]
   branch = "master"
@@ -2743,6 +2759,7 @@
     "github.com/rai-project/tracer",
     "github.com/rai-project/tracer/jaeger",
     "github.com/sirupsen/logrus",
+    "github.com/spf13/cast",
     "github.com/spf13/cobra",
     "github.com/stretchr/testify/assert",
     "github.com/tensorflow/tensorflow/tensorflow/go",

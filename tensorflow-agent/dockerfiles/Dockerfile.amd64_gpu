@@ -69,9 +69,13 @@ RUN pip install -U setuptools && \
 ENV PKG github.com/rai-project/tensorflow
 WORKDIR $GOPATH/src/$PKG
 
-RUN git clone --depth=1 --branch=master https://${PKG}.git . && \
-  cd $GOPATH/src/$PKG && \
-  dep ensure -vendor-only -v
+RUN git clone --depth=1 --branch=master https://${PKG}.git .
+
+RUN dep ensure -v -no-vendor -update \
+    github.com/rai-project/tensorflow \
+    github.com/rai-project/dlframework \
+    github.com/rai-project/evaluation && \
+    dep ensure -v -vendor-only
 
 RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   export GCC_HOST_COMPILER_PATH=/usr/bin/gcc && \

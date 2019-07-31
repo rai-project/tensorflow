@@ -1,8 +1,7 @@
 jobs:
   - job: CPU
     timeoutInMinutes: 0
-    pool:
-      vmImage: "Ubuntu 16.04"
+    pool: 'Impact2'
     steps:
       - bash: |
           docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
@@ -12,8 +11,7 @@ jobs:
           ./push.sh docker_push_cpu
   - job: GPU
     timeoutInMinutes: 0
-    pool:
-      vmImage: "Ubuntu 16.04"
+    pool: 'Impact2'
     steps:
       - bash: |
           docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
