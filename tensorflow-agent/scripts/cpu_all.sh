@@ -20,6 +20,10 @@ declare -a array=(MLPerf_ResNet50_v1.5 MLPerf_SSD_MobileNet_v1_300x300
   VGG16 VGG19
 )
 
+declare -a array2=(
+  SSD_ResNet50_FPN_Shared_Box_Predictor_640x640_COCO14_Sync
+)
+
 for i in "${array[@]}"; do
   echo $i
   ./cpu_eval_ab.sh localhost 16 $i
