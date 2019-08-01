@@ -25,6 +25,7 @@ LABEL org.carml.tensorflow.build-date=$BUILD_DATE \
 ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
 ENV LD_LIBRARY_PATH /usr/local/cuda/lib64:$LD_LIBRARY_PATH
 ENV LD_LIBRARY_PATH /usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH}
 
 RUN add-apt-repository ppa:webupd8team/java &&\
   apt-get update -y && apt-get install -y --no-install-recommends \
@@ -102,13 +103,15 @@ RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
   tensorflow/tools/ci_build/builds/configured GPU \
   bazel build -c opt --local_resources=32000,8,1.0 --config=cuda --config=nonccl --define=grpc_no_ares=true //tensorflow:libtensorflow.so
 
-RUN	export LD_LIBRARY_PATH=${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow:${LD_LIBRARY_PATH} && \
-    ls -la ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow && \
+RUN	ls -la ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow && \
     cp ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow/libtensorflow.so.1.14.0 /usr/local/lib/libtensorflow.so && \
-	cp ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow/libtensorflow_framework.so.1.14.0 /usr/local/lib/libtensorflow_framework.so
+	cp ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow/libtensorflow_framework.so.1.14.0 /usr/local/lib/libtensorflow_framework.so && \
+	mkdir /usr/local/include/tensorflow && \
+	cp -r ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow/c /usr/local/include/tensorflow
 
-ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH}
-ENV LD_LIBRARY_PATH=${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow:${LD_LIBRARY_PATH}
+ENV CGO_CFLAGS="${CGO_CFLAGS} -I /usr/local/include"
+ENV CGO_CXXFLAGS="${CGO_CXXFLAGS} -I /usr/local/include"
+ENV CGO_LDFLAGS="${CGO_LDFLAGS} -L /usr/local/lib/tensorflow"
 
 RUN cd $GOPATH/src/$PKG && \
   go build -a -installsuffix cgo -ldflags "-s -w -X ${PKG}/Version=${VERSION} -X ${PKG}/GitCommit=${VCS_REF} -X ${PKG}/BuildDate=${BUILD_DATE}"&& \

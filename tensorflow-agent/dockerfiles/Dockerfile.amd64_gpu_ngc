@@ -44,10 +44,12 @@ ENV PATH $GOPATH/bin:$PATH
 ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/tensorflow
 ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/usr/local/cuda-10.1/compat/lib.real:$LD_LIBRARY_PATH
+ENV CGO_CFLAGS="${CGO_CFLAGS} -I /opt/tensorflow/tensorflow-source"
+ENV CGO_CXXFLAGS="${CGO_CXXFLAGS} -I /opt/tensorflow/tensorflow-source"
 ENV CGO_LDFLAGS="${CGO_LDFLAGS} -L /usr/local/lib/tensorflow/"
 
-RUN ln -s /usr/local/lib/tensorflow/libtensorflow_cc.so /usr/local/lib/tensorflow/libtensorflow.so && \
-    ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1
+RUN ln -s /usr/local/lib/tensorflow/libtensorflow_cc.so /usr/local/lib/tensorflow/libtensorflow.so
 
 # Install Go packages
 RUN go get -u github.com/golang/dep/cmd/dep
