@@ -24,13 +24,13 @@ declare -a array2=(
   SSD_ResNet50_FPN_Shared_Box_Predictor_640x640_COCO14_Sync
 )
 
-for i in "${array[@]}"; do
+for i in "${array2[@]}"; do
   echo $i
   ./gpu_eval_ab.sh localhost 256 $i
   ./gpu_eval_fb.sh localhost 1 $i
 done
 
-for i in "${array[@]}"; do
+for i in "${array2[@]}"; do
   echo $i
   ./gpu_analysis.sh localhost 1 $i
 done
