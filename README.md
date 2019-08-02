@@ -237,6 +237,7 @@ nvidia-docker run --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 -it 
 -v $GOPATH:/workspace/go1.12/global \
 -v $GOROOT:/workspace/go1.12_root \
 -v ~/.carml_config.yml:/root/.carml_config.yml \
+-v ~/data/carml:/root/data/carml \
 nvcr.io/nvidia/tensorflow:19.06-py2
 ```
 
