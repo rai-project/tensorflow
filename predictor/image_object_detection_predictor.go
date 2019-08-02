@@ -118,6 +118,11 @@ func (p *ObjectDetectionPredictor) Predict(ctx context.Context, data interface{}
 			"evaluation_trace_level": p.TraceLevel(),
 		})
 
+	err = p.cuptiStart(ctx)
+	if err != nil {
+		return err
+	}
+
 	fetches := []tf.Output{
 		graph.Operation(p.boxesLayer).Output(0),
 	}

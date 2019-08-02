@@ -98,6 +98,11 @@ func (p *ImageEnhancementPredictor) Predict(ctx context.Context, data interface{
 			"evaluation_trace_level": p.TraceLevel(),
 		})
 
+	err = p.cuptiStart(ctx)
+	if err != nil {
+		return err
+	}
+
 	fetches, err := session.Run(ctx,
 		map[tf.Output]*tf.Tensor{
 			graph.Operation(p.inputLayer).Output(0): tensor,

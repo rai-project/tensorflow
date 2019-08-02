@@ -3,10 +3,10 @@
 DATABASE_ADDRESS=$1
 BATCHSIZE=$2
 MODELNAME=$3
-NUMPREDS=5
+NUMPREDS=1
 DUPLICATE_INPUT=$(($NUMPREDS * $BATCHSIZE))
 OUTPUTFOLDER=output_gpu
-DATABASE_NAME=carml
+DATABASE_NAME=carml_test
 GPU_DEVICE_ID=0
 
 cd ..
@@ -25,9 +25,9 @@ export CUDA_LAUNCH_BLOCKING=0
 
 export CUDA_LAUNCH_BLOCKING=1
 
-# run framework trace to get acurate layer latency
-./tensorflow-agent predict urls --model_name=$MODELNAME --duplicate_input=$DUPLICATE_INPUT --batch_size=$BATCHSIZE --database_address=$DATABASE_ADDRESS --publish --use_gpu --disable_autotune=true \
-  --trace_level=FRAMEWORK_TRACE --database_name=$DATABASE_NAME --gpu_device_id=$GPU_DEVICE_ID
+# # run framework trace to get acurate layer latency
+# ./tensorflow-agent predict urls --model_name=$MODELNAME --duplicate_input=$DUPLICATE_INPUT --batch_size=$BATCHSIZE --database_address=$DATABASE_ADDRESS --publish --use_gpu --disable_autotune=true \
+#   --trace_level=FRAMEWORK_TRACE --database_name=$DATABASE_NAME --gpu_device_id=$GPU_DEVICE_ID
 
 export CUDA_LAUNCH_BLOCKING=0
 

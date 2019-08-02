@@ -4,7 +4,7 @@ DATABASE_ADDRESS=$1
 BATCHSIZE=$2
 MODELNAME=$3
 OUTPUTFOLDER=output_gpu
-DATABASE_NAME=carml
+DATABASE_NAME=carml_test
 
 cd ..
 
@@ -17,9 +17,9 @@ if [ -f tensorflow-agent ]; then
 fi
 go build -tags=nolibjpeg
 
-echo "Start to run model analysis"
+# echo "Start to run model analysis"
 
-./tensorflow-agent evaluation model info --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --sort_output --format=csv,table --plot_all --output="$OUTPUTFOLDER/$MODELNAME/model_info"
+# ./tensorflow-agent evaluation model info --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --sort_output --format=csv,table --plot_all --output="$OUTPUTFOLDER/$MODELNAME/model_info"
 
 echo "Start to run layer analysis"
 
