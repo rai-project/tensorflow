@@ -106,9 +106,8 @@ RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
 RUN	ls -la ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow && \
     cp ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow/libtensorflow.so.1.14.0 /usr/local/lib/libtensorflow.so && \
 	cp ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow/libtensorflow_framework.so.1.14.0 /usr/local/lib/libtensorflow_framework.so.1 && \
-	mkdir -p /usr/local/include/tensorflow/c && \
-	cp -r ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow/c /usr/local/include/tensorflow/c && \
-	ls /usr/local/include/tensorflow/c
+	mkdir /usr/local/include/tensorflow && \
+	cp -r ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/tensorflow/c /usr/local/include/tensorflow
 
 ENV CGO_CFLAGS="${CGO_CFLAGS} -I /usr/local/include"
 ENV CGO_CXXFLAGS="${CGO_CXXFLAGS} -I /usr/local/include"
