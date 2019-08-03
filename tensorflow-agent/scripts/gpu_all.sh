@@ -26,12 +26,12 @@ declare -a array=(
 )
 
 declare -a array2=(
-  Faster_RCNN_Inception_v2_COCO
+  DeepLabv3_MobileNet_v2_PASCAL_VOC_Train_Val
 )
 
 for i in "${array2[@]}"; do
   echo $i
-  # ./gpu_eval_ab.sh localhost 256 $i
-  ./gpu_eval_fb.sh localhost 8 $i
-  # ./gpu_analysis.sh localhost 256 $i
+  ./gpu_eval_ab.sh localhost 1 $i
+  ./gpu_eval_fb.sh localhost 1 $i
+  ./gpu_analysis.sh localhost 1 $i
 done
