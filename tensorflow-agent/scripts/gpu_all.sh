@@ -29,7 +29,7 @@ declare -a array2=(
 MLPerf_ResNet50_v1.5
 )
 
-for (( b = 1; b < 256; b *=2 ));do
+for (( b = 2; b < 256; b *=2 ));do
 for i in "${array2[@]}"; do
   echo $i
   # ./gpu_eval_ab.sh localhost $b $i
