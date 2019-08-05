@@ -26,12 +26,14 @@ declare -a array=(
 )
 
 declare -a array2=(
-  DeepLabv3_MobileNet_v2_PASCAL_VOC_Train_Val
+MLPerf_ResNet50_v1.5
 )
 
+for (( b = 1; b < 256; b *=2 ));do
 for i in "${array2[@]}"; do
   echo $i
-  ./gpu_eval_ab.sh localhost 1 $i
-  ./gpu_eval_fb.sh localhost 1 $i
-  ./gpu_analysis.sh localhost 1 $i
+  # ./gpu_eval_ab.sh localhost $b $i
+  ./gpu_eval_fb.sh localhost $b $i
+  ./gpu_analysis.sh localhost $b $i
+done
 done
