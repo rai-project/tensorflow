@@ -25,146 +25,194 @@ declare -a array=(
   SRGAN
 )
 
-# echo Faster_RCNN_Inception_v2_COCO
-# ./gpu_eval_fb.sh localhost 8 Faster_RCNN_Inception_v2_COCO
-# ./gpu_analysis.sh localhost 8 Faster_RCNN_Inception_v2_COCO
+# # # echo Faster_RCNN_Inception_v2_COCO
+# ./gpu_eval_fb.sh localhost 4 Faster_RCNN_Inception_v2_COCO
+# ./gpu_analysis.sh localhost 4 Faster_RCNN_Inception_v2_COCO
 
-# echo Faster_RCNN_NAS_COCO
+# # # echo Faster_RCNN_NAS_COCO
 # ./gpu_eval_fb.sh localhost 4 Faster_RCNN_NAS_COCO
 # ./gpu_analysis.sh localhost 4 Faster_RCNN_NAS_COCO
 
-# echo Faster_RCNN_ResNet101_COCO
-# ./gpu_eval_fb.sh localhost 8 Faster_RCNN_ResNet101_COCO
-# ./gpu_analysis.sh localhost 8 Faster_RCNN_ResNet101_COCO
+# # # echo Faster_RCNN_ResNet101_COCO
+# ./gpu_eval_fb.sh localhost 4 Faster_RCNN_ResNet101_COCO
+# ./gpu_analysis.sh localhost 4 Faster_RCNN_ResNet101_COCO
 
-# echo Faster_RCNN_ResNet50_COCO
-# ./gpu_eval_fb.sh localhost 8 Faster_RCNN_ResNet50_COCO
-# ./gpu_analysis.sh localhost 8 Faster_RCNN_ResNet50_COCO
+# # # echo Faster_RCNN_ResNet50_COCO
+# ./gpu_eval_fb.sh localhost 4 Faster_RCNN_ResNet50_COCO
+# ./gpu_analysis.sh localhost 4 Faster_RCNN_ResNet50_COCO
 
-echo Inception_ResNet_v2
-./gpu_eval_fb.sh localhost 128 Inception_ResNet_v2
-./gpu_analysis.sh localhost 128 Inception_ResNet_v2
+echo SSD_Inception_v2_COCO
+./gpu_eval_fb.sh localhost 8 SSD_Inception_v2_COCO
+# ./gpu_analysis.sh localhost 8 SSD_Inception_v2_COCO
 
-echo Inception_v1
-./gpu_eval_fb.sh localhost 128 Inception_v1
-./gpu_analysis.sh localhost 128 Inception_v1
+# echo MLPerf_SSD_MobileNet_v1_300x300
+# ./gpu_eval_fb.sh localhost 8 MLPerf_SSD_MobileNet_v1_300x300
+# ./gpu_analysis.sh localhost 8 MLPerf_SSD_MobileNet_v1_300x300
 
-echo Inception_v2
-./gpu_eval_fb.sh localhost 128 Inception_v2
-./gpu_analysis.sh localhost 128 Inception_v2
+# echo SSD_MobileNet_v2_COCO
+# ./gpu_eval_fb.sh localhost 8 SSD_MobileNet_v2_COCO
+# ./gpu_analysis.sh localhost 8 SSD_MobileNet_v2_COCO
 
-echo Inception_v3
-./gpu_eval_fb.sh localhost 64 Inception_v3
-./gpu_analysis.sh localhost 64 Inception_v3
+# echo SSD_MobileNet_v1_PPN_Shared_Box_Predictor_300x300_COCO14_Sync
+# ./gpu_eval_fb.sh localhost 16 SSD_MobileNet_v1_PPN_Shared_Box_Predictor_300x300_COCO14_Sync
+# ./gpu_analysis.sh localhost 16 SSD_MobileNet_v1_PPN_Shared_Box_Predictor_300x300_COCO14_Sync
 
-echo Inception_v4
-./gpu_eval_fb.sh localhost 128 Inception_v4
-./gpu_analysis.sh localhost 128 Inception_v4
+# echo Mask_RCNN_Inception_ResNet_v2_Atrous_COCO
+# ./gpu_eval_fb.sh localhost 4 Mask_RCNN_Inception_ResNet_v2_Atrous_COCO
+# ./gpu_analysis.sh localhost 4 Mask_RCNN_Inception_ResNet_v2_Atrous_COCO
 
-echo MLPerf_Mobilenet_v1
-./gpu_eval_fb.sh localhost 128 MLPerf_Mobilenet_v1
-./gpu_analysis.sh localhost 128 MLPerf_Mobilenet_v1
+# echo Mask_RCNN_ResNet101_v2_Atrous_COCO
+# ./gpu_eval_fb.sh localhost 2 Mask_RCNN_ResNet101_v2_Atrous_COCO
+# ./gpu_analysis.sh localhost 2 Mask_RCNN_ResNet101_v2_Atrous_COCO
 
-echo MLPerf_ResNet50_v1.5
-./gpu_eval_fb.sh localhost 256 MLPerf_ResNet50_v1.5
-./gpu_analysis.sh localhost 256 MLPerf_ResNet50_v1.5
+# echo Mask_RCNN_ResNet50_v2_Atrous_COCO
+# ./gpu_eval_fb.sh localhost 2 Mask_RCNN_ResNet50_v2_Atrous_COCO
+# ./gpu_analysis.sh localhost 2 Mask_RCNN_ResNet50_v2_Atrous_COCO
 
-echo MLPerf_SSD_MobileNet_v1_300x300
-./gpu_eval_fb.sh localhost 8 MLPerf_SSD_MobileNet_v1_300x300
-./gpu_analysis.sh localhost 8 MLPerf_SSD_MobileNet_v1_300x300
+# echo Mask_RCNN_Inception_v2_COCO
+# ./gpu_eval_fb.sh localhost 4 Mask_RCNN_Inception_v2_COCO
+# ./gpu_analysis.sh localhost 4 Mask_RCNN_Inception_v2_COCO
 
-echo ResNet_v1_101
-./gpu_eval_fb.sh localhost 256 ResNet_v1_101
-./gpu_analysis.sh localhost 256 ResNet_v1_101
+# echo DeepLabv3_MobileNet_v2_PASCAL_VOC_Train_Val
+# ./gpu_eval_fb.sh localhost 1 DeepLabv3_MobileNet_v2_PASCAL_VOC_Train_Val
+# ./gpu_analysis.sh localhost 1 DeepLabv3_MobileNet_v2_PASCAL_VOC_Train_Val
 
-echo ResNet_v2_101
-./gpu_eval_fb.sh localhost 256 ResNet_v2_101
-./gpu_analysis.sh localhost 256 ResNet_v2_101
+# echo DeepLabv3_PASCAL_VOC_Train_Val
+# ./gpu_eval_fb.sh localhost 1 DeepLabv3_PASCAL_VOC_Train_Val
+# ./gpu_analysis.sh localhost 1 DeepLabv3_PASCAL_VOC_Train_Val
 
-echo ResNet_v1_50
-./gpu_eval_fb.sh localhost 256 ResNet_v1_50
-./gpu_analysis.sh localhost 256 ResNet_v1_50
+# echo DeepLabv3_MobileNet_v2_DM_05_PASCAL_VOC_Train_Val
+# ./gpu_eval_fb.sh localhost 1 DeepLabv3_MobileNet_v2_DM_05_PASCAL_VOC_Train_Val
+# ./gpu_analysis.sh localhost 1 DeepLabv3_MobileNet_v2_DM_05_PASCAL_VOC_Train_Val
 
-echo ResNet_v2_50
-./gpu_eval_fb.sh localhost 256 ResNet_v2_50
-./gpu_analysis.sh localhost 256 ResNet_v2_50
+# # echo SSD_MobileNet_v1_FPN_Shared_Box_Predictor_640x640_COCO14_Sync
+# ./gpu_eval_fb.sh localhost 8 SSD_MobileNet_v1_FPN_Shared_Box_Predictor_640x640_COCO14_Sync
+# ./gpu_analysis.sh localhost 8 SSD_MobileNet_v1_FPN_Shared_Box_Predictor_640x640_COCO14_Sync
 
-echo ResNet_v1_152
-./gpu_eval_fb.sh localhost 256 ResNet_v1_152
-./gpu_analysis.sh localhost 256 ResNet_v1_152
+# echo Inception_ResNet_v2
+# ./gpu_eval_fb.sh localhost 128 Inception_ResNet_v2
+# ./gpu_analysis.sh localhost 128 Inception_ResNet_v2
 
-echo ResNet_v2_50
-./gpu_eval_fb.sh localhost 256 ResNet_v2_50
-./gpu_analysis.sh localhost 256 ResNet_v2_50
+# echo Inception_v1
+# ./gpu_eval_fb.sh localhost 128 Inception_v1
+# ./gpu_analysis.sh localhost 128 Inception_v1
 
-echo VGG16
-./gpu_eval_fb.sh localhost 256 VGG16
-./gpu_analysis.sh localhost 256 VGG16
+# echo Inception_v2
+# ./gpu_eval_fb.sh localhost 128 Inception_v2
+# ./gpu_analysis.sh localhost 128 Inception_v2
 
-echo VGG19
-./gpu_eval_fb.sh localhost 256 VGG19
-./gpu_analysis.sh localhost 256 VGG19
+# echo Inception_v3
+# ./gpu_eval_fb.sh localhost 64 Inception_v3
+# ./gpu_analysis.sh localhost 64 Inception_v3
 
-echo MobileNet_v1_0.25_128
-./gpu_eval_fb.sh localhost 256 MobileNet_v1_0.25_128
-./gpu_analysis.sh localhost 256 MobileNet_v1_0.25_128
+# echo Inception_v4
+# ./gpu_eval_fb.sh localhost 128 Inception_v4
+# ./gpu_analysis.sh localhost 128 Inception_v4
 
-echo MobileNet_v1_0.25_160
-./gpu_eval_fb.sh localhost 256 MobileNet_v1_0.25_160
-./gpu_analysis.sh localhost 256 MobileNet_v1_0.25_160
+# echo MLPerf_Mobilenet_v1
+# ./gpu_eval_fb.sh localhost 128 MLPerf_Mobilenet_v1
+# ./gpu_analysis.sh localhost 128 MLPerf_Mobilenet_v1
 
-echo MobileNet_v1_0.25_192
-./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.25_192
-./gpu_analysis.sh localhost 64 MobileNet_v1_0.25_192
+# echo MLPerf_ResNet50_v1.5
+# ./gpu_eval_fb.sh localhost 256 MLPerf_ResNet50_v1.5
+# ./gpu_analysis.sh localhost 256 MLPerf_ResNet50_v1.5
 
-echo MobileNet_v1_0.25_224
-./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.25_224
-./gpu_analysis.sh localhost 64 MobileNet_v1_0.25_224
+# echo MLPerf_SSD_MobileNet_v1_300x300
+# ./gpu_eval_fb.sh localhost 8 MLPerf_SSD_MobileNet_v1_300x300
+# ./gpu_analysis.sh localhost 8 MLPerf_SSD_MobileNet_v1_300x300
 
-echo MobileNet_v1_0.5_128
-./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.5_128
-./gpu_analysis.sh localhost 64 MobileNet_v1_0.5_128
+# echo ResNet_v1_101
+# ./gpu_eval_fb.sh localhost 256 ResNet_v1_101
+# ./gpu_analysis.sh localhost 256 ResNet_v1_101
 
-echo MobileNet_v1_0.5_160
-./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.5_160
-./gpu_analysis.sh localhost 64 MobileNet_v1_0.5_160
+# echo ResNet_v2_101
+# ./gpu_eval_fb.sh localhost 256 ResNet_v2_101
+# ./gpu_analysis.sh localhost 256 ResNet_v2_101
 
-echo MobileNet_v1_0.5_192
-./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.5_192
-./gpu_analysis.sh localhost 64 MobileNet_v1_0.5_192
+# echo ResNet_v1_50
+# ./gpu_eval_fb.sh localhost 256 ResNet_v1_50
+# ./gpu_analysis.sh localhost 256 ResNet_v1_50
 
-echo MobileNet_v1_0.5_224
-./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.5_224
-./gpu_analysis.sh localhost 64 MobileNet_v1_0.5_224
+# echo ResNet_v2_50
+# ./gpu_eval_fb.sh localhost 256 ResNet_v2_50
+# ./gpu_analysis.sh localhost 256 ResNet_v2_50
 
-echo MobileNet_v1_0.75_128
-./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.75_128
-./gpu_analysis.sh localhost 64 MobileNet_v1_0.75_128
+# echo ResNet_v1_152
+# ./gpu_eval_fb.sh localhost 256 ResNet_v1_152
+# ./gpu_analysis.sh localhost 256 ResNet_v1_152
 
-echo MobileNet_v1_0.75_160
-./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.75_160
-./gpu_analysis.sh localhost 64 MobileNet_v1_0.75_160
+# echo ResNet_v2_50
+# ./gpu_eval_fb.sh localhost 256 ResNet_v2_50
+# ./gpu_analysis.sh localhost 256 ResNet_v2_50
 
-echo MobileNet_v1_0.75_192
-./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.75_192
-./gpu_analysis.sh localhost 64 MobileNet_v1_0.75_192
+# echo VGG16
+# ./gpu_eval_fb.sh localhost 256 VGG16
+# ./gpu_analysis.sh localhost 256 VGG16
 
-echo MobileNet_v1_0.75_224
-./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.75_224
-./gpu_analysis.sh localhost 64 MobileNet_v1_0.75_224
+# echo VGG19
+# ./gpu_eval_fb.sh localhost 256 VGG19
+# ./gpu_analysis.sh localhost 256 VGG19
 
-echo MobileNet_v1_1.0_128
-./gpu_eval_fb.sh localhost 64 MobileNet_v1_1.0_128
-./gpu_analysis.sh localhost 64 MobileNet_v1_1.0_128
+# echo MobileNet_v1_0.25_128
+# ./gpu_eval_fb.sh localhost 256 MobileNet_v1_0.25_128
+# ./gpu_analysis.sh localhost 256 MobileNet_v1_0.25_128
 
-echo MobileNet_v1_1.0_160
-./gpu_eval_fb.sh localhost 64 MobileNet_v1_1.0_160
-./gpu_analysis.sh localhost 64 MobileNet_v1_1.0_160
+# echo MobileNet_v1_0.25_160
+# ./gpu_eval_fb.sh localhost 256 MobileNet_v1_0.25_160
+# ./gpu_analysis.sh localhost 256 MobileNet_v1_0.25_160
 
-echo MobileNet_v1_1.0_192
-./gpu_eval_fb.sh localhost 128 MobileNet_v1_1.0_192
-./gpu_analysis.sh localhost 128 MobileNet_v1_1.0_192
+# echo MobileNet_v1_0.25_192
+# ./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.25_192
+# ./gpu_analysis.sh localhost 64 MobileNet_v1_0.25_192
 
-echo MobileNet_v1_1.0_224
-./gpu_eval_fb.sh localhost 128 MobileNet_v1_1.0_224
-./gpu_analysis.sh localhost 128 MobileNet_v1_1.0_224
+# echo MobileNet_v1_0.25_224
+# ./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.25_224
+# ./gpu_analysis.sh localhost 64 MobileNet_v1_0.25_224
+
+# echo MobileNet_v1_0.5_128
+# ./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.5_128
+# ./gpu_analysis.sh localhost 64 MobileNet_v1_0.5_128
+
+# echo MobileNet_v1_0.5_160
+# ./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.5_160
+# ./gpu_analysis.sh localhost 64 MobileNet_v1_0.5_160
+
+# echo MobileNet_v1_0.5_192
+# ./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.5_192
+# ./gpu_analysis.sh localhost 64 MobileNet_v1_0.5_192
+
+# echo MobileNet_v1_0.5_224
+# ./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.5_224
+# ./gpu_analysis.sh localhost 64 MobileNet_v1_0.5_224
+
+# echo MobileNet_v1_0.75_128
+# ./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.75_128
+# ./gpu_analysis.sh localhost 64 MobileNet_v1_0.75_128
+
+# echo MobileNet_v1_0.75_160
+# ./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.75_160
+# ./gpu_analysis.sh localhost 64 MobileNet_v1_0.75_160
+
+# echo MobileNet_v1_0.75_192
+# ./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.75_192
+# ./gpu_analysis.sh localhost 64 MobileNet_v1_0.75_192
+
+# echo MobileNet_v1_0.75_224
+# ./gpu_eval_fb.sh localhost 64 MobileNet_v1_0.75_224
+# ./gpu_analysis.sh localhost 64 MobileNet_v1_0.75_224
+
+# echo MobileNet_v1_1.0_128
+# ./gpu_eval_fb.sh localhost 64 MobileNet_v1_1.0_128
+# ./gpu_analysis.sh localhost 64 MobileNet_v1_1.0_128
+
+# echo MobileNet_v1_1.0_160
+# ./gpu_eval_fb.sh localhost 64 MobileNet_v1_1.0_160
+# ./gpu_analysis.sh localhost 64 MobileNet_v1_1.0_160
+
+# echo MobileNet_v1_1.0_192
+# ./gpu_eval_fb.sh localhost 128 MobileNet_v1_1.0_192
+# ./gpu_analysis.sh localhost 128 MobileNet_v1_1.0_192
+
+# echo MobileNet_v1_1.0_224
+# ./gpu_eval_fb.sh localhost 128 MobileNet_v1_1.0_224
+# ./gpu_analysis.sh localhost 128 MobileNet_v1_1.0_224
