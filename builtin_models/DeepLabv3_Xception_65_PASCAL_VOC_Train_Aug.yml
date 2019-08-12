@@ -1,0 +1,50 @@
+name: DeepLabv3_Xception_65_PASCAL_VOC_Train_Aug # name of your model
+framework:
+  name: TensorFlow # framework for the model
+  version: 1.12 # framework version contraint
+version: 1.0 # version information in semantic version format
+container: # containers used to perform model evaluation
+  amd64:
+    gpu: raiproject/carml-tensorflow:amd64-cpu
+    cpu: raiproject/carml-tensorflow:amd64-gpu
+  ppc64le:
+    cpu: raiproject/carml-tensorflow:ppc64le-gpu
+    gpu: raiproject/carml-tensorflow:ppc64le-gpu
+description: >
+  TensorFlow Semantic Segmentation model, which is trained on the COCO (Common Objects
+  in Context) dataset. Use deeplabv3_pascal_train_aug(deeplabv3_pascal_train_aug_2018_01_04)
+  from TensorFlow DeepLab Model Zoo.
+references: # references to papers / websites / etc.. describing the model
+  - https://github.com/tensorflow/models/tree/master/research/deeplab
+  - https://github.com/tensorflow/models/blob/master/research/deeplab/g3doc/model_zoo.md
+license: Apache License, Version 2.0 # license of the model
+inputs: # model inputs
+  - type: image # first input modality
+    description: the input image # description of the first input
+    parameters:
+      element_type: uint8
+      input_layer: 'ImageTensor'
+      layout: HWC
+      color_mode: RGB
+      max_dimension: 513
+      keep_aspect_ratio: true
+output:
+  type: semanticsegment
+  description: the output semantic segment # a description of the output parameter
+  parameters:
+    element_type: int64
+    masks_layer: SemanticPredictions
+    features_url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/deeplabv3_mnv2_pascal_train_aug_2018_01_29/pascal-voc-classes.txt
+    features_checksum: 9ce439bcfb44c304e49a0fe1ae398f69
+model: # specifies model graph and weights sources
+  base_url:
+  graph_path: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/deeplabv3_pascal_train_aug_2018_01_04/frozen_inference_graph.pb
+  is_archive:
+    false # if true, then the base_url is a url to an archive
+    # the graph_path and weights_path then denote the
+    # file names of the graph and weights within the archive
+  graph_checksum: e6d2e7c8c9cf683e43ec052a5d8f62aa
+attributes: # extra model attributes
+  kind: CNN # the kind of neural network (CNN, RNN, ...)
+  training_dataset: PASCAL VOC 2012 # dataset used to for training
+  manifest_author: Jingning Tang
