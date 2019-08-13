@@ -10,7 +10,9 @@ import (
 	opentracing "github.com/opentracing/opentracing-go"
 	olog "github.com/opentracing/opentracing-go/log"
 	"github.com/pkg/errors"
+	"github.com/rai-project/config"
 	"github.com/rai-project/dlframework"
+	"github.com/rai-project/dlframework/framework/agent"
 	"github.com/rai-project/dlframework/framework/options"
 	common "github.com/rai-project/dlframework/framework/predictor"
 	"github.com/rai-project/downloadmanager"
@@ -393,4 +395,17 @@ func (p *RawPredictor) Close() error {
 	}
 	forceGC()
 	return nil
+}
+
+func init() {
+	config.AfterInit(func() {
+		framework := tensorflow.FrameworkManifest
+		agent.AddPredictor(framework, &RawPredictor{
+			RawPredictor: common.RawPredictor{
+				Base: common.Base{
+					Framework: framework,
+				},
+			},
+		})
+	})
 }
