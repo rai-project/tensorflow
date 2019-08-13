@@ -6,6 +6,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/k0kubun/pp"
 	opentracing "github.com/opentracing/opentracing-go"
 	olog "github.com/opentracing/opentracing-go/log"
 	"github.com/pkg/errors"
@@ -229,11 +230,12 @@ func (p *RawPredictor) loadPredictor(ctx context.Context) error {
 
 // Predict ...
 func (p *RawPredictor) Predict(ctx context.Context, data interface{}, opts ...options.Option) error {
-	input, err := p.GetInputData()
+
+	inputTypes, err := p.GetInputParams("input_type")
 	if err != nil {
 		return err
 	}
-	p.inputLayers, err = p.GetInputLayerNames()
+	p.inputLayers, err = p.GetInputParams("input_layer")
 	if err != nil {
 		return err
 	}
@@ -251,15 +253,74 @@ func (p *RawPredictor) Predict(ctx context.Context, data interface{}, opts ...op
 		return err
 	}
 
-	var feeds map[tf.Output]*Tensor
+	feeds := make(map[tf.Output]*Tensor, len(p.inputLayers))
+
 	for ii, v := range p.inputLayers {
-		a := input[ii].([]float32)
-		tensor, err := tf.NewTensor(a)
+		input, err := p.GetInputDataByIdx(ii)
 		if err != nil {
 			return err
 		}
+		elementType, err := p.GetInputParamsByIdx(ii, "element_type")
+		if err != nil {
+			return err
+		}
+
+		var tensor *tf.Tensor
+		switch inputTypes[ii] {
+		case "scalar":
+			switch elementType {
+			case "int32":
+				d := make([]int32, len(input))
+				for ii, v := range input {
+					d[ii] = v.(int32)
+				}
+				tensor, err = tf.NewTensor(d)
+				if err != nil {
+					return err
+				}
+			case "float32":
+				d := make([]float32, len(input))
+				for ii, v := range input {
+					d[ii] = v.(float32)
+				}
+				pp.Println(len(d))
+				tensor, err = tf.NewTensor(d)
+				if err != nil {
+					return err
+				}
+			default:
+				return errors.Errorf("the scalar element type=%s is not valid", elementType)
+			}
+		case "slice":
+			switch elementType {
+			case "int32":
+				d := make([][]int32, len(input))
+				for ii, v := range input {
+					d[ii] = v.([]int32)
+				}
+				tensor, err = tf.NewTensor(d)
+				if err != nil {
+					return err
+				}
+			case "float32":
+				d := make([][]float32, len(input))
+				for ii, v := range input {
+					d[ii] = v.([]float32)
+				}
+				tensor, err = tf.NewTensor(d)
+				if err != nil {
+					return err
+				}
+			default:
+				return errors.Errorf("the slice element type=%s is not valid", elementType)
+			}
+
+		default:
+			return errors.New("input type not supported")
+		}
 		feeds[graph.Operation(v).Output(0)] = tensor
 	}
+
 	fetches, err := session.Run(ctx,
 		feeds,
 		[]tf.Output{
@@ -279,7 +340,7 @@ func (p *RawPredictor) Predict(ctx context.Context, data interface{}, opts ...op
 	}
 
 	p.probabilities = fetches[0].Value()
-
+	// pp.Println(p.probabilities.([][]float32)[0])
 	return nil
 }
 

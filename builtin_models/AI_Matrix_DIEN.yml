@@ -20,46 +20,55 @@ license: unrestricted
 inputs:
   # first input type for the model
   - type: raw
-    # description of the first input
     description: mid_his_ph
     parameters: # type parameters
       input_layer: 'Inputs/mid_his_batch_ph'
+      input_type: slice
+      element_type: int32
       url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/ai_matrix_dien_1.0/input/mid_his_batch_ph.txt
   - type: raw
-    # description of the first input
     description: cat_his_ph
     parameters: # type parameters
       input_layer: 'Inputs/cat_his_batch_ph'
+      input_type: slice
+      element_type: int32
       url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/ai_matrix_dien_1.0/input/cat_his_batch_ph.txt
   - type: raw
-    # description of the first input
     description: uid_batch_ph
     parameters: # type parameters
       input_layer: 'Inputs/uid_batch_ph'
+      input_type: scalar
+      element_type: int32
       url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/ai_matrix_dien_1.0/input/uid_batch_ph.txt
   - type: raw
-    # description of the first input
     description: mid_batch_ph
     parameters: # type parameters
       input_layer: 'Inputs/mid_batch_ph'
+      input_type: scalar
+      element_type: int32
       url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/ai_matrix_dien_1.0/input/mid_batch_ph.txt
   - type: raw
-    # description of the first input
+
     description: cat_batch_ph
     parameters: # type parameters
       input_layer: 'Inputs/cat_batch_ph'
+      input_type: scalar
+      element_type: int32
       url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/ai_matrix_dien_1.0/input/cat_batch_ph.txt
   - type: raw
-    # description of the first input
+
     description: mask
     parameters: # type parameters
       input_layer: 'Inputs/mask'
+      input_type: slice
+      element_type: float32
       url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/ai_matrix_dien_1.0/input/mask.txt
   - type: raw
-    # description of the first input
     description: seq_len_ph
     parameters: # type parameters
       input_layer: 'Inputs/seq_len_ph'
+      input_type: scalar
+      element_type: int32
       url: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/ai_matrix_dien_1.0/input/seq_len_ph.txt
 output:
   # the type of the output

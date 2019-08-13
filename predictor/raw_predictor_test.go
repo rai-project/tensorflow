@@ -12,7 +12,6 @@ import (
 
 func TestRaw(t *testing.T) {
 	tf.Register()
-	// model, err := tf.FrameworkManifest.FindModel("AI_Matrix_ResNet50:1.0")
 	model, err := tf.FrameworkManifest.FindModel("AI_Matrix_DIEN:1.0")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, model)
@@ -22,7 +21,7 @@ func TestRaw(t *testing.T) {
 		device = options.CUDA_DEVICE
 	}
 
-	batchSize := 1
+	batchSize := 2
 	ctx := context.Background()
 	opts := options.New(options.Context(ctx),
 		options.Device(device, 0),
@@ -44,6 +43,4 @@ func TestRaw(t *testing.T) {
 	if err != nil {
 		return
 	}
-	// assert.InDelta(t, float32(0.998212), pred[0][0].GetProbability(), 0.001)
-	// assert.Equal(t, int32(104), pred[0][0].GetClassification().GetIndex())
 }
