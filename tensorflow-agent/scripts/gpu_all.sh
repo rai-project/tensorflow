@@ -39,8 +39,8 @@ declare -a array3=(
 
 for i in "${array3[@]}"; do
   echo $i
-  ./gpu_eval_ab.sh localhost $b $i
-  for ((b = 1; b <= 2; b *= 2)); do
+  ./gpu_eval_ab.sh localhost 2 $i
+  for ((b = 2; b <= 2; b *= 2)); do
     ./gpu_eval_fb.sh localhost $b $i
     ./gpu_analysis.sh localhost $b $i
   done
@@ -48,8 +48,8 @@ done
 
 for i in "${array2[@]}"; do
   echo $i
-  ./gpu_eval_ab.sh localhost $b $i
-  for ((b = 1; b <= 16; b *= 2)); do
+  ./gpu_eval_ab.sh localhost 16 $i
+  for ((b = 2; b <= 16; b *= 2)); do
     ./gpu_eval_fb.sh localhost $b $i
     ./gpu_analysis.sh localhost $b $i
   done
@@ -57,8 +57,8 @@ done
 
 for i in "${array1[@]}"; do
   echo $i
-  ./gpu_eval_ab.sh localhost $b 256
-  for ((b = 1; b <= 256; b *= 2)); do
+  ./gpu_eval_ab.sh localhost 256 $i
+  for ((b = 2; b <= 256; b *= 2)); do
     ./gpu_eval_fb.sh localhost $b $i
     ./gpu_analysis.sh localhost $b $i
   done
