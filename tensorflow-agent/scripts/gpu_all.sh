@@ -33,14 +33,14 @@ declare -a array2=(
 )
 
 declare -a array3=(
-  DeepLabv3_PASCAL_VOC_Train_Val DeepLabv3_MobileNet_v2_DM_05_PASCAL_VOC_Train_Val
+  DeepLabv3_Xception_65_PASCAL_VOC_Train_Val DeepLabv3_MobileNet_v2_PASCAL_VOC_Train_Val DeepLabv3_MobileNet_v2_DM_05_PASCAL_VOC_Train_Val
   SRGAN
 )
 
-for i in "${array1[@]}"; do
+for i in "${array3[@]}"; do
   echo $i
-  ./gpu_eval_ab.sh localhost $b 256
-  for ((b = 1; b <= 256; b *= 2)); do
+  ./gpu_eval_ab.sh localhost $b $i
+  for ((b = 1; b <= 2; b *= 2)); do
     ./gpu_eval_fb.sh localhost $b $i
     ./gpu_analysis.sh localhost $b $i
   done
@@ -55,10 +55,10 @@ for i in "${array2[@]}"; do
   done
 done
 
-for i in "${array3[@]}"; do
+for i in "${array1[@]}"; do
   echo $i
-  ./gpu_eval_ab.sh localhost $b $i
-  for ((b = 1; b <= 2; b *= 2)); do
+  ./gpu_eval_ab.sh localhost $b 256
+  for ((b = 1; b <= 256; b *= 2)); do
     ./gpu_eval_fb.sh localhost $b $i
     ./gpu_analysis.sh localhost $b $i
   done
