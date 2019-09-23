@@ -2,9 +2,11 @@ package predictor
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"runtime"
+	"strconv"
 	"strings"
 
 	opentracing "github.com/opentracing/opentracing-go"
@@ -52,6 +54,36 @@ func (p *ImagePredictor) GetInputLayerName(reader io.Reader, layer string) (stri
 		return "", errors.New("cannot determin the name of the input layer")
 	}
 	return name, nil
+}
+
+// GetMultipleInputLayerNames generalizes GetInputLayerName when multiple inputs are present.
+func (p *ImagePredictor) GetMultipleInputLayerNames(reader io.Reader, layers []string) ([]string, error) {
+	model := p.Model
+	names := make([]string, len(layers))
+	modelInputs := model.GetInputs()
+	if len(modelInputs) != len(layers) {
+		return names, errors.New("mismatch between number of input layers specified in yaml and number of input layers qetting")
+	}
+
+	for idx, modelInput := range modelInputs {
+		typeParameter := modelInput.GetParameters()
+		name, err := p.GetTypeParameter(typeParameter, layers[idx])
+
+		if err != nil {
+			fmt.Println("Error happened in index "+strconv.Itoa(idx)+": ", err)
+			graphDef, err := tensorflow.FromCheckpoint(reader)
+			if err != nil {
+				return make([]string, len(layers)), errors.Wrap(err, "failed to read metagraph from checkpoint")
+			}
+			nodes := graphDef.GetNode()
+			if nodes == nil {
+				return make([]string, len(layers)), errors.New("failed to read graph nodes")
+			}
+		}
+		names[idx] = name
+	}
+
+	return names, nil
 }
 
 func (p *ImagePredictor) GetOutputLayerName(reader io.Reader, layer string) (string, error) {

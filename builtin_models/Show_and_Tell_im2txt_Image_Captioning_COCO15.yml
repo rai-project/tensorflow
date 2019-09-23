@@ -1,4 +1,4 @@
-name: Mask_RCNN_Inception_ResNet_v2_Atrous_COCO # name of your model
+name: Show_and_Tell_im2txt_Image_Captioning_COCO15 # name of your model
 framework:
   name: TensorFlow # framework for the model
   version: 1.12 # framework version contraint
@@ -21,14 +21,40 @@ inputs: # model inputs
     description: the input image # description of the first input
     parameters:
       element_type: uint8
-      input_layer: 'image_tensor'
+      input_layer: 'convert_image/Cast'
       layout: HWC
       color_mode: RGB
+  - type: image
+    description: first intermediate output that will be fed into LSTM.
+    parameters:
+      element_type: float32
+      initial_state_layer: 'lstm/initial_state'
+  - type: image
+    description: intermediate LSTM input that feeds partial predicted sentence.
+    parameters:
+      element_type: int64
+      intermediate_sentence_input_layer: 'input_feed'
+  - type: image
+    description: intermediate LSTM input that feeds partial predicted state.
+    parameters:
+      element_type: float32
+      intermediate_state_input_layer: 'lstm/state_feed'
+  - type: image
+    description: intermediate LSTM output that produces each word's probability.
+    parameters:
+      element_type: float32
+      intermediate_softmax_output_layer: 'softmax'
+  - type: image
+    description: intermediate LSTM output that produces states.
+    parameters:
+      element_type: float32
+      intermediate_state_output_layer: 'lstm/state'
 output:
   type: text
   description: the most probable sentences # a description of the output parameter
   parameters:
     element_type: string
+    description: The most probable captions for the input image.
     # boxes_layer: 'detection_boxes'
     # probabilities_layer: 'detection_scores'
     # classes_layer: 'detection_classes'
@@ -37,13 +63,13 @@ output:
     # features_checksum: 4418c85d01e6c82ff6849b8239759438
 model: # specifies model graph and weights sources
   base_url:
-  graph_path: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/mask_rcnn_inception_resnet_v2_atrous_coco_2018_01_28/frozen_inference_graph.pb
+  graph_path: https://s3.amazonaws.com/store.carml.org/models/tensorflow/models/image_captioning/show_and_tell_im2txt_image_captioning_coco15/frozen_model.pb
   is_archive:
     false # if true, then the base_url is a url to an archive
     # the graph_path and weights_path then denote the
     # file names of the graph and weights within the archive
-  graph_checksum: 9dd24ee8716d34789efbf6b50c8f2ee1
+  graph_checksum: 60bcd4bcd6c7ec40e276d746312c0efa
 attributes: # extra model attributes
-  kind: CNN # the kind of neural network (CNN, RNN, ...)
+  kind: CNN + LSTM # the kind of neural network (CNN, RNN, ...)
   training_dataset: COCO # dataset used to for training
   manifest_author: Jingning Tang

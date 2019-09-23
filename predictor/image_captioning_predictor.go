@@ -43,7 +43,7 @@ func NewImageCaptioningPredictor(model dlframework.ModelManifest, opts ...option
 	defer span.Finish()
 
 	modelInputs := model.GetInputs()
-	if len(modelInputs) != 1 {
+	if len(modelInputs) == 0 {
 		return nil, errors.New("number of inputs not supported")
 	}
 	firstInputType := modelInputs[0].GetType()
@@ -51,7 +51,7 @@ func NewImageCaptioningPredictor(model dlframework.ModelManifest, opts ...option
 		return nil, errors.New("input type not supported")
 	}
 
-	predictor := new(InstanceSegmentationPredictor)
+	predictor := new(ImageCaptioningPredictor)
 
 	return predictor.Load(ctx, model, opts...)
 }
@@ -72,33 +72,29 @@ func (self *ImageCaptioningPredictor) Load(ctx context.Context, modelManifest dl
 		return nil, errors.Wrapf(err, "cannot read %s", p.GetGraphPath())
 	}
 	modelReader := bytes.NewReader(model)
-
-	p.CNNInputLayer, err = p.GetInputLayerName(modelReader, "image_input_layer")
+	layers := []string{
+		"input_layer",
+		"initial_state_layer",
+		"intermediate_sentence_input_layer",
+		"intermediate_state_input_layer",
+		"intermediate_softmax_output_layer",
+		"intermediate_state_output_layer",
+	}
+	pLayers := []*string{
+		&p.CNNInputLayer,
+		&p.CNNStateOutputLayer,
+		&p.seqSentenceInputLayer,
+		&p.seqStateInputLayer,
+		&p.seqSoftmaxLayer,
+		&p.seqStateOutputLayer,
+	}
+	layerNames, err := p.GetMultipleInputLayerNames(modelReader, layers)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to get image input layer name")
+		return nil, errors.Wrap(err, "failed to get all input layers' name")
 	}
 
-	p.seqSentenceInputLayer, err = p.GetInputLayerName(modelReader, "sentence_input_layer")
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to get intermediate sentence input layer name")
-	}
-
-	p.seqStateInputLayer, err = p.GetInputLayerName(modelReader, "state_input_layer")
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to get intermediate state input layer name")
-	}
-
-	p.CNNStateOutputLayer, err = p.GetOutputLayerName(modelReader, "initial_state_output_layer")
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to get the initial state output layer name")
-	}
-	p.seqSoftmaxLayer, err = p.GetOutputLayerName(modelReader, "softmax_output_layer")
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to get the intermediate softmax output layer name")
-	}
-	p.seqStateOutputLayer, err = p.GetOutputLayerName(modelReader, "state_output_layer")
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to get the intermediate state output layer name")
+	for i, layerName := range layerNames {
+		*pLayers[i] = layerName
 	}
 
 	return p, nil
@@ -119,6 +115,7 @@ func (p *ImageCaptioningPredictor) Predict(ctx context.Context, data interface{}
 
 	tensor, err := makeTensorFromGoTensors(input)
 	if err != nil {
+		fmt.Println("Error is making tensor!")
 		return err
 	}
 
@@ -138,16 +135,23 @@ func (p *ImageCaptioningPredictor) Predict(ctx context.Context, data interface{}
 		p.runOptions(),
 		p.GetGraphPath(),
 	)
+	if err != nil {
+		fmt.Println("Error is running!")
+		return err
+	}
 
 	beamSize := 3
 	maxCaptionLength := 20
 	lengthNormalizationFactor := 0.0
-	vocabularyFile := "./word_counts.txt"
+	vocabularyFile := "../word_counts.txt"
 	p.vocabulary = constructVocabulary(vocabularyFile)
 
 	vocab := p.vocabulary
 	// no actual meaning. just to squeeze the 0th dimension.
-	initialStateArray, _ := tf.NewTensor(initialState[0].Value().([][]float32)[0])
+	initialStateArray, err := tf.NewTensor(initialState[0].Value().([][]float32)[0])
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	initialBeam := caption{
 		sentence: []int64{vocab.startID},
@@ -163,14 +167,8 @@ func (p *ImageCaptioningPredictor) Predict(ctx context.Context, data interface{}
 	completeCaptions := &topN{n: beamSize}
 	heap.Init(completeCaptions)
 
-	intermediateInputFeed := graph.Operation("input_feed")
-	intermediateStateFeed := graph.Operation("lstm/state_feed")
-	softmaxOp := graph.Operation("softmax")
-	stateOp := graph.Operation("lstm/state")
-
 	for i := 0; i < maxCaptionLength-1; i++ {
 		partialCaptionsList := partialCaptions.Extract(false)
-		// partialCaptions.Reset()
 
 		inputFeed := []int64{}
 		stateFeed := []*tf.Tensor{}
@@ -186,12 +184,12 @@ func (p *ImageCaptioningPredictor) Predict(ctx context.Context, data interface{}
 
 		intermediateOutput, err := session.Run(ctx,
 			map[tf.Output]*tf.Tensor{
-				intermediateInputFeed.Output(0): inputTensor,
-				intermediateStateFeed.Output(0): stateTensor,
+				graph.Operation(p.seqSentenceInputLayer).Output(0): inputTensor,
+				graph.Operation(p.seqStateInputLayer).Output(0):    stateTensor,
 			},
 			[]tf.Output{
-				softmaxOp.Output(0),
-				stateOp.Output(0),
+				graph.Operation(p.seqSoftmaxLayer).Output(0),
+				graph.Operation(p.seqStateOutputLayer).Output(0),
 			},
 			nil,
 			p.runOptions(),
@@ -205,7 +203,6 @@ func (p *ImageCaptioningPredictor) Predict(ctx context.Context, data interface{}
 		softmaxOutput := intermediateOutput[0].Value().([][]float32)
 		stateOutput := intermediateOutput[1].Value().([][]float32)
 
-		// fmt.Printf("%d: inputFeed: %v\n", i, inputFeed)
 		for j, partialCaption := range partialCaptionsList {
 			wordProbabilities := softmaxOutput[j]
 			state := stateOutput[j]
@@ -220,8 +217,6 @@ func (p *ImageCaptioningPredictor) Predict(ctx context.Context, data interface{}
 			mostLikelyWords := arg.Idxs[wordLen-beamSize : wordLen]
 			mostLikelyWordsProb := arg.Args[wordLen-beamSize : wordLen]
 
-			// fmt.Println(mostLikelyWords, mostLikelyWordsProb)
-
 			for k := len(mostLikelyWords) - 1; k >= 0; k-- {
 				w := mostLikelyWords[k]
 				p := mostLikelyWordsProb[k]
@@ -234,11 +229,7 @@ func (p *ImageCaptioningPredictor) Predict(ctx context.Context, data interface{}
 				sentence = append(sentence, w)
 				logprob := partialCaption.logprob + float32(math.Log(float64(p)))
 				score := logprob
-				// fmt.Println("sentence:", sentence)
-				// fmt.Println("word:", w, "->", p)
-				// fmt.Printf("sentence: %v, prob: %f\n", sentence, logprob)
 				newStateTensor, _ := tf.NewTensor(state)
-				// fmt.Println("inner stateTensor shape:", stateTensor.Shape())
 
 				if w == vocab.endID {
 					if lengthNormalizationFactor > 0 {
@@ -259,11 +250,6 @@ func (p *ImageCaptioningPredictor) Predict(ctx context.Context, data interface{}
 						score:    score,
 					}
 					partialCaptions.PushTopN(beam)
-					// fmt.Printf("heap: ")
-					// for _, c := range partialCaptions.captionHeap {
-					// 	fmt.Printf("%v", c.sentence)
-					// }
-					// fmt.Printf("\n")
 				}
 
 				if partialCaptions.Len() == 0 {
@@ -271,15 +257,6 @@ func (p *ImageCaptioningPredictor) Predict(ctx context.Context, data interface{}
 				}
 			}
 		}
-
-		// fmt.Printf("partialCaptions after round %d: ", i)
-		// for _, c := range partialCaptions.captionHeap {
-		// 	fmt.Printf("%v", c.sentence)
-		// }
-		// fmt.Printf("\n\n")
-		// if i == 2 {
-		// 	break
-		// }
 	}
 
 	if completeCaptions.Len() == 0 {

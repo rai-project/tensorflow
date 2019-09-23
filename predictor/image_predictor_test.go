@@ -2,6 +2,7 @@ package predictor
 
 import (
 	"context"
+	"fmt"
 	"image"
 	"image/color"
 	"image/jpeg"
@@ -454,4 +455,65 @@ func TestSemanticSegmentation(t *testing.T) {
 	intMask := sseg.GetIntMask()
 
 	assert.Equal(t, int32(7), intMask[72122])
+}
+
+func TestCaptioning(t *testing.T) {
+	tf.Register()
+	model, err := tf.FrameworkManifest.FindModel("Show_and_Tell_im2txt_Image_Captioning_COCO15:1.0")
+	assert.NoError(t, err)
+	assert.NotEmpty(t, model)
+
+	device := options.CPU_DEVICE
+	if nvidiasmi.HasGPU {
+		device = options.CUDA_DEVICE
+	}
+
+	batchSize := 1
+	ctx := context.Background()
+	opts := options.New(options.Context(ctx),
+		options.Device(device, 0),
+		options.BatchSize(batchSize))
+
+	predictor, err := NewImageCaptioningPredictor(*model, options.WithOptions(opts))
+	assert.NoError(t, err)
+	assert.NotEmpty(t, predictor)
+	defer predictor.Close()
+
+	imgDir, _ := filepath.Abs("./_fixtures")
+	imgPath := filepath.Join(imgDir, "man_surfing.jpg")
+	r, err := os.Open(imgPath)
+	if err != nil {
+		panic(err)
+	}
+	img, err := raiimage.Read(r)
+	if err != nil {
+		panic(err)
+	}
+
+	height := img.Bounds().Dy()
+	width := img.Bounds().Dx()
+	channels := 3
+	input := make([]*gotensor.Dense, batchSize)
+	imgBytes := img.(*types.RGBImage).Pix
+
+	for ii := 0; ii < batchSize; ii++ {
+		input[ii] = gotensor.New(
+			gotensor.WithShape(height, width, channels),
+			gotensor.WithBacking(imgBytes),
+		)
+	}
+
+	err = predictor.Predict(ctx, input)
+	assert.NoError(t, err)
+	if err != nil {
+		return
+	}
+
+	pred, err := predictor.ReadPredictedFeatures(ctx)
+	assert.NoError(t, err)
+	if err != nil {
+		return
+	}
+
+	fmt.Println(pred)
 }

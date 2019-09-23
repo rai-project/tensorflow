@@ -79,6 +79,7 @@
 // builtin_models/SSD_MobileNet_v2_COCO.yml
 // builtin_models/SSD_MobileNet_v2_Quantized_300x300_COCO.yml
 // builtin_models/SSD_ResNet50_FPN_Shared_Box_Predictor_640x640_COCO14_Sync.yml
+// builtin_models/Show_and_Tell_im2txt_Image_Captioning_COCO15.yml
 // builtin_models/VGG16.yml
 // builtin_models/VGG19.yml
 // DO NOT EDIT!
@@ -163,7 +164,7 @@ func ai_matrix_densenet121Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "AI_Matrix_Densenet121.yml", size: 1796, mode: os.FileMode(420), modTime: time.Unix(1562617114, 0)}
+	info := bindataFileInfo{name: "AI_Matrix_Densenet121.yml", size: 1796, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -183,7 +184,7 @@ func ai_matrix_googlenetYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "AI_Matrix_GoogleNet.yml", size: 1726, mode: os.FileMode(420), modTime: time.Unix(1562622297, 0)}
+	info := bindataFileInfo{name: "AI_Matrix_GoogleNet.yml", size: 1726, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -203,7 +204,7 @@ func ai_matrix_resnet152Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "AI_Matrix_ResNet152.yml", size: 1726, mode: os.FileMode(420), modTime: time.Unix(1562622292, 0)}
+	info := bindataFileInfo{name: "AI_Matrix_ResNet152.yml", size: 1726, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -223,7 +224,7 @@ func ai_matrix_resnet50Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "AI_Matrix_ResNet50.yml", size: 1724, mode: os.FileMode(420), modTime: time.Unix(1562622285, 0)}
+	info := bindataFileInfo{name: "AI_Matrix_ResNet50.yml", size: 1724, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -243,7 +244,7 @@ func bvlc_alexnet_caffeYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "BVLC_AlexNet_Caffe.yml", size: 2934, mode: os.FileMode(420), modTime: time.Unix(1554919653, 0)}
+	info := bindataFileInfo{name: "BVLC_AlexNet_Caffe.yml", size: 2934, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -263,7 +264,7 @@ func bvlc_googlenet_caffeYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "BVLC_GoogLeNet_Caffe.yml", size: 3204, mode: os.FileMode(420), modTime: time.Unix(1554919653, 0)}
+	info := bindataFileInfo{name: "BVLC_GoogLeNet_Caffe.yml", size: 3204, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -283,7 +284,7 @@ func deeplabv3_mobilenet_v2_dm_05_pascal_voc_train_augYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "DeepLabv3_MobileNet_v2_DM_05_PASCAL_VOC_Train_Aug.yml", size: 2403, mode: os.FileMode(420), modTime: time.Unix(1554874925, 0)}
+	info := bindataFileInfo{name: "DeepLabv3_MobileNet_v2_DM_05_PASCAL_VOC_Train_Aug.yml", size: 2403, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -303,7 +304,7 @@ func deeplabv3_mobilenet_v2_dm_05_pascal_voc_train_valYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "DeepLabv3_MobileNet_v2_DM_05_PASCAL_VOC_Train_Val.yml", size: 2400, mode: os.FileMode(420), modTime: time.Unix(1554874925, 0)}
+	info := bindataFileInfo{name: "DeepLabv3_MobileNet_v2_DM_05_PASCAL_VOC_Train_Val.yml", size: 2400, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -323,7 +324,7 @@ func deeplabv3_mobilenet_v2_pascal_voc_train_augYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "DeepLabv3_MobileNet_v2_PASCAL_VOC_Train_Aug.yml", size: 2375, mode: os.FileMode(420), modTime: time.Unix(1554874925, 0)}
+	info := bindataFileInfo{name: "DeepLabv3_MobileNet_v2_PASCAL_VOC_Train_Aug.yml", size: 2375, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -343,7 +344,7 @@ func deeplabv3_pascal_voc_train_augYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "DeepLabv3_PASCAL_VOC_Train_Aug.yml", size: 2354, mode: os.FileMode(420), modTime: time.Unix(1554874925, 0)}
+	info := bindataFileInfo{name: "DeepLabv3_PASCAL_VOC_Train_Aug.yml", size: 2354, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -363,7 +364,7 @@ func deeplabv3_pascal_voc_train_valYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "DeepLabv3_PASCAL_VOC_Train_Val.yml", size: 2351, mode: os.FileMode(420), modTime: time.Unix(1554874925, 0)}
+	info := bindataFileInfo{name: "DeepLabv3_PASCAL_VOC_Train_Val.yml", size: 2351, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -383,7 +384,7 @@ func faster_rcnn_inception_resnet_v2_atrous_cocoYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Faster_RCNN_Inception_ResNet_v2_Atrous_COCO.yml", size: 2271, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "Faster_RCNN_Inception_ResNet_v2_Atrous_COCO.yml", size: 2271, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -403,7 +404,7 @@ func faster_rcnn_inception_resnet_v2_atrous_lowproposals_cocoYml() (*asset, erro
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Faster_RCNN_Inception_ResNet_v2_Atrous_Lowproposals_COCO.yml", size: 2310, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "Faster_RCNN_Inception_ResNet_v2_Atrous_Lowproposals_COCO.yml", size: 2310, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -423,7 +424,7 @@ func faster_rcnn_inception_v2_cocoYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Faster_RCNN_Inception_v2_COCO.yml", size: 2225, mode: os.FileMode(420), modTime: time.Unix(1562622716, 0)}
+	info := bindataFileInfo{name: "Faster_RCNN_Inception_v2_COCO.yml", size: 2225, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -443,7 +444,7 @@ func faster_rcnn_nas_cocoYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Faster_RCNN_NAS_COCO.yml", size: 2202, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "Faster_RCNN_NAS_COCO.yml", size: 2202, mode: os.FileMode(436), modTime: time.Unix(1567544352, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -463,7 +464,7 @@ func faster_rcnn_nas_lowproposals_cocoYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Faster_RCNN_NAS_Lowproposals_COCO.yml", size: 2237, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "Faster_RCNN_NAS_Lowproposals_COCO.yml", size: 2237, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -483,7 +484,7 @@ func faster_rcnn_resnet101_cocoYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Faster_RCNN_ResNet101_COCO.yml", size: 2215, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "Faster_RCNN_ResNet101_COCO.yml", size: 2215, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -503,7 +504,7 @@ func faster_rcnn_resnet101_lowproposals_cocoYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Faster_RCNN_ResNet101_Lowproposals_COCO.yml", size: 2259, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "Faster_RCNN_ResNet101_Lowproposals_COCO.yml", size: 2259, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -523,7 +524,7 @@ func faster_rcnn_resnet50_cocoYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Faster_RCNN_ResNet50_COCO.yml", size: 2212, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "Faster_RCNN_ResNet50_COCO.yml", size: 2212, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -543,7 +544,7 @@ func faster_rcnn_resnet50_lowproposals_cocoYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Faster_RCNN_ResNet50_Lowproposals_COCO.yml", size: 2252, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "Faster_RCNN_ResNet50_Lowproposals_COCO.yml", size: 2252, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -563,7 +564,7 @@ func inception_5hYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Inception_5h.yml", size: 1970, mode: os.FileMode(420), modTime: time.Unix(1554874925, 0)}
+	info := bindataFileInfo{name: "Inception_5h.yml", size: 1970, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -583,7 +584,7 @@ func inception_resnet_v2Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Inception_ResNet_v2.yml", size: 2231, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "Inception_ResNet_v2.yml", size: 2231, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -603,7 +604,7 @@ func inception_v1Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Inception_v1.yml", size: 2368, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "Inception_v1.yml", size: 2368, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -623,7 +624,7 @@ func inception_v2Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Inception_v2.yml", size: 1957, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "Inception_v2.yml", size: 1957, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -643,7 +644,7 @@ func inception_v3Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Inception_v3.yml", size: 1908, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "Inception_v3.yml", size: 1908, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -663,7 +664,7 @@ func inception_v4Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Inception_v4.yml", size: 1900, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "Inception_v4.yml", size: 1900, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -683,7 +684,7 @@ func mask_rcnn_inception_resnet_v2_atrous_cocoYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Mask_RCNN_Inception_ResNet_v2_Atrous_COCO.yml", size: 2313, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "Mask_RCNN_Inception_ResNet_v2_Atrous_COCO.yml", size: 2313, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -703,7 +704,7 @@ func mask_rcnn_inception_v2_cocoYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Mask_RCNN_Inception_v2_COCO.yml", size: 2266, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "Mask_RCNN_Inception_v2_COCO.yml", size: 2266, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -723,7 +724,7 @@ func mask_rcnn_resnet101_v2_atrous_cocoYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Mask_RCNN_ResNet101_v2_Atrous_COCO.yml", size: 2286, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "Mask_RCNN_ResNet101_v2_Atrous_COCO.yml", size: 2286, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -743,7 +744,7 @@ func mask_rcnn_resnet50_v2_atrous_cocoYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Mask_RCNN_ResNet50_v2_Atrous_COCO.yml", size: 2283, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "Mask_RCNN_ResNet50_v2_Atrous_COCO.yml", size: 2283, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -763,7 +764,7 @@ func mobilenet_v1_025_128Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.25_128.yml", size: 2801, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.25_128.yml", size: 2801, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -783,7 +784,7 @@ func mobilenet_v1_025_128_quantYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.25_128_Quant.yml", size: 2825, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.25_128_Quant.yml", size: 2825, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -803,7 +804,7 @@ func mobilenet_v1_025_160Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.25_160.yml", size: 2801, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.25_160.yml", size: 2801, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -823,7 +824,7 @@ func mobilenet_v1_025_160_quantYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.25_160_Quant.yml", size: 2825, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.25_160_Quant.yml", size: 2825, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -843,7 +844,7 @@ func mobilenet_v1_025_192Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.25_192.yml", size: 2801, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.25_192.yml", size: 2801, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -863,7 +864,7 @@ func mobilenet_v1_025_192_quantYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.25_192_Quant.yml", size: 2824, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.25_192_Quant.yml", size: 2824, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -883,7 +884,7 @@ func mobilenet_v1_025_224Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.25_224.yml", size: 2801, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.25_224.yml", size: 2801, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -903,7 +904,7 @@ func mobilenet_v1_025_224_quantYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.25_224_Quant.yml", size: 2824, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.25_224_Quant.yml", size: 2824, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -923,7 +924,7 @@ func mobilenet_v1_05_128Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.5_128.yml", size: 2797, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.5_128.yml", size: 2797, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -943,7 +944,7 @@ func mobilenet_v1_05_128_quantYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.5_128_Quant.yml", size: 2821, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.5_128_Quant.yml", size: 2821, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -963,7 +964,7 @@ func mobilenet_v1_05_160Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.5_160.yml", size: 2797, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.5_160.yml", size: 2797, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -983,7 +984,7 @@ func mobilenet_v1_05_160_quantYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.5_160_Quant.yml", size: 2821, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.5_160_Quant.yml", size: 2821, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1003,7 +1004,7 @@ func mobilenet_v1_05_192Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.5_192.yml", size: 2797, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.5_192.yml", size: 2797, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1023,7 +1024,7 @@ func mobilenet_v1_05_192_quantYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.5_192_Quant.yml", size: 2820, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.5_192_Quant.yml", size: 2820, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1043,7 +1044,7 @@ func mobilenet_v1_05_224Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.5_224.yml", size: 2797, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.5_224.yml", size: 2797, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1063,7 +1064,7 @@ func mobilenet_v1_05_224_quantYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.5_224_Quant.yml", size: 2821, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.5_224_Quant.yml", size: 2821, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1083,7 +1084,7 @@ func mobilenet_v1_075_128Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.75_128.yml", size: 2801, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.75_128.yml", size: 2801, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1103,7 +1104,7 @@ func mobilenet_v1_075_128_quantYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.75_128_Quant.yml", size: 2825, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.75_128_Quant.yml", size: 2825, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1123,7 +1124,7 @@ func mobilenet_v1_075_160Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.75_160.yml", size: 2800, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.75_160.yml", size: 2800, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1143,7 +1144,7 @@ func mobilenet_v1_075_160_quantYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.75_160_Quant.yml", size: 2799, mode: os.FileMode(420), modTime: time.Unix(1554873644, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.75_160_Quant.yml", size: 2799, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1163,7 +1164,7 @@ func mobilenet_v1_075_192Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.75_192.yml", size: 2801, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.75_192.yml", size: 2801, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1183,7 +1184,7 @@ func mobilenet_v1_075_192_quantYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.75_192_Quant.yml", size: 2825, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.75_192_Quant.yml", size: 2825, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1203,7 +1204,7 @@ func mobilenet_v1_075_224Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.75_224.yml", size: 2801, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.75_224.yml", size: 2801, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1223,7 +1224,7 @@ func mobilenet_v1_075_224_quantYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_0.75_224_Quant.yml", size: 2824, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_0.75_224_Quant.yml", size: 2824, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1243,7 +1244,7 @@ func mobilenet_v1_10_128Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_1.0_128.yml", size: 2797, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_1.0_128.yml", size: 2797, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1263,7 +1264,7 @@ func mobilenet_v1_10_128_quantYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_1.0_128_Quant.yml", size: 2821, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_1.0_128_Quant.yml", size: 2821, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1283,7 +1284,7 @@ func mobilenet_v1_10_160Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_1.0_160.yml", size: 2796, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_1.0_160.yml", size: 2796, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1303,7 +1304,7 @@ func mobilenet_v1_10_160_quantYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_1.0_160_Quant.yml", size: 2795, mode: os.FileMode(420), modTime: time.Unix(1554874877, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_1.0_160_Quant.yml", size: 2795, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1323,7 +1324,7 @@ func mobilenet_v1_10_192Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_1.0_192.yml", size: 2796, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_1.0_192.yml", size: 2796, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1343,7 +1344,7 @@ func mobilenet_v1_10_192_quantYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_1.0_192_Quant.yml", size: 2821, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_1.0_192_Quant.yml", size: 2821, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1363,7 +1364,7 @@ func mobilenet_v1_10_224Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_1.0_224.yml", size: 2797, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_1.0_224.yml", size: 2797, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1383,7 +1384,7 @@ func mobilenet_v1_10_224_quantYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "MobileNet_v1_1.0_224_Quant.yml", size: 2821, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "MobileNet_v1_1.0_224_Quant.yml", size: 2821, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1403,7 +1404,7 @@ func rfcn_resnet101_cocoYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "RFCN_ResNet101_COCO.yml", size: 2195, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "RFCN_ResNet101_COCO.yml", size: 2195, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1423,7 +1424,7 @@ func resnet_v1_101Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "ResNet_v1_101.yml", size: 1978, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "ResNet_v1_101.yml", size: 1978, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1443,7 +1444,7 @@ func resnet_v1_152Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "ResNet_v1_152.yml", size: 1959, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "ResNet_v1_152.yml", size: 1959, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1463,7 +1464,7 @@ func resnet_v1_50Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "ResNet_v1_50.yml", size: 2056, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "ResNet_v1_50.yml", size: 2056, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1483,7 +1484,7 @@ func resnet_v2_101Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "ResNet_v2_101.yml", size: 1967, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "ResNet_v2_101.yml", size: 1967, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1503,7 +1504,7 @@ func resnet_v2_152Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "ResNet_v2_152.yml", size: 1967, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "ResNet_v2_152.yml", size: 1967, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1523,7 +1524,7 @@ func resnet_v2_50Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "ResNet_v2_50.yml", size: 1963, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "ResNet_v2_50.yml", size: 1963, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1543,7 +1544,7 @@ func srganYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "SRGAN.yml", size: 2019, mode: os.FileMode(420), modTime: time.Unix(1554874762, 0)}
+	info := bindataFileInfo{name: "SRGAN.yml", size: 2019, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1563,7 +1564,7 @@ func ssdlite_mobilenet_v2_cocoYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "SSDLite_MobileNet_v2_COCO.yml", size: 2213, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "SSDLite_MobileNet_v2_COCO.yml", size: 2213, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1583,7 +1584,7 @@ func ssd_inception_v2_cocoYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "SSD_Inception_v2_COCO.yml", size: 2201, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "SSD_Inception_v2_COCO.yml", size: 2201, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1603,7 +1604,7 @@ func ssd_mobilenet_v1_075_depth_300x300_coco14_syncYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "SSD_MobileNet_v1_0.75_Depth_300x300_COCO14_Sync.yml", size: 2279, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "SSD_MobileNet_v1_0.75_Depth_300x300_COCO14_Sync.yml", size: 2279, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1623,7 +1624,7 @@ func ssd_mobilenet_v1_cocoYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "SSD_MobileNet_v1_COCO.yml", size: 2200, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "SSD_MobileNet_v1_COCO.yml", size: 2200, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1643,7 +1644,7 @@ func ssd_mobilenet_v1_fpn_shared_box_predictor_640x640_coco14_syncYml() (*asset,
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "SSD_MobileNet_v1_FPN_Shared_Box_Predictor_640x640_COCO14_Sync.yml", size: 2321, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "SSD_MobileNet_v1_FPN_Shared_Box_Predictor_640x640_COCO14_Sync.yml", size: 2321, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1663,7 +1664,7 @@ func ssd_mobilenet_v1_ppn_shared_box_predictor_300x300_coco14_syncYml() (*asset,
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "SSD_MobileNet_v1_PPN_Shared_Box_Predictor_300x300_COCO14_Sync.yml", size: 2321, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "SSD_MobileNet_v1_PPN_Shared_Box_Predictor_300x300_COCO14_Sync.yml", size: 2321, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1683,7 +1684,7 @@ func ssd_mobilenet_v2_cocoYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "SSD_MobileNet_v2_COCO.yml", size: 2200, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "SSD_MobileNet_v2_COCO.yml", size: 2200, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1703,7 +1704,7 @@ func ssd_mobilenet_v2_quantized_300x300_cocoYml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "SSD_MobileNet_v2_Quantized_300x300_COCO.yml", size: 2278, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "SSD_MobileNet_v2_Quantized_300x300_COCO.yml", size: 2278, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1723,7 +1724,27 @@ func ssd_resnet50_fpn_shared_box_predictor_640x640_coco14_syncYml() (*asset, err
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "SSD_ResNet50_FPN_Shared_Box_Predictor_640x640_COCO14_Sync.yml", size: 2314, mode: os.FileMode(420), modTime: time.Unix(1562622736, 0)}
+	info := bindataFileInfo{name: "SSD_ResNet50_FPN_Shared_Box_Predictor_640x640_COCO14_Sync.yml", size: 2314, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _show_and_tell_im2txt_image_captioning_coco15Yml = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xb4\x57\xdf\x6f\xdb\x36\x10\x7e\xd7\x5f\x71\x80\x1f\xd2\x62\x89\x64\x3b\x8e\xe3\x08\xd8\x86\xd6\x40\xdb\x75\x5d\x8a\xb5\x69\x8b\x3d\x09\x14\x75\xb2\xd8\x50\xa4\xc0\x3b\xc5\x71\xff\xfa\x81\xa4\xfc\x23\x3f\x80\x65\x5d\xf7\x62\x48\xba\x8f\xc7\xef\xbb\x3b\xf2\xce\x46\xb4\x98\xc3\xc7\xc6\xae\x0b\x61\xaa\xe2\x0a\xb5\x2e\x54\x3b\xe5\x5b\x2e\x7e\x6b\xc5\x0a\x8b\xa5\xe8\x58\x59\xa3\xcc\xaa\x58\xbe\x5f\xbe\x9f\x9c\xc1\x08\xfc\x22\xb0\x35\x6c\x6c\xef\xa0\xb5\x15\xea\xa4\x76\xa2\xc5\xb5\x75\xd7\x79\x02\x10\x9d\x5e\xa1\x21\xeb\x5e\x69\xbb\x86\x11\xec\xec\x50\x5b\x07\xdc\xe0\xb0\x0e\xe0\x06\x1d\x29\x6b\x72\x98\xa4\x93\xe9\x1d\xe4\x60\x01\x69\x0d\x3b\xa1\x0c\x27\x07\xd8\x31\x8c\x76\x00\x65\x6a\xeb\x5a\xc1\xf1\x19\x08\x5b\x61\x58\xc9\x9d\x3d\x5a\x13\xef\x47\x28\x83\x2e\x87\x11\xec\x5e\x08\x7a\xc2\x0a\xd8\x42\x87\xce\x23\x23\x33\xc0\x1b\xa1\xfb\xe0\x33\x01\x10\x6d\x35\x9f\x79\x69\x00\xab\xae\xcf\xc1\x09\xd5\x39\xfb\x15\x25\x67\x52\xb8\x56\x9f\x70\x10\x5b\x6b\xbb\xce\x03\xf6\x44\x76\x7d\x80\xcb\xa7\xc1\x57\x01\xde\x75\x72\x3e\xd3\x98\x3f\x6d\xe5\x80\x1e\xd6\x3e\x81\xd9\xe1\x82\x0a\x49\x3a\x15\x72\x9b\xc3\x2f\x09\x1c\xa6\x2b\x64\x1e\xf6\x99\x8f\x11\x39\x86\x75\xa3\x64\x03\x8a\x20\xa4\x03\x2b\xb0\x26\xa4\xd2\x17\x06\x3c\x5b\xda\xb6\xb5\x06\xde\x97\x7e\x73\xf2\x89\x58\x5a\xc3\x78\xcb\xcf\x61\x3a\x9e\x9c\x41\x25\x58\x10\x72\x9a\x00\x7c\x22\x84\xde\xd8\xba\x56\x52\x09\xad\x37\xd0\x39\x7b\xa3\x2a\xac\xa0\x56\x06\x4f\xb8\xf7\xce\x63\x1a\x9e\x35\xcc\x1d\xe5\x59\x56\x39\x75\x83\xe9\xca\xda\x95\xc6\x54\xda\x36\xab\x95\xc6\xac\xca\xc6\x2f\xd7\xf3\xb6\x98\xcf\xdf\x7e\xfc\xeb\x9d\xfe\xf0\xea\xf3\xef\x7f\x4e\xf9\xb5\xfc\xf4\x56\x7c\xf9\xfa\x22\xbb\x51\xb8\xfe\xb5\xa7\xee\x67\x6a\x84\x53\x66\xf5\xdc\xd3\xda\x7a\x5c\x29\x6e\xfa\x32\xf8\xda\x07\x29\x0b\xdb\x52\xa6\x88\x7a\xa4\x6c\x36\x9f\x8f\xc2\xa3\xb4\x6d\x8b\x86\x4f\xa6\x67\x93\xf3\xb3\xf9\xf8\x62\x01\xb5\xb3\xed\x61\xd4\x5e\x2b\x7e\xd3\x97\xe0\xb0\xb3\xa4\xd8\xba\x4d\x9a\x38\xac\xd1\xa1\x91\x48\xbe\xe4\xf6\x6f\xa1\xda\x44\xe7\x8b\x2f\x83\x35\x96\xa4\x18\xfd\x23\xb2\x4c\x53\x88\xa9\x29\x7d\xe0\x0f\x0f\xca\xc9\xd3\x88\xb3\x43\xcc\x5a\x41\x8c\x2e\x73\x48\x28\x9c\x6c\xb2\x78\xa4\x13\xad\x24\x1a\xc2\x1c\x5e\x74\x42\x36\x08\xef\xe2\xfb\x31\x7c\x1e\x4e\xca\x34\x9c\xab\x01\xe6\x8f\xf8\x9e\x80\x32\x5d\xcf\x41\x47\x4c\x4c\x7c\x0f\xbc\x78\xd3\x61\x0e\x2a\x54\xcd\x08\x6a\xe5\x88\xa3\xd9\x43\x85\x56\xbc\x09\xf5\x79\xa7\xe4\xbc\xe3\x88\xd9\xae\x3b\x30\x6f\x77\x3e\x70\x15\x3c\x74\xc2\x5f\x0e\x8c\x8e\xe2\x11\x01\x40\x8d\x3e\x2d\x45\xa4\xd0\x2b\xc3\x8b\xc1\x12\x56\x15\x5a\x6c\xfc\x79\x3f\x92\xd6\xdc\xa0\xe3\x22\x6c\x96\x2d\x05\xf1\xd1\x80\xd3\x62\x63\x7b\xce\xe1\xcd\x97\xe5\xf0\x45\x5a\x6d\x5d\xe1\x55\xe6\xf0\xe1\xf5\xcb\xfb\x12\x1f\x6a\xd9\xd2\x64\x74\x2d\x56\x4a\x30\x82\xed\xd9\x6b\xe3\x46\x30\xac\x95\xd6\x50\x22\xd4\x58\x79\x90\x85\x77\x1f\xaf\xfe\x48\x9f\x24\xa8\xd6\x56\xf0\xe9\x74\x27\x49\xb1\x12\xba\x20\x16\x8c\x3b\x69\x9a\xb8\xcd\xee\x98\x8e\xfe\x99\xf2\x1d\xb2\x9e\xcf\x90\x8c\x40\xb8\x46\xac\xc8\x73\xf3\x2e\xa1\x73\x58\x29\xc9\x58\x01\xa1\x61\x5f\xbf\x4f\xe3\xae\x0c\xcf\x67\x3b\xe6\xfb\xed\x8a\xad\x9b\xe2\x6e\x8a\xe2\x9b\xdf\xfb\x7f\xe3\xef\x83\xf3\x7d\x81\x3f\xa4\x1f\xa2\x7f\x97\x7b\xc8\x41\x34\x7c\xb7\x80\xc3\x92\xe9\x9c\xad\x7a\x7f\x51\xa0\x90\x0d\xac\xad\xab\x8e\xc8\x7f\x2c\x45\xa9\xfc\x79\xfa\xef\x22\x6c\xcd\xad\xb8\x2d\xe2\xa6\x3b\x1d\xc3\xe7\x1f\xc7\x3f\xc4\x84\x7e\x50\xcc\xef\x91\xdd\x07\xfd\x28\x89\x26\xef\x37\xfa\xf2\x7d\x27\x79\xe4\xca\x69\x2d\xf1\x10\x48\x8d\xbb\x82\x26\x18\x81\x78\xec\x02\x1a\x34\xed\x98\x27\x0f\x55\xdc\xd5\x40\xec\xdb\xcc\xc3\x70\x5d\x3d\xd8\x5b\xc6\xf6\x4a\xbb\x81\xe8\xe0\x36\x8c\xf1\x1a\x41\x69\x6f\x91\x76\x7a\x2b\x64\x94\x7e\x4d\x11\xbe\x1f\x0d\xa0\x7d\x59\xa8\x47\xc1\x24\xad\xdb\xa3\xa5\x16\x44\x8f\xe2\x06\xcb\x16\xd8\x0a\xba\x7e\x0c\x16\xbe\x6f\x41\x35\x0a\xee\x1d\x52\xd1\x3b\x9d\xef\xfa\x13\x9d\xa6\xa2\x15\xdf\xac\x11\x6b\x0a\x5d\x8a\xd8\x3a\x4c\xc3\x3c\x92\x5a\xb7\xca\x68\x63\x08\x99\x32\x69\xa5\x0d\x3f\x85\x16\x25\x6a\x2a\x42\x53\x4c\xf9\x96\xef\xfb\x97\x0d\xca\x6b\xea\xdb\x1c\x66\xb3\xc9\x42\x2e\xce\xaa\xf1\x04\xe7\x72\x31\xad\xeb\xf9\x62\x76\x51\x2e\xa6\xa7\x17\xe7\x67\x17\xb3\xd3\x45\x12\xda\x93\xef\x53\xd4\xa1\x54\xb5\x42\x1a\x3a\xd6\xca\x89\xae\x01\x61\x2a\x58\xa3\x5a\x35\x4c\x40\xb6\x77\x12\x7d\x13\x2b\x05\x61\x10\x91\x40\xc4\x15\x9d\xe0\xe6\x5f\x48\xda\x76\xdf\x87\x83\x44\x18\xa3\xe5\x6e\x98\xca\x68\x3b\x6c\xf3\xc1\xb0\x7d\x1f\x55\xf8\xa8\x4c\xce\xb2\xda\xd9\x6f\x68\x42\x33\xd2\x69\x57\x26\x00\x8a\x0a\xdf\xd2\xd5\xcd\x30\x26\xd6\x42\x93\x6f\x9f\xaa\x06\x76\x3d\x1e\xfb\x5a\x8a\x63\xd9\x56\x93\x9f\xd8\x04\xf8\x07\xb6\x20\x0c\x0c\xcb\x87\x10\x7b\xe4\x5e\xf1\x61\x78\xe2\x87\xe0\xae\x42\x63\x19\xfd\xf3\x36\x31\x4a\x63\x98\xf3\x69\x7b\x54\x1e\x46\x77\xad\xb8\x51\x91\xca\x7e\xcb\xb8\xd5\x3e\x9d\xf3\x71\x29\xab\x59\x29\xab\xb9\x3c\x47\x39\x1b\xe3\xf4\x7c\x5e\x9d\xcf\xe6\xa7\x93\xa9\x1c\x63\x2d\x12\xc1\xec\x54\xd9\x73\x9c\xa1\xf0\x96\x9d\x18\xf2\xb9\xb7\x24\x00\xd7\xca\x54\x39\x2c\x2f\x2f\xe1\xa7\x78\x1d\x45\x65\xfe\xb3\x67\x68\xb0\x77\x42\x83\x41\x0e\x7f\x2d\x9e\x2d\x2f\x2f\x8f\xe1\x83\xff\x49\xd3\xf4\xb9\xbf\x36\xfc\x48\xeb\x03\x3f\x8c\xa9\x79\x9c\x6a\x47\xdb\xb1\x75\xf7\x2f\x21\x1c\xd7\x01\x9c\x00\xb4\xc2\xa8\x1a\x89\x0b\xd1\x73\x63\x5d\x0e\x6f\x95\x59\x85\xa1\xf9\x4a\x98\x55\xf2\x77\x00\x00\x00\xff\xff\x8a\x0d\x90\x97\x60\x0d\x00\x00"
+
+func show_and_tell_im2txt_image_captioning_coco15YmlBytes() ([]byte, error) {
+	return bindataRead(
+		_show_and_tell_im2txt_image_captioning_coco15Yml,
+		"Show_and_Tell_im2txt_Image_Captioning_COCO15.yml",
+	)
+}
+
+func show_and_tell_im2txt_image_captioning_coco15Yml() (*asset, error) {
+	bytes, err := show_and_tell_im2txt_image_captioning_coco15YmlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "Show_and_Tell_im2txt_Image_Captioning_COCO15.yml", size: 3424, mode: os.FileMode(436), modTime: time.Unix(1569038315, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1743,7 +1764,7 @@ func vgg16Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "VGG16.yml", size: 2032, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "VGG16.yml", size: 2032, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1763,7 +1784,7 @@ func vgg19Yml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "VGG19.yml", size: 2032, mode: os.FileMode(420), modTime: time.Unix(1555240618, 0)}
+	info := bindataFileInfo{name: "VGG19.yml", size: 2032, mode: os.FileMode(436), modTime: time.Unix(1563242663, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1899,6 +1920,7 @@ var _bindata = map[string]func() (*asset, error){
 	"SSD_MobileNet_v2_COCO.yml": ssd_mobilenet_v2_cocoYml,
 	"SSD_MobileNet_v2_Quantized_300x300_COCO.yml": ssd_mobilenet_v2_quantized_300x300_cocoYml,
 	"SSD_ResNet50_FPN_Shared_Box_Predictor_640x640_COCO14_Sync.yml": ssd_resnet50_fpn_shared_box_predictor_640x640_coco14_syncYml,
+	"Show_and_Tell_im2txt_Image_Captioning_COCO15.yml": show_and_tell_im2txt_image_captioning_coco15Yml,
 	"VGG16.yml": vgg16Yml,
 	"VGG19.yml": vgg19Yml,
 }
@@ -2022,6 +2044,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 	"SSD_MobileNet_v2_COCO.yml": &bintree{ssd_mobilenet_v2_cocoYml, map[string]*bintree{}},
 	"SSD_MobileNet_v2_Quantized_300x300_COCO.yml": &bintree{ssd_mobilenet_v2_quantized_300x300_cocoYml, map[string]*bintree{}},
 	"SSD_ResNet50_FPN_Shared_Box_Predictor_640x640_COCO14_Sync.yml": &bintree{ssd_resnet50_fpn_shared_box_predictor_640x640_coco14_syncYml, map[string]*bintree{}},
+	"Show_and_Tell_im2txt_Image_Captioning_COCO15.yml": &bintree{show_and_tell_im2txt_image_captioning_coco15Yml, map[string]*bintree{}},
 	"VGG16.yml": &bintree{vgg16Yml, map[string]*bintree{}},
 	"VGG19.yml": &bintree{vgg19Yml, map[string]*bintree{}},
 }}
