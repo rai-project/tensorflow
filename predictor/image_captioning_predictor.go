@@ -113,9 +113,9 @@ func (p *ImageCaptioningPredictor) Predict(ctx context.Context, data interface{}
 	session := p.tfSession
 	graph := p.tfGraph
 
-	tensor, err := makeTensorFromGoTensors(input)
+	tensor, err := makeSingleTensorFromGoTensor(input)
+	
 	if err != nil {
-		fmt.Println("Error is making tensor!")
 		return err
 	}
 
@@ -136,7 +136,6 @@ func (p *ImageCaptioningPredictor) Predict(ctx context.Context, data interface{}
 		p.GetGraphPath(),
 	)
 	if err != nil {
-		fmt.Println("Error is running!")
 		return err
 	}
 
@@ -150,7 +149,7 @@ func (p *ImageCaptioningPredictor) Predict(ctx context.Context, data interface{}
 	// no actual meaning. just to squeeze the 0th dimension.
 	initialStateArray, err := tf.NewTensor(initialState[0].Value().([][]float32)[0])
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 
 	initialBeam := caption{
@@ -302,10 +301,7 @@ func (p *ImageCaptioningPredictor) ReadPredictedFeatures(ctx context.Context) ([
 		predSentence := strings.Join(words[1:len(words)-1], " ")
 		sentences = append(sentences, predSentence)
 		probabilities = append(probabilities, math.Exp(float64(caption.logprob)))
-		// fmt.Printf("%d) %s (p=%f)   ", i, predSentence, math.Exp(float64(caption.logprob)))
-		// fmt.Println(IDs)
 		words = nil
-		// IDs = nil
 	}
 
 	return p.CreateCaptioningFeatures(ctx, sentences, probabilities)

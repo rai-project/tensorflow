@@ -21,7 +21,7 @@ inputs: # model inputs
     description: the input image # description of the first input
     parameters:
       element_type: uint8
-      input_layer: 'convert_image/Cast'
+      input_layer: 'decode/DecodeJpeg'
       layout: HWC
       color_mode: RGB
   - type: image

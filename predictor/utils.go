@@ -1,6 +1,7 @@
 package predictor
 
 import (
+	"fmt"
 	"image"
 	"image/png"
 	"os"
@@ -181,4 +182,30 @@ func makeUniformImage() [][][][]float32 {
 		images[ii] = sl
 	}
 	return images
+}
+
+func makeSingleTensorFromGoTensor(in0 []*gotensor.Dense) (*tf.Tensor, error) {
+	if len(in0) < 1 {
+		return nil, errors.New("no dense tensor in input")
+	}
+
+	joined := in0[0]
+	shape := make([]int64, len(joined.Shape()))
+	for ii, s := range joined.Shape() {
+		shape[ii] = int64(s)
+	}
+	data := joined.Data().([]uint8)
+	H, W, C := shape[0], shape[1], shape[2]
+	fmt.Println(H, W, C)
+	tn := make([][][]uint8, H)
+	for h := int64(0); h < H; h++ {
+		th := make([][]uint8, W)
+		for w := int64(0); w < W; w++ {
+			offset := C * (W*h + w)
+			tw := data[offset : offset+C]
+			th[w] = tw
+		}
+		tn[h] = th
+	}
+	return tf.NewTensor(tn)
 }

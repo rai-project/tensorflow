@@ -2,14 +2,16 @@ package predictor
 
 import (
 	"context"
-	"fmt"
 	"image"
 	"image/color"
 	"image/jpeg"
 	"os"
 	"path/filepath"
 	"testing"
+	"fmt"
+	"reflect"
 
+	_ "github.com/k0kubun/pp"
 	"github.com/rai-project/dlframework"
 	"github.com/rai-project/dlframework/framework/options"
 	raiimage "github.com/rai-project/image"
@@ -514,6 +516,18 @@ func TestCaptioning(t *testing.T) {
 	if err != nil {
 		return
 	}
+	
+	groundTruthSentence := []string{
+		"a man riding a wave on top of a surfboard .",
+		"a person riding a surf board on a wave",
+		"a man on a surfboard riding a wave .",
+	}
+	groundTruthProbability := []float32{0.035667, 0.016235, 0.010144}
 
-	fmt.Println(pred)
+	fmt.Println(reflect.TypeOf(pred[0][0]))
+	for i, feat := range pred {
+		fmt.Printf("%d: (%f) %s\n", i, feat[0].GetProbability(), string(feat[0].GetText().Data))
+		assert.Equal(t, groundTruthSentence[i], string(feat[0].GetText().Data))
+		assert.InDelta(t, groundTruthProbability[i], feat[0].GetProbability(), 0.001)
+	}
 }
