@@ -65,16 +65,31 @@ declare -a array3=(
 # done
 
 for i in "${array1[@]}"; do
-  echo $i
+  echo $i "on gpu"
   ./eurosys_gpu.sh localhost 1 $i
 done
 
 for i in "${array2[@]}"; do
-  echo $i
+  echo $i "on gpu"
   ./eurosys_gpu.sh localhost 1 $i
 done
 
 for i in "${array3[@]}"; do
-  echo $i
+  echo $i "on gpu"
   ./eurosys_gpu.sh localhost 1 $i
+done
+
+for i in "${array1[@]}"; do
+  echo $i "on cpu"
+  ./eurosys_cpu.sh localhost 1 $i
+done
+
+for i in "${array2[@]}"; do
+  echo $i "on cpu"
+  ./eurosys_cpu.sh localhost 1 $i
+done
+
+for i in "${array3[@]}"; do
+  echo $i "on cpu"
+  ./eurosys_cpu.sh localhost 1 $i
 done
