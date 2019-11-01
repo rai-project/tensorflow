@@ -14,50 +14,38 @@ One can evaluate the **~80** models on any systems of insterest with either loca
 
 Check out [MLModelScope](mlmodelscope.org) and welcome to contribute.
 
-## Installation
+# Bare Minimum Installation
 
-Install go if you have not done so. Please follow [Go Installation](https://docs.mlmodelscope.org/installation/source/golang).
 
-Download and install the MLModelScope TensorFlow Agent:
+## Prerequsite System Library Installation
+We first discuss a bare minimum tensorflow-agent installation without the tracing and profiling capabilities. To make this work, you will need to have the following system libraries preinstalled in your system. 
 
-```
-go get -v github.com/rai-project/tensorflow
+- The CUDA library (required)
+- The CUPTI library (required)
+- The Tensorflow library (required)
+- The libjpeg-turbo library (optional, but preferred)
 
-```
+### The CUDA Library
 
-The agent requires The TensorFlow C library and other Go packages.
-
-### Go Packages
-
-You can install the dependency through `go get`.
+Please refer to Nvidia CUDA library installation on this. Find the localation of your local CUDA installation, which is typically at `/usr/local/cuda/`, and setup the path to the `libcublas.so` library. Place the following in either your `~/.bashrc` or `~/.zshrc` file:
 
 ```
-cd $GOPATH/src/github.com/rai-project/tensorflow
-go get -u -v ./...
+export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/cuda/lib64
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
 ```
 
-Or use [Dep](https://github.com/golang/dep).
+### The CUPTI Library
+
+Please refer to Nvidia CUPTI library installation on this. Find the localation of your local CUPTI installation, which is typically at `/usr/local/cuda/extras/CUPTI`, and setup the path to the `libcupti.so` library. Place the following in either your `~/.bashrc` or `~/.zshrc` file:
 
 ```
-dep ensure -v
+export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64
 ```
-
-This installs the dependency in `vendor/`.
-
-Note: The CGO interface passes go pointers to the C API. This is an error by the CGO runtime. Disable the error by placing
-
-```
-export GODEBUG=cgocheck=0
-```
-
-in your `~/.bashrc` or `~/.zshrc` file and then run either `source ~/.bashrc` or `source ~/.zshrc`
-
 
 ### The TensorFlow C Library
 
-The TensorFlow C library is required for the TensorFlow Go package.
-
-If you use TensorFlow Docker Images (e.g. NVIDIA GPU CLOUD (NGC)), skip this step.
+The TensorFlow C library is required for the TensorFlow Go package. If you want to use TensorFlow Docker Images (e.g. NVIDIA GPU CLOUD (NGC)) instead, skip this step for now and refer to our later section on this.
 
 You can download pre-built TensorFlow C library from [Install TensorFlow for C](https://www.tensorflow.org/install/lang_c).
 
@@ -115,25 +103,66 @@ macOS
 brew install jpeg-turbo
 ```
 
-## External Ervices
 
-MLModelScope relies on a few external services.
-These services provide tracing, registry, and database servers.
+## Installation of GO for Compilation
 
-### Installing Docker
+Since we use `go` for MLModelScope development, it's required to have `go` installed in your system before proceed.
 
-Refer to [Install Docker](https://docs.docker.com/install/).
+Please follow [Installing Go Compiler](https://github.com/rai-project/rai/blob/master/docs/developer_guide.md) to have `go` installed.
 
-On Ubuntu, an easy way is using
+
+## Bare Minimum Tensorflow-agent Installation
+
+Download and install the MLModelScope TensorFlow Agent by running the following command in any location, assuming you have installed `go` following the above instruction.
 
 ```
-curl -fsSL get.docker.com -o get-docker.sh | sudo sh
-sudo usermod -aG docker $USER
+go get -v github.com/rai-project/tensorflow
+
 ```
 
-On macOS, [intsall Docker Destop](https://docs.docker.com/docker-for-mac/install/)
+You can then install the dependency packages through `go get`.
 
-### Configuration
+```
+cd $GOPATH/src/github.com/rai-project/tensorflow
+go get -u -v ./...
+```
+
+An alternative to install the dependency packages is to use [Dep](https://github.com/golang/dep).
+
+```
+dep ensure -v
+```
+
+This installs the dependency in `vendor/`.
+
+The CGO interface passes go pointers to the C API. There is an error in the CGO runtime. We can disable the error by placing
+
+```
+export GODEBUG=cgocheck=0
+```
+
+in your `~/.bashrc` or `~/.zshrc` file and then run either `source ~/.bashrc` or `source ~/.zshrc`
+
+
+Build the TensorFlow agent with GPU enabled
+```
+cd $GOPATH/src/github.com/rai-project/tensorflow/tensorflow-agent
+go build 
+```
+
+Build the TensorFlow agent without GPU or libjpeg-turbo
+```
+cd $GOPATH/src/github.com/rai-project/tensorflow/tensorflow-agent
+go build -tags="nogpu nolibjpeg" 
+```
+
+If everything is successful, you should have an executable `tensorflow-agent` binary in the current directory.
+
+### Configuration Setup
+
+To run the agent, you need to setup the correct configuration file for the agent. Some of the information may not make perfect sense for all testing scenarios, but they are required and will be needed for later stage testing. Some of the port numbers as specified below can be changed depending on your later setup for those service. 
+
+So let's just set them up as is, and worry about the detailed configuration parameter values later. 
 
 You must have a `carml` config file called `.carml_config.yml` under your home directory. An example config file `carml_config.yml.example` is in [github.com/rai-project/MLModelScope](https://github.com/rai-project/MLModelScope) . You can move it to `~/.carml_config.yml`.
 
@@ -165,6 +194,57 @@ logger:
   hooks:
     - syslog
 ```
+
+## Test Installation
+
+With the configuration and the above  bare minimumn installation, you should be ready to test the installation and see how things works. 
+
+Here are a few examples. First, make sure we are in the right location
+```
+cd $GOPATH/src/github.com/rai-project/tensorflow/tensorflow-agent
+```
+
+To see a list of help
+```
+./tensorflow-agent -h
+```
+
+To see a list of models that we can run with this agent
+```
+./tensorflow-agent info models
+```
+
+To run an inference using the default DNN model `mobilenet_v1_1.0_224` with a default input image.
+
+```
+./tensorflow-agent predict urls --profile=false --publish=false
+```
+
+The above `--profile=false --publish=false` command parameters tell the agent that we do not want to use profiling capability and publish the results, aas we haven't installed the MongoDB database to store profiling data and the tracer service to accept tracing information.
+
+# External Service Installation to Enable Tracing and Profiling
+
+We now discuss how to install a few external services that make the agent fully useful in terms of collecting tracing and profiling data.
+
+## External Srvices
+
+MLModelScope relies on a few external services. These services provide tracing, registry, and database servers.
+
+These services can be installed and enabled in different ways. We discuss how we use `docker` below to show how this can be done. You can also not use `docker` but install those services from either binaries or source codes directly.
+
+### Installing Docker
+
+Refer to [Install Docker](https://docs.docker.com/install/).
+
+On Ubuntu, an easy way is using
+
+```
+curl -fsSL get.docker.com -o get-docker.sh | sudo sh
+sudo usermod -aG docker $USER
+```
+
+On macOS, [intsall Docker Destop](https://docs.docker.com/docker-for-mac/install/)
+
 
 ### Starting Trace Server
 
@@ -220,7 +300,35 @@ You can also mount the database volume to a local directory using
 docker run -p 27017:27017 --restart always -d  -v $HOME/data/carml/mongo:/data/db mongo:3.0
 ```
 
-## Use within TensorFlow Docker Images
+### Configuration
+
+You must have a `carml` config file called `.carml_config.yml` under your home directory. An example config file `~/.carml_config.yml` is already discussed above. Please update the port numbers for the above external services accordingly if you decide to choose a different ports above.
+
+
+### Testing
+
+The testing steps are very similar to those testing we discussed above, except that you can now safely use both the profiling and publishing services.
+
+
+# Alternative ways to Install Tensorflow-agent using a Tensorflow Docker Image
+
+Instead of using a local Tensorflow library to install the MLModelScope `tensorflow-agent`, we can also use a Tensorflow docker image to start this process. 
+
+## Local Setup
+
+You need to follow the above similar procedures to setup `go` and get all the related `rai-project` projects in your local go development environment.
+
+```
+go get -v github.com/rai-project/tensorflow
+cd $GOPATH/src/github.com/rai-project/tensorflow
+go get -u -v ./...
+```
+
+You also need to have the `.carml_config.yml` configuraiton file as discussed above to be placed under $HOME as `.carml_config.yml`
+
+You can also setup all the external services as discussed above in your local host machine where you plan to use the Tensorflow Docker container.
+
+## Setup within TensorFlow Docker Image
 
 Continue if you have
 
@@ -230,7 +338,7 @@ Continue if you have
 
 , otherwise read above
 
-An example of using NGC TensorFlow docker image: 
+Assuming you want to use the NGC TensorFlow docker image. Here is an example on how to do this: 
 
 ```
 nvidia-docker run --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 -it --privileged=true --network host \
@@ -258,16 +366,12 @@ export CGO_LDFLAGS="${CGO_LDFLAGS} -L /usr/local/lib/tensorflow/"
 
 export PATH=$PATH:$(go env GOPATH)/bin  
 export GODEBUG=cgocheck=0  
-cd $GOPATH/src/github.com/rai-project/tensorflow/tensorflow-agent  
 ```
-
-
-## Usage
 
 Build the TensorFlow agent with GPU enabled
 ```
 cd $GOPATH/src/github.com/rai-project/tensorflow/tensorflow-agent
-go build ./main.go
+go build 
 ```
 
 Build the TensorFlow agent without GPU or libjpeg-turbo
@@ -276,7 +380,8 @@ cd $GOPATH/src/github.com/rai-project/tensorflow/tensorflow-agent
 go build -tags="nogpu nolibjpeg" 
 ```
 
-### Use the Agent with the [MLModelScope Web UI](https://github.com/rai-project/mlmodelscope)
+
+# Use the Agent with the [MLModelScope Web UI](https://github.com/rai-project/mlmodelscope)
 
 ```
 ./tensorflow-agent serve -l -d -v
@@ -284,7 +389,7 @@ go build -tags="nogpu nolibjpeg"
 
 Refer to [TODO] to run the web UI to interact with the agent.
 
-### Use the Agent through Command Line
+# Use the Agent through Command Line
 
 Run ```./tensorflow-agent -h``` to list the available commands.
 
@@ -301,15 +406,15 @@ An example run is
 
 Refer to [TODO] to run the web UI to interact with the agent.
 
-## Notes on installing TensorFlow from source (ignore this if you are a user)
+# Notes on installing TensorFlow from source (ignore this if you are a user)
 
-### Install Bazel
+## Install Bazel
 
 - [Installing Bazel on Ubuntu](https://docs.bazel.build/versions/master/install-ubuntu.html)
 
 - [Installing Bazel on macOS](https://docs.bazel.build/versions/master/install-os-x.html#install-on-mac-os-x-homebrew)
 
-### Build
+## Build
 
 Build TensorFlow 1.13.1 with the following scripts.
 
@@ -330,7 +435,7 @@ cp ${GOPATH}/src/github.com/tensorflow/tensorflow/bazel-bin/tensorflow/libtensor
 
 Need to put the directory that contains `libtensorflow_framework.so` and `libtensorflow.so` into `$PATH`.
 
-### PowerPC
+## PowerPC
 
 For TensorFlow compilation, here are the recommended tensorflow-configure settings:
 
