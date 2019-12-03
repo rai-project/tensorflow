@@ -47,9 +47,10 @@ ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$LD_LIBRARY_PATH
 ENV LD_LIBRARY_PATH=/usr/local/cuda-10.1/compat/lib.real:$LD_LIBRARY_PATH
 ENV CGO_CFLAGS="${CGO_CFLAGS} -I /opt/tensorflow/tensorflow-source"
 ENV CGO_CXXFLAGS="${CGO_CXXFLAGS} -I /opt/tensorflow/tensorflow-source"
-ENV CGO_LDFLAGS="${CGO_LDFLAGS} -L /usr/local/lib/tensorflow/"
+ENV CGO_LDFLAGS="${CGO_LDFLAGS} -L /usr/local/lib"
 
-RUN ln -s /usr/local/lib/tensorflow/libtensorflow_cc.so /usr/local/lib/tensorflow/libtensorflow.so
+RUN ln -s /usr/local/lib/tensorflow/libtensorflow_cc.so /usr/local/lib/tensorflow/libtensorflow.so && \
+    ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/stubs/libnvidia-ml.so /usr/local/cuda-10.1/targets/x86_64-linux/lib/stubs/libnvidia-ml.so.1
 
 # Install Go packages
 RUN go get -u github.com/golang/dep/cmd/dep
@@ -61,13 +62,12 @@ WORKDIR $GOPATH/src/$PKG
 RUN git clone --depth=1 --branch=master https://${PKG}.git .
 
 RUN dep ensure -v -no-vendor -update \
-    github.com/rai-project/tensorflow \
     github.com/rai-project/dlframework \
     github.com/rai-project/evaluation && \
     dep ensure -v -vendor-only
 
 RUN cd tensorflow-agent && go install -tags="nolibjpeg" && \
-    cd .. && rm -fr vendor
+    cd ..
 
 ENTRYPOINT ["tensorflow-agent"]
 

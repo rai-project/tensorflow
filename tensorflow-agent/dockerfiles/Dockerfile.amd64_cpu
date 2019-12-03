@@ -67,7 +67,6 @@ WORKDIR $GOPATH/src/$PKG
 RUN git clone --depth=1 --branch=master https://${PKG}.git .
 
 RUN dep ensure -v -no-vendor -update \
-    github.com/rai-project/tensorflow \
     github.com/rai-project/dlframework \
     github.com/rai-project/evaluation && \
     dep ensure -v -vendor-only
@@ -90,19 +89,21 @@ RUN cd ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow && \
 
 RUN	ls -la ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow && \
 	cp ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow/libtensorflow.so.1.14.0 /usr/local/lib/libtensorflow.so && \
+	ln -s /usr/local/lib/libtensorflow.so /usr/local/lib/libtensorflow.so.1 && \
 	cp ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow/libtensorflow_framework.so.1.14.0 /usr/local/lib/libtensorflow_framework.so.1 && \
 	mkdir /usr/local/include/tensorflow && \
 	cp -r ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/tensorflow/c /usr/local/include/tensorflow
 
 ENV CGO_CFLAGS="${CGO_CFLAGS} -I /usr/local/include"
 ENV CGO_CXXFLAGS="${CGO_CXXFLAGS} -I /usr/local/include"
-ENV CGO_LDFLAGS="${CGO_LDFLAGS} -L /usr/local/lib/tensorflow" 
+ENV CGO_LDFLAGS="${CGO_LDFLAGS} -L /usr/local/lib"
+
+RUN ldconfig
 
 RUN cd $GOPATH/src/$PKG && \
   go build -a -installsuffix cgo -ldflags "-s -w -X ${PKG}/Version=${VERSION} -X ${PKG}/GitCommit=${VCS_REF} -X ${PKG}/BuildDate=${BUILD_DATE}"&& \
   cd tensorflow-agent && \
   go install -tags=nogpu && \
-  cd .. && \
-  rm -fr vendor
+  cd ..
 
 ENTRYPOINT ["tensorflow-agent"]
