@@ -9,7 +9,7 @@
 
 This is the TensorFlow agent for [MLModelScope](mlmodelscope.org), an open-source framework and hardware agnostic, extensible and customizable platform for evaluating and profiling ML models across datasets / frameworks / systems, and within AI application pipelines.
 
-Currently it has most of the models from TensorFlow Model Zoo built in, including Image Classification, Object Detection, Instance Segmentation, Semantic Segmentation, Image Enhancement. More built-in models are comming. 
+Currently it has most of the models from TensorFlow Model Zoo built in, including Image Classification, Object Detection, Instance Segmentation, Semantic Segmentation, Image Enhancement. More built-in models are coming. 
 One can evaluate the **~80** models on any systems of insterest with either local TensorFlow installation or TensorFlow docker images. 
 
 Check out [MLModelScope](mlmodelscope.org) and welcome to contribute.
@@ -27,7 +27,7 @@ We first discuss a bare minimum tensorflow-agent installation without the tracin
 
 ### The CUDA Library
 
-Please refer to Nvidia CUDA library installation on this. Find the localation of your local CUDA installation, which is typically at `/usr/local/cuda/`, and setup the path to the `libcublas.so` library. Place the following in either your `~/.bashrc` or `~/.zshrc` file:
+Please refer to Nvidia CUDA library installation on this. Find the location of your local CUDA installation, which is typically at `/usr/local/cuda/`, and setup the path to the `libcublas.so` library. Place the following in either your `~/.bashrc` or `~/.zshrc` file:
 
 ```
 export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/cuda/lib64
@@ -36,7 +36,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
 
 ### The CUPTI Library
 
-Please refer to Nvidia CUPTI library installation on this. Find the localation of your local CUPTI installation, which is typically at `/usr/local/cuda/extras/CUPTI`, and setup the path to the `libcupti.so` library. Place the following in either your `~/.bashrc` or `~/.zshrc` file:
+Please refer to Nvidia CUPTI library installation on this. Find the location of your local CUPTI installation, which is typically at `/usr/local/cuda/extras/CUPTI`, and setup the path to the `libcupti.so` library. Place the following in either your `~/.bashrc` or `~/.zshrc` file:
 
 ```
 export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64
@@ -197,7 +197,7 @@ logger:
 
 ## Test Installation
 
-With the configuration and the above  bare minimumn installation, you should be ready to test the installation and see how things works. 
+With the configuration and the above  bare minimumn installation, you should be ready to test the installation and see how things work. 
 
 Here are a few examples. First, make sure we are in the right location
 ```
@@ -220,7 +220,7 @@ To run an inference using the default DNN model `mobilenet_v1_1.0_224` with a de
 ./tensorflow-agent predict urls --profile=false --publish=false
 ```
 
-The above `--profile=false --publish=false` command parameters tell the agent that we do not want to use profiling capability and publish the results, aas we haven't installed the MongoDB database to store profiling data and the tracer service to accept tracing information.
+The above `--profile=false --publish=false` command parameters tell the agent that we do not want to use profiling capability and publish the results, as we haven't installed the MongoDB database to store profiling data and the tracer service to accept tracing information.
 
 # External Service Installation to Enable Tracing and Profiling
 
@@ -341,17 +341,15 @@ Continue if you have
 Assuming you want to use the NGC TensorFlow docker image. Here is an example on how to do this: 
 
 ```
-nvidia-docker run --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 -it --privileged=true --network host \
+docker run --gpus=all --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 -it --privileged=true --network host \
 -v $GOPATH:/workspace/go1.12/global \
 -v $GOROOT:/workspace/go1.12_root \
 -v ~/.carml_config.yml:/root/.carml_config.yml \
--v ~/data/carml:/root/data/carml \
-nvcr.io/nvidia/tensorflow:19.06-py2
+nvcr.io/nvidia/tensorflow:19.06-py3
 ```
 
-NOTE: The SHMEM allocation limit is set to the default of 64MB.  This may be
-   insufficient for TensorFlow.  NVIDIA recommends the use of the following flags:
-   ```nvidia-docker run --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 ...```
+NOTE: The SHMEM allocation limit is set to the default of 64MB.  This may be insufficient for TensorFlow. NVIDIA recommends the use of the following flags:
+   ```--shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 ...```
 
 Within the container, set up the environment so that the agent can find the TensorFlow C library.
 
@@ -361,8 +359,9 @@ export GOROOT=/workspace/go1.12_root
 export PATH=$GOROOT/bin:$PATH
 
 ln -s /usr/local/lib/tensorflow/libtensorflow_cc.so /usr/local/lib/tensorflow/libtensorflow.so
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/tensorflow
 export CGO_LDFLAGS="${CGO_LDFLAGS} -L /usr/local/lib/tensorflow/"
+export CGO_CFLAGS="${CGO_CFLAGS} -I /opt/tensorflow/tensorflow-source"
+export CGO_CXXFLAGS="${CGO_CXXFLAGS} -I /opt/tensorflow/tensorflow-source"
 
 export PATH=$PATH:$(go env GOPATH)/bin  
 export GODEBUG=cgocheck=0  
@@ -406,6 +405,28 @@ An example run is
 
 Refer to [TODO] to run the web UI to interact with the agent.
 
+# Use the Agent through Pre-built Docker Images
+
+We have [pre-built docker images](https://hub.docker.com/r/carml/tensorflow/tags) on Dockerhub. The images are `carml/tensorflow:amd64-cpu-latest`, `carml/tensorflow:amd64-gpu-latest` and `carml/tensorflow:amd64-gpu-ngc-latest`. The entrypoint is set as `tensorflow-agent` thus these images act similar as the command line above.
+
+An example run is
+
+```
+docker run --gpus=all --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 --privileged=true \
+    --network host \
+    -v ~/.carml_config.yml:/root/.carml_config.yml \ 
+    -v ~/results:/go/src/github.com/rai-project/tensorflow/results \
+    carml/tensorflow:amd64-gpu-latest predict urls --trace_level=FRAMEWORK_TRACE --model_name=Inception_v3
+```
+NOTE: The SHMEM allocation limit is set to the default of 64MB.  This may be insufficient for TensorFlow.  NVIDIA recommends the use of the following flags:
+   ```--shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 ...```
+
+NOTE: To run with GPU, you need to meet following requirements:
+
+- Docker >= 19.03 with nvidia-container-toolkit (otherwise need to use nvidia-docker)
+- CUDA >= 10.1
+- NVIDIA Driver >= 418.39 
+
 # Notes on installing TensorFlow from source (ignore this if you are a user)
 
 ## Install Bazel
@@ -416,13 +437,13 @@ Refer to [TODO] to run the web UI to interact with the agent.
 
 ## Build
 
-Build TensorFlow 1.13.1 with the following scripts.
+Build TensorFlow 1.14.0 with the following scripts.
 
 ```sh
 go get -d github.com/tensorflow/tensorflow/tensorflow/go
 cd ${GOPATH}/src/github.com/tensorflow/tensorflow
 git fetch --all
-git checkout v1.13.1
+git checkout v1.14.0
 ./configure
 ```
 

@@ -21,8 +21,7 @@ jobs:
           ./push.sh docker_push_gpu
   - job: GPU_NGC
     timeoutInMinutes: 0
-    pool:
-      vmImage: "Ubuntu 16.04"
+    pool: 'Impact2'
     steps:
       - bash: |
           docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)

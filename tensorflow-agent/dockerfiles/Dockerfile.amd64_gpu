@@ -22,10 +22,9 @@ LABEL org.carml.tensorflow.build-date=$BUILD_DATE \
 
 ########## INSTALLATION STEPS ###################
 
-ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
-ENV LD_LIBRARY_PATH /usr/local/cuda/lib64:$LD_LIBRARY_PATH
-ENV LD_LIBRARY_PATH /usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
-ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH}
+# Setup LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:/usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH /usr/local/cuda/lib64/stubs:/usr/lib/x86_64-linux-gnu:/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 
 RUN add-apt-repository ppa:webupd8team/java &&\
   apt-get update -y && apt-get install -y --no-install-recommends \
@@ -72,6 +71,7 @@ WORKDIR $GOPATH/src/$PKG
 
 RUN git clone --depth=1 --branch=master https://${PKG}.git .
 
+# Update frequently modified deps and genereate vendor
 RUN dep ensure -v -no-vendor -update \
     github.com/rai-project/dlframework \
     github.com/rai-project/evaluation && \
@@ -106,9 +106,9 @@ RUN	ls -la ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/
     cp ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow/libtensorflow.so.1.14.0 /usr/local/lib/libtensorflow.so && \
     ln -s /usr/local/lib/libtensorflow.so /usr/local/lib/libtensorflow.so.1 && \
     ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/stubs/libnvidia-ml.so /usr/local/cuda-10.1/targets/x86_64-linux/lib/stubs/libnvidia-ml.so.1 && \
-	cp ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow/libtensorflow_framework.so.1.14.0 /usr/local/lib/libtensorflow_framework.so.1 && \
-	mkdir /usr/local/include/tensorflow && \
-	cp -r ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/tensorflow/c /usr/local/include/tensorflow
+	  cp ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/bazel-bin/tensorflow/libtensorflow_framework.so.1.14.0 /usr/local/lib/libtensorflow_framework.so.1 && \
+	  mkdir /usr/local/include/tensorflow && \
+	  cp -r ${GOPATH}/src/$PKG/vendor/github.com/tensorflow/tensorflow/tensorflow/c /usr/local/include/tensorflow
 
 RUN ldconfig
 
@@ -121,5 +121,9 @@ RUN cd $GOPATH/src/$PKG && \
   cd tensorflow-agent && \
   go install && \
   cd ..
+
+# Remove cuda/lib64/stubs from LD_LIBRARY_PATH since it's for building purpose
+ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64
+ENV LD_LIBRARY_PATH /usr/lib/x86_64-linux-gnu:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
 
 ENTRYPOINT ["tensorflow-agent"]

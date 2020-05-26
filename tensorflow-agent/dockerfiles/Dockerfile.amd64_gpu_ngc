@@ -41,15 +41,13 @@ ENV GOPATH "/go"
 ENV PATH $GOPATH/bin:$PATH
 
 #Setup Environment
-ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/tensorflow
-ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$LD_LIBRARY_PATH
-ENV LD_LIBRARY_PATH=/usr/local/cuda-10.1/compat/lib.real:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH /usr/local/cuda/lib64/stubs:/usr/local/cuda-10.1/compat/lib.real:$LD_LIBRARY_PATH
+
 ENV CGO_CFLAGS="${CGO_CFLAGS} -I /opt/tensorflow/tensorflow-source"
 ENV CGO_CXXFLAGS="${CGO_CXXFLAGS} -I /opt/tensorflow/tensorflow-source"
 ENV CGO_LDFLAGS="${CGO_LDFLAGS} -L /usr/local/lib"
 
-RUN ln -s /usr/local/lib/tensorflow/libtensorflow_cc.so /usr/local/lib/tensorflow/libtensorflow.so && \
+RUN ln -s /usr/local/lib/tensorflow/libtensorflow_cc.so /usr/local/lib/libtensorflow.so && \
     ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/stubs/libnvidia-ml.so /usr/local/cuda-10.1/targets/x86_64-linux/lib/stubs/libnvidia-ml.so.1
 
 # Install Go packages
@@ -68,6 +66,10 @@ RUN dep ensure -v -no-vendor -update \
 
 RUN cd tensorflow-agent && go install -tags="nolibjpeg" && \
     cd ..
+
+# Remove cuda/lib64/stubs from LD_LIBRARY_PATH since it's for building purpose
+ENV LD_LIBRARY_PATH /usr/local/cuda/compat/lib:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/lib/tensorflow
+ENV LD_LIBRARY_PATH /usr/local/cuda-10.1/compat/lib.real:/usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
 
 ENTRYPOINT ["tensorflow-agent"]
 

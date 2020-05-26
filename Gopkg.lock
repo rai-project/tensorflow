@@ -461,7 +461,6 @@
     "pkg/jsonmessage",
     "pkg/longpath",
     "pkg/mount",
-    "pkg/parsers",
     "pkg/pools",
     "pkg/progress",
     "pkg/signal",
@@ -1516,7 +1515,7 @@
     "steps",
   ]
   pruneopts = "T"
-  revision = "f85e36865eb4de8fad997f06934263b0a207db92"
+  revision = "4aaa12cfa5874a785cbe70a2bc8a849472c7bc95"
 
 [[projects]]
   branch = "master"
@@ -1782,6 +1781,18 @@
 [[projects]]
   branch = "master"
   digest = "0:"
+  name = "github.com/rai-project/tensorflow"
+  packages = [
+    ".",
+    "graph",
+    "predictor",
+  ]
+  pruneopts = "T"
+  revision = "202663a68df3165460f14ccf7dad93eaf90a3796"
+
+[[projects]]
+  branch = "master"
+  digest = "0:"
   name = "github.com/rai-project/tracer"
   packages = [
     ".",
@@ -1798,7 +1809,7 @@
     "zipkin",
   ]
   pruneopts = "T"
-  revision = "7dcecc9e08b5279b7849775ec21d8b69bc05a117"
+  revision = "97d6a9677dc3a0e73fc9df74d366323884c19190"
 
 [[projects]]
   branch = "master"
@@ -2755,7 +2766,6 @@
   analyzer-version = 1
   input-imports = [
     "github.com/Unknwon/com",
-    "github.com/alangpierce/go-forceexport",
     "github.com/cheekybits/genny/generic",
     "github.com/elazarl/go-bindata-assetfs",
     "github.com/gogo/protobuf/proto",
@@ -2779,6 +2789,9 @@
     "github.com/rai-project/image/types",
     "github.com/rai-project/logger",
     "github.com/rai-project/nvidia-smi",
+    "github.com/rai-project/tensorflow",
+    "github.com/rai-project/tensorflow/graph",
+    "github.com/rai-project/tensorflow/predictor",
     "github.com/rai-project/tracer",
     "github.com/rai-project/tracer/jaeger",
     "github.com/sirupsen/logrus",
