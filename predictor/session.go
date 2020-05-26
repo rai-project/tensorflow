@@ -333,7 +333,7 @@ func newCRunArgs(feeds map[Output]*Tensor, fetches []Output, targets []*Operatio
 func (c *cRunArgs) toGo() []*Tensor {
 	ret := make([]*Tensor, len(c.fetchTensors))
 	for i, ct := range c.fetchTensors {
-		ret[i] = newTensorFromC(ct)
+		ret[i] = tensor_newTensorFromC(ct)
 	}
 	return ret
 }
