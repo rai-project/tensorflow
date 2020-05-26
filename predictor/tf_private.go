@@ -5,17 +5,35 @@ package predictor
 import "C"
 
 import (
+	"github.com/k0kubun/pp"
 	"reflect"
 	"unsafe"
-
-	forceexport "github.com/alangpierce/go-forceexport"
-	"github.com/k0kubun/pp"
+	"runtime"
 	// "github.com/spance/go-callprivate/private"
 )
 
-var (
-	newTensorFromC func(c *C.TF_Tensor) *Tensor
-)
+func tensor_newTensorFromC(c *C.TF_Tensor) *Tensor {
+	var shape []int64
+	if ndims := int(C.TF_NumDims(c)); ndims > 0 {
+		shape = make([]int64, ndims)
+	}
+	for i := range shape {
+		shape[i] = int64(C.TF_Dim(c, C.int(i)))
+	}
+
+	t := new(Tensor)
+
+	field_c := reflect.ValueOf(t).Elem().FieldByName("c")
+	reflect.NewAt(field_c.Type(), unsafe.Pointer(field_c.UnsafeAddr())).Elem().Set(reflect.ValueOf(c).Convert(field_c.Type()))
+
+	field_shape := reflect.ValueOf(t).Elem().FieldByName("shape")
+	reflect.NewAt(field_shape.Type(), unsafe.Pointer(field_shape.UnsafeAddr())).Elem().Set(reflect.ValueOf(shape).Convert(field_shape.Type()))
+
+	runtime.SetFinalizer(t, tensor_finalize)
+	return t
+}
+
+func tensor_finalize(t *Tensor) { C.TF_DeleteTensor(tensorPtrC(t)) }
 
 func outputC(p Output) C.TF_Output {
 	if p.Op == nil {
@@ -72,8 +90,6 @@ func tensorData(c *C.TF_Tensor) []byte {
 }
 
 func init() {
-	const tfPackagePath = "github.com/tensorflow/tensorflow/tensorflow/go"
-	forceexport.GetFunc(&newTensorFromC, tfPackagePath+".newTensorFromC")
 	if false {
 		pp.Println("init")
 	}
